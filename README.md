@@ -1,11 +1,27 @@
-# C++ OpenGL project template
-This is a template for my C++ OpenGL projects so I don't have to spend 30 minutes on setting up a project every time I want to start a new one.
+# PSX-style model viewer
+Shows a provided model in a style as closely mimicking PS1 graphics as possible
 
-## How to use
-Click the Use this template button and create a new repository
 
-## Setting up
-1) Rename CMake target to the name of the project
-2) Configure CMake
-3) Rewrite README.md
-4) Get to work
+
+## Features
+
+- Affine texture mapping (WIP)
+- Gourard shading (WIP)
+- Forward rendering (WIP)
+- OBJ model loading (WIP) (other formats might come later)
+
+
+
+## Cloning
+
+```bash
+git clone --recursive https://github.com/novacti3/psx-style-model-viewer
+```
+
+
+
+## Build
+
+Requires CMake 3.15 and above (this might change)
+
+Run the `build-release.sh` or `build-debug.sh` based on the configuration you want to build (WIP). The executable will be located in `bin/(config)`

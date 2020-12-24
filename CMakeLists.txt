@@ -6,14 +6,12 @@ make_directory(build/)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<CONFIG>/)
 
 add_subdirectory(libs/glfw ${projectName_BINARY_DIR}/glfw)
-add_subdirectory(libs/freetype ${projectName_BINARY_DIR}/freetype)
 
 list(APPEND INCLUDES
     # external includes
     libs/glfw/include
     libs/glad/include
     libs/glm/
-    libs/freetype/include
 
     # engine includes
 
@@ -29,9 +27,9 @@ list(APPEND SOURCES
     # game sources
 )
 
-add_executable(projectName src/program.cpp)
+add_executable(projectName src/program.c)
 # Change the executable's name and C++ language standard
 set_target_properties(projectName PROPERTIES OUTPUT_NAME projectName CXX_STANDARD 17)
-target_link_libraries(projectName glfw opengl32.lib freetype)
+target_link_libraries(projectName glfw opengl32.lib)
 target_include_directories(projectName PRIVATE ${INCLUDES})
 target_sources(projectName PRIVATE ${SOURCES})

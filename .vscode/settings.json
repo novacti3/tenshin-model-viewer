@@ -6,5 +6,6 @@
         "GLFW_BUILD_TESTS":"OFF",
         "GLFW_BUILD_DOCS":"OFF",
         "GLFW_INSTALL":"OFF"
-    }
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
