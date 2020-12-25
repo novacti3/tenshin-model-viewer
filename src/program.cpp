@@ -8,7 +8,11 @@ static const std::string WINDOW_TITLE = "Model Viewer";
 int main()
 {
     Window window;
-    window.Init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
+    if(!window.Init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE))
+    {
+        // TODO: Log
+        return -1;
+    }
 
     App app;
     app.Init(&window);
