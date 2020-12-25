@@ -36,8 +36,3 @@ void Window::Cleanup()
     glfwDestroyWindow(_handle);
     glfwTerminate();
 }
-
-unsigned int Window::getWidth() { return _width; }
-unsigned int Window::getHeight() { return _height; }
-std::string Window::getTitle() { return _title; }
-GLFWwindow *Window::getHandle() {return _handle; }

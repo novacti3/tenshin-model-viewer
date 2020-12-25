@@ -19,8 +19,8 @@ class Window
     bool Init(const unsigned int width, const unsigned int height, const std::string title);
     void Cleanup();
 
-    unsigned int getWidth();
-    unsigned int getHeight();
-    std::string getTitle();
-    GLFWwindow *getHandle();
+    inline unsigned int getWidth() { return _width; }
+    inline unsigned int getHeight() { return _height; }
+    inline std::string getTitle() { return _title; }
+    inline GLFWwindow *getHandle() { return _handle; }
 };

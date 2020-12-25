@@ -20,6 +20,8 @@ list(APPEND INCLUDES
 
     src/window.hpp
     src/app.hpp
+    src/shader.hpp
+    src/resource_manager.hpp
 )
 
 list(APPEND SOURCES
@@ -28,6 +30,8 @@ list(APPEND SOURCES
 
     src/window.cpp
     src/app.cpp
+    src/shader.cpp
+    src/resource_manager.cpp
 )
 
 add_executable(ModelViewer src/program.cpp)
