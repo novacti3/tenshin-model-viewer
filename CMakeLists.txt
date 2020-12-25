@@ -19,6 +19,7 @@ list(APPEND INCLUDES
     libs/glm/
 
     src/window.hpp
+    src/app.hpp
 )
 
 list(APPEND SOURCES
@@ -26,6 +27,7 @@ list(APPEND SOURCES
     libs/glad/src/glad.c
 
     src/window.cpp
+    src/app.cpp
 )
 
 add_executable(ModelViewer src/program.cpp)
