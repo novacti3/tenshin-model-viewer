@@ -34,6 +34,7 @@ int main()
 
         app.PollInput(deltaTime);
         app.Update(deltaTime);
+        app.Render();
     }
 
     app.Cleanup();

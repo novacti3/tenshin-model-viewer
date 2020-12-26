@@ -103,40 +103,49 @@ void ResourceManager::Cleanup()
 
         std::string line;
         std::vector<std::string> splitLine;
-        unsigned int vtCounter = 0;
-        unsigned int vnCounter = 0;
+
+        std::vector<glm::vec3> vertPositions;
+        std::vector<glm::vec2> vertUVs;
+        std::vector<glm::ivec3> vertNormals;
+
+        unsigned int lineCounter = 0;
         while(std::getline(file, line))
         {
-            splitLine = SplitString(line, ' ');
+            Log::LogInfo("Line: " + std::to_string(++lineCounter));
             
             if(line[0] == '#')
             {
                 continue;
             }
-            else if(line[0] == 'v')
+
+            splitLine = SplitString(line, ' ');    
+            if(line[0] == 'v')
             {
                 if(line[1] == ' ')
                 {
-                    Vertex vert;
-                    vert.position = glm::vec3(std::stof(splitLine[1]), std::stof(splitLine[2]), std::stof(splitLine[3]));
-
-                    vertices.push_back(vert);
+                    vertPositions.push_back(glm::vec3(std::stof(splitLine[1]), std::stof(splitLine[2]), std::stof(splitLine[3])));  
                 }
                 else if(line[1] == 't')
                 {
-                    vertices[vtCounter].uv = glm::vec2(std::stof(splitLine[1]), std::stof(splitLine[2]));
-
-                    vtCounter++;
+                    vertUVs.push_back(glm::vec2(std::stof(splitLine[1]), std::stof(splitLine[2])));  
                 }
                 else if(line[1] == 'n')
                 {
-                    vertices[vnCounter].normal = glm::vec3(std::stof(splitLine[1]), std::stof(splitLine[2]), std::stof(splitLine[3]));
-
-                    vnCounter++;
+                    vertNormals.push_back(glm::ivec3(std::stoi(splitLine[1]), std::stoi(splitLine[2]), std::stoi(splitLine[3])));  
                 }
             }
+            else if(line[0] == 'f')
+            {
+                for (size_t i = 1; i < splitLine.size(); i++)
+                {
+                    std::vector<std::string> vertInfo = SplitString(splitLine[i], '/');
+                    int vertPosIndex = std::stoi(vertInfo[0]) - 1;
+                    int vertUVIndex = std::stoi(vertInfo[1]) - 1;
+                    int vertNormalIndex = std::stoi(vertInfo[2]) - 1;
 
-            // TODO: Add face parsing
+                    vertices.push_back(Vertex(vertPositions[vertPosIndex], vertUVs[vertUVIndex], vertNormals[vertNormalIndex]));
+                }
+            }
         }
         
         Model *model = new Model(std::move(vertices), std::move(faces));

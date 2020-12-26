@@ -15,5 +15,6 @@ class App
     void Init(Window *window);
     void PollInput(float deltaTime);
     void Update(float deltaTime);
+    void Render();
     void Cleanup();
 };
