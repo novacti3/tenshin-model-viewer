@@ -1,5 +1,7 @@
 #include "window.hpp"
 
+#include "log.hpp"
+
 bool Window::Init(const unsigned int width, const unsigned int height, const std::string title)
 {
     _width = width;
@@ -8,9 +10,10 @@ bool Window::Init(const unsigned int width, const unsigned int height, const std
 
     if(!glfwInit())
     {
-        // TODO: Log
+        Log::LogFatal("Failed initializing GLFW");
         return false;
     }
+    Log::LogInfo("GLFW initialized");
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -24,9 +27,10 @@ bool Window::Init(const unsigned int width, const unsigned int height, const std
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        // TODO: Log
+        Log::LogFatal("Failed initializing GLAD");
         return false;
     }
+    Log::LogInfo("GLAD initialized");
 
     return true;
 }

@@ -1,5 +1,7 @@
 #include "resource_manager.hpp"
 
+#include "log.hpp"
+
 #include <fstream>
 #include <sstream>
 
@@ -30,7 +32,7 @@ Shader *ResourceManager::CreateShaderFromFiles(const std::string &vertShaderPath
     }
     else
     {
-        // TODO: Add debug
+        Log::LogError("Couldn't open file " + vertShaderPath);
         return nullptr;
     }
     vertShaderFile.close();
@@ -42,7 +44,7 @@ Shader *ResourceManager::CreateShaderFromFiles(const std::string &vertShaderPath
     }
     else
     {
-        // TODO: Add debug
+        Log::LogError("Couldn't open file " + fragShaderPath);
         return nullptr;
     }
     fragShaderFile.close();
@@ -65,7 +67,8 @@ Shader *ResourceManager::GetShader(const std::string &name)
             return shader.second;
         }
     }
-    // TODO: Add debug/assert
+
+    Log::LogError("Couldn't find shader " + name);
     return nullptr;
 }
 

@@ -18,6 +18,8 @@ list(APPEND INCLUDES
     libs/glad/include
     libs/glm/
 
+    src/log.hpp
+
     src/window.hpp
     src/app.hpp
     src/shader.hpp

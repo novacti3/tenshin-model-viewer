@@ -1,3 +1,4 @@
+#include "log.hpp"
 #include "window.hpp"
 #include "app.hpp"
 
@@ -7,12 +8,18 @@ static const std::string WINDOW_TITLE = "Model Viewer";
 
 int main()
 {
+    // if(!Log::InitFileLog("../../debug_output.txt"))
+    // {
+    //     Log::LogWarning("Couldn't initialize file log");
+    // }
+
     Window window;
     if(!window.Init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE))
     {
-        // TODO: Log
+        Log::LogFatal("Failed initializing window");
         return -1;
     }
+    Log::LogInfo("Window initialized");
 
     App app;
     app.Init(&window);
