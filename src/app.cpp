@@ -10,6 +10,10 @@ void App::Init(Window *window)
     _window = window;
 
     ResourceManager::AddShader(ResourceManager::CreateShaderFromFiles("../../res/shaders/base.vs", "../../res/shaders/base.fs"), "base");
+
+    ResourceManager::AddModel(ResourceManager::CreateModelFromOBJFile("../../res/models/cube.obj"), "cube");
+
+    ResourceManager::GetModel("cube");
 }
 
 void App::PollInput(float deltaTime)

@@ -19,6 +19,7 @@ list(APPEND INCLUDES
     libs/glm/
 
     src/log.hpp
+    src/utils.hpp
 
     src/window.hpp
     src/app.hpp
