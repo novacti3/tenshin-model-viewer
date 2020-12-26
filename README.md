@@ -1,27 +1,21 @@
-# PSX-style model viewer
-Shows a provided model in a style as closely mimicking PS1 graphics as possible
-
-
+# Tenshin Model Viewer
+Tenshin is a program which lets you view a model of your choosing as closely as it'd look on a PS1.
 
 ## Features
-
 - Affine texture mapping (WIP)
 - Gourard shading (WIP)
 - Forward rendering (WIP)
-- OBJ model loading (WIP) (other formats might come later)
 
-
+## Supported formats
+- OBJ
+- GLTF (WIP)
 
 ## Cloning
-
 ```bash
-git clone --recursive https://github.com/novacti3/psx-style-model-viewer
+git clone --recursive https://github.com/novacti3/tenshin-model-viewer "Tenshin"
 ```
 
-
-
 ## Build
-
 Requires CMake 3.15 and above (this might change) and a compiler with C++17 support.
 
 Run the `build-release.sh` or `build-debug.sh` based on the configuration you want to build (WIP). The executable will be located in `bin/(config)`
