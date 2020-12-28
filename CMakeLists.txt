@@ -21,20 +21,25 @@ list(APPEND INCLUDES
     src/log.hpp
     src/utils.hpp
 
+    src/rendering/shader.hpp
+    src/rendering/model.hpp
+    src/rendering/renderer.hpp
+
+    src/resource_manager.hpp
     src/window.hpp
     src/app.hpp
-    src/shader.hpp
-    src/resource_manager.hpp
 )
 
 list(APPEND SOURCES
     # external sources
     libs/glad/src/glad.c
 
+    src/rendering/shader.cpp
+    src/rendering/renderer.cpp
+
+    src/resource_manager.cpp
     src/window.cpp
     src/app.cpp
-    src/shader.cpp
-    src/resource_manager.cpp
 )
 
 add_executable(ModelViewer src/program.cpp)

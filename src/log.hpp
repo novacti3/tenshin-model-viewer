@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 
+#include <glad/glad.h>
+
 enum LogLevel
 {
     Info = 0, Warning, Error, Fatal
@@ -76,3 +78,15 @@ class Log final
         std::cout << message << std::endl;
     }
 };
+
+static bool CheckError(char const* file, char const* function, int line)
+{
+    if (auto error = glGetError(); error != GL_NO_ERROR)
+    {
+        Log::LogError("OpenGL Error: " + std::to_string(error) + " : " + file + ":" + function + ":" + std::to_string(line));
+        return false;
+    }
+    return true;
+}
+
+#define GL_CALL(x) x; CheckError(__FILE__, #x, __LINE__);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shader.hpp"
-#include "model.hpp"
+#include "rendering/shader.hpp"
+#include "rendering/model.hpp"
 
 #include <unordered_map>
 #include <string>

@@ -24,7 +24,7 @@ int main()
     App app;
     app.Init(&window);
 
-    float lastTime, currentTime, deltaTime;
+    float lastTime = 0, currentTime = 0, deltaTime = 0;
     while(!glfwWindowShouldClose(window.getHandle()))
     {
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere

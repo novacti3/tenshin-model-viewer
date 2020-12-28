@@ -60,9 +60,7 @@ void ResourceManager::Cleanup()
         fragShaderSource = fragShaderSourceStream.str();
         
         // Create a new shader from the extracted sources
-        Shader *shader = new Shader();
-        shader->Init(vertShaderSource.c_str(), fragShaderSource.c_str());
-        
+        Shader *shader = new Shader(vertShaderSource.c_str(), fragShaderSource.c_str());
         return shader;
     }
 
@@ -92,6 +90,10 @@ void ResourceManager::Cleanup()
         std::vector<Vertex> vertices;
         std::vector<Face> faces;
 
+        std::vector<glm::vec3> vertPositions;
+        std::vector<glm::vec2> vertUVs;
+        std::vector<glm::ivec3> vertNormals;
+
         // NOTE: Might want to wrap this in a try-catch block
         std::ifstream file(filePath);
 
@@ -101,18 +103,12 @@ void ResourceManager::Cleanup()
             return nullptr;
         }
 
+        // NOTE: Separating each file format's parser into its own Loader object 
+        // and then selecting which loader to use based on the file extension would probably be a good idea
         std::string line;
         std::vector<std::string> splitLine;
-
-        std::vector<glm::vec3> vertPositions;
-        std::vector<glm::vec2> vertUVs;
-        std::vector<glm::ivec3> vertNormals;
-
-        unsigned int lineCounter = 0;
         while(std::getline(file, line))
         {
-            Log::LogInfo("Line: " + std::to_string(++lineCounter));
-            
             if(line[0] == '#')
             {
                 continue;
@@ -136,6 +132,9 @@ void ResourceManager::Cleanup()
             }
             else if(line[0] == 'f')
             {
+                // TODO: Parse indices somehow
+                glm::uvec3 firstTriangleIndices;
+                glm::uvec3 secondTriangleIndices;
                 for (size_t i = 1; i < splitLine.size(); i++)
                 {
                     std::vector<std::string> vertInfo = SplitString(splitLine[i], '/');
@@ -143,8 +142,36 @@ void ResourceManager::Cleanup()
                     int vertUVIndex = std::stoi(vertInfo[1]) - 1;
                     int vertNormalIndex = std::stoi(vertInfo[2]) - 1;
 
-                    vertices.push_back(Vertex(vertPositions[vertPosIndex], vertUVs[vertUVIndex], vertNormals[vertNormalIndex]));
+                    // NOTE: Produces 24 vertices instead of 8 because each vertex has 3 different sets of UVs and presumably also normals, which is very not ideal
+                    Vertex newVert(vertPositions[vertPosIndex], vertUVs[vertUVIndex], vertNormals[vertNormalIndex]);
+                    vertices.push_back(newVert);
+
+                    switch(i)
+                    {
+                        case 1:
+                        {
+                            firstTriangleIndices.x = vertPosIndex;
+                        }
+                        break;
+
+                        case 2:
+                            firstTriangleIndices.y = vertPosIndex;
+                            secondTriangleIndices.x = vertPosIndex;
+                        break;
+
+                        case 3:
+                            firstTriangleIndices.z = vertPosIndex;
+                            secondTriangleIndices.y = vertPosIndex;
+                        break;
+
+                        case 4:
+                            secondTriangleIndices.z = vertPosIndex;
+                        break;
+                    }
                 }
+
+                Face newFace(firstTriangleIndices, secondTriangleIndices);
+                faces.push_back(newFace);
             }
         }
         
