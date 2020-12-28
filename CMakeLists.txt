@@ -19,11 +19,8 @@ list(APPEND INCLUDES
     libs/glm/
 
     src/log.hpp
+    src/types.hpp
     src/utils.hpp
-
-    src/rendering/shader.hpp
-    src/rendering/model.hpp
-    src/rendering/renderer.hpp
 
     src/resource_manager.hpp
     src/window.hpp
@@ -35,7 +32,6 @@ list(APPEND SOURCES
     libs/glad/src/glad.c
 
     src/rendering/shader.cpp
-    src/rendering/renderer.cpp
 
     src/resource_manager.cpp
     src/window.cpp

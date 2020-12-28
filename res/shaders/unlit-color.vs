@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec3 a_VertPos;
 
-uniform mat4 u_MVP;
+uniform mat4 u_MVP = mat4(1.0);
 
 void main()
 {
