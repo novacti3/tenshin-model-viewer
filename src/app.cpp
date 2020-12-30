@@ -14,23 +14,20 @@ void App::Init(Window *window)
 
 void App::PollInput(float deltaTime)
 {
-
+    glfwPollEvents();
 }
 
 void App::Update(float deltaTime)
 {
-    glfwPollEvents();
-
-    // TODO: Move to renderer
-    glad_glClear(GL_COLOR_BUFFER_BIT);
-    glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
-
-    glfwSwapBuffers(_window->getHandle());
+    
 }
 
 void App::Render()
 {
+    glad_glClear(GL_COLOR_BUFFER_BIT);
+    glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
+    glfwSwapBuffers(_window->getHandle());
 }
 
 void App::Cleanup()
@@ -38,6 +35,8 @@ void App::Cleanup()
     ResourceManager::Cleanup();
 
     _window->Cleanup();
+    // FIXME: Invalid address specified to RtlValidateHeap
+    // Unable to open 'delete_scalar.cpp'
     delete _window;
     _window = 0;
 }

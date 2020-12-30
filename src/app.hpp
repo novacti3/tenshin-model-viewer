@@ -17,4 +17,6 @@ class App
     void Update(float deltaTime);
     void Render();
     void Cleanup();
+
+    inline Window *getWindow() { return _window; }
 };
