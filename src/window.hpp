@@ -24,4 +24,6 @@ class Window
     inline glm::uvec2  &getSize()   { return _size; }
     inline std::string &getTitle()  { return _title; }
     inline GLFWwindow  *getHandle() { return _handle; }
+
+    static void ResizeWindowCallback(GLFWwindow *window, int width, int height);
 };
