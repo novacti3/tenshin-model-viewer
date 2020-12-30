@@ -20,17 +20,17 @@ int main()
     //     Log::LogWarning("Couldn't initialize file log");
     // }
 
-    Window window;
-    if(!window.Init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE))
+    App app;
+    if(!app.Init(glm::uvec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE))
     {
-        Log::LogFatal("Failed initializing window");
+        Log::LogFatal("Failed creating app instance");
         return -1;
     }
-    Log::LogInfo("Window initialized");
+    Log::LogInfo("App instance created");
 
-    App app;
-    app.Init(&window);
+    app.LoadResources();
 
+    // TODO: Move to a Quad class
     std::array<Vertex, 4> vertices = 
     {
         Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec2(0.0f, 1.0f), glm::ivec3(0.0f)), // top left
@@ -69,7 +69,7 @@ int main()
     Shader *shader = ResourceManager::GetShader("unlit-color");
 
     float lastTime = 0, currentTime = 0, deltaTime = 0;
-    while(!glfwWindowShouldClose(window.getHandle()))
+    while(!glfwWindowShouldClose(app.getWindow()->getHandle()))
     {
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere
         currentTime = glfwGetTime() / 1000;
@@ -80,19 +80,17 @@ int main()
         app.Update(deltaTime);
         // app.Render();
 
-        glfwSwapBuffers(window.getHandle());
+        glfwSwapBuffers(app.getWindow()->getHandle());
 
+        // TODO: Move to App::Render
         glad_glClear(GL_COLOR_BUFFER_BIT);
         glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
-
 
         shader->Bind();
         GL_CALL(glad_glBindVertexArray(VAO));
         GL_CALL(glad_glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_BYTE, (void*)0));
         GL_CALL(glad_glBindVertexArray(0));
         shader->Unbind();
-
-
     }
 
     app.Cleanup();

@@ -2,18 +2,10 @@
 
 #include "log.hpp"
 
-bool Window::Init(const unsigned int width, const unsigned int height, const std::string title)
+bool Window::Init(const glm::uvec2 size, const std::string title)
 {
-    _width = width;
-    _height = height;
+    _size = size;
     _title = title;
-
-    if(!glfwInit())
-    {
-        Log::LogFatal("Failed initializing GLFW");
-        return false;
-    }
-    Log::LogInfo("GLFW initialized");
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -22,15 +14,14 @@ bool Window::Init(const unsigned int width, const unsigned int height, const std
     glfwWindowHint(GLFW_RESIZABLE, false);
     glfwWindowHint(GLFW_FOCUS_ON_SHOW, true);
 
-    _handle = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-    glfwMakeContextCurrent(_handle);
-
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    _handle = glfwCreateWindow(size.x, size.y, title.c_str(), NULL, NULL);
+    if(_handle == nullptr)
     {
-        Log::LogFatal("Failed initializing GLAD");
+        Log::LogFatal("Failed creating window");
         return false;
     }
-    Log::LogInfo("GLAD initialized");
+
+    glfwMakeContextCurrent(_handle);
 
     return true;
 }

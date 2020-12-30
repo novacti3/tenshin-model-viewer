@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/vec2.hpp>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -7,7 +9,7 @@
 class Window
 {
     private:
-    unsigned int _width, _height;
+    glm::uvec2 _size;
     std::string _title;
     GLFWwindow *_handle;
 
@@ -16,11 +18,10 @@ class Window
     ~Window(){}
 
     public:
-    bool Init(const unsigned int width, const unsigned int height, const std::string title);
+    bool Init(const glm::uvec2 size, const std::string title);
     void Cleanup();
 
-    inline unsigned int getWidth() { return _width; }
-    inline unsigned int getHeight() { return _height; }
-    inline std::string getTitle() { return _title; }
-    inline GLFWwindow *getHandle() { return _handle; }
+    inline glm::uvec2  &getSize()   { return _size; }
+    inline std::string &getTitle()  { return _title; }
+    inline GLFWwindow  *getHandle() { return _handle; }
 };

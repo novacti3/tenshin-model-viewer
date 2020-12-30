@@ -12,7 +12,8 @@ class App
     ~App(){}
 
     public:
-    void Init(Window *window);
+    bool Init(const glm::uvec2 windowSize, const std::string windowTitle);
+    void LoadResources();
     void PollInput(float deltaTime);
     void Update(float deltaTime);
     void Render();
