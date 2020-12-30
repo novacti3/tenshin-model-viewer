@@ -22,6 +22,9 @@ list(APPEND INCLUDES
     src/types.hpp
     src/utils.hpp
 
+    src/rendering/shader.hpp
+    src/rendering/quad.hpp
+
     src/resource_manager.hpp
     src/window.hpp
     src/app.hpp
@@ -32,6 +35,7 @@ list(APPEND SOURCES
     libs/glad/src/glad.c
 
     src/rendering/shader.cpp
+    src/rendering/quad.cpp
 
     src/resource_manager.cpp
     src/window.cpp

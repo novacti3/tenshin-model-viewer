@@ -1,6 +1,11 @@
 #pragma once
 
 #include "window.hpp"
+#include "rendering/quad.hpp"
+
+#include <glm/vec2.hpp>
+
+#include <string>
 
 class App
 {

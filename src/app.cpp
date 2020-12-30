@@ -53,10 +53,14 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
+    Quad rect(glm::vec3(-0.5, -0.5, 0.0f), glm::vec3(-0.5, 0.5, 0.0f), glm::vec3(0.5, -0.5, 0.0f), glm::vec3(0.5, 0.5, 0.0f));
+
+    glfwSwapBuffers(_window->getHandle());
+
     glad_glClear(GL_COLOR_BUFFER_BIT);
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
-    glfwSwapBuffers(_window->getHandle());
+    rect.Draw(*ResourceManager::GetShader("unlit-color"));
 }
 
 void App::Cleanup()
