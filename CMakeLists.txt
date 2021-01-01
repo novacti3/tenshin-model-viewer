@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 
+# Fail compilation if on Mac because it's not supported
+if(APPLE)
+    message(FATAL_ERROR "Mac is not a supported platform. Cancelling compilation")
+endif()
+
 project(ModelViewer)
 
 make_directory(build/)
@@ -18,33 +23,41 @@ list(APPEND INCLUDES
     libs/glad/include
     libs/glm/
 
-    src/log.hpp
-    src/types.hpp
-    src/utils.hpp
+    "src/log.hpp"
+    "src/types.hpp"
+    "src/utils.hpp"
 
-    src/rendering/shader.hpp
-    src/rendering/quad.hpp
+    "src/rendering/shader.hpp"
+    "src/rendering/quad.hpp"
 
-    src/resource_manager.hpp
-    src/window.hpp
-    src/app.hpp
+    "src/resource_manager.hpp"
+    "src/window.hpp"
+    "rc/app.hpp"
 )
 
 list(APPEND SOURCES
     # external sources
-    libs/glad/src/glad.c
+    "libs/glad/src/glad.c"
 
-    src/rendering/shader.cpp
-    src/rendering/quad.cpp
+    "src/rendering/shader.cpp"
+    "src/rendering/quad.cpp"
 
-    src/resource_manager.cpp
-    src/window.cpp
-    src/app.cpp
+    "src/resource_manager.cpp"
+    "src/window.cpp"
+    "src/app.cpp"
 )
 
-add_executable(ModelViewer src/program.cpp)
+add_executable(ModelViewer src/main.cpp)
 # Change the executable's name and C language standard
 set_target_properties(ModelViewer PROPERTIES OUTPUT_NAME ModelViewer CXX_STANDARD 17)
-target_link_libraries(ModelViewer glfw opengl32.lib)
+target_link_libraries(ModelViewer glfw)
+
+# Link the proper OpenGL lib based on the platform
+if(WIN32)
+    target_link_libraries(ModelViewer opengl32.lib)
+elseif(UNIX)
+    target_link_libraries(ModelViewer libGL.so)
+endif()
+
 target_include_directories(ModelViewer PRIVATE ${INCLUDES})
 target_sources(ModelViewer PRIVATE ${SOURCES})

@@ -11,7 +11,7 @@
 
 static const unsigned int WINDOW_WIDTH = 800;
 static const unsigned int WINDOW_HEIGHT = 600;
-static const std::string WINDOW_TITLE = "Model Viewer";
+static const std::string WINDOW_TITLE = "Tenshin Model Viewer";
 
 int main()
 {
