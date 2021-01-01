@@ -70,4 +70,6 @@ void App::Cleanup()
     _window->Cleanup();
     delete _window;
     _window = 0;
+
+    Log::LogInfo("App instance destroyed");
 }

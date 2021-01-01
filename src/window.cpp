@@ -55,7 +55,9 @@ bool Window::Init(glm::uvec2 size, const std::string title)
 void Window::Cleanup()
 {
     glfwDestroyWindow(_handle);
+    Log::LogInfo("Window destroyed");
     glfwTerminate();
+    Log::LogInfo("GLFW terminated");
 }
 
 void Window::OnResize(int width, int height)
