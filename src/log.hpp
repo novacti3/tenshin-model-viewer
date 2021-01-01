@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 #include <glad/glad.h>
 
@@ -12,7 +13,6 @@ enum LogLevel
 };
 
 // TODO: Add severity filtering
-// TODO: Add a timestamp to the log message
 // TODO: Add the message severity to the log message
 // TODO: Add logging into file
 class Log final
@@ -59,6 +59,7 @@ class Log final
     static void LogFatal(const std::string &message)    { Log::LogMessage(LogLevel::Fatal, message); }
 
     private:
+    // NOTE: There has to be a better way to print messages. This reuses way too much code
     static void LogMessage(LogLevel severity, const char *message)
     {
         // if(_logFileStream.is_open())
@@ -66,7 +67,15 @@ class Log final
         //     _logFileStream << message;
         // }
 
-        std::cout << message << std::endl;
+        // Get the current time in HH:MM:SS format
+        time_t rawCurrentTime;
+        time(&rawCurrentTime);
+        tm *currentTime = localtime(&rawCurrentTime);
+
+        char currentTimeStr[9];
+        strftime(currentTimeStr, 9, "%T", currentTime);
+
+        std::cout << "[" << currentTimeStr << "] " << message << std::endl;
     }
     static void LogMessage(LogLevel severity, const std::string &message)
     {
@@ -75,7 +84,15 @@ class Log final
         //     _logFileStream << message;
         // }
 
-        std::cout << message << std::endl;
+        // Get the current time in HH:MM:SS format
+        time_t rawCurrentTime;
+        time(&rawCurrentTime);
+        tm *currentTime = localtime(&rawCurrentTime);
+        
+        char currentTimeStr[9];
+        strftime(currentTimeStr, 9, "%T", currentTime);
+
+        std::cout << "[" << currentTimeStr << "] " << message << std::endl;
     }
 };
 
