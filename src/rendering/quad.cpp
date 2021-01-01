@@ -52,7 +52,8 @@ void Quad::Draw(Shader &shader)
 {
     if(_VAO == 0 || _VBO == 0 || _EBO == 0)
     {
-        // TODO: Add assert/log
+        // NOTE: Adding a line number and/or file would be cool
+        Log::LogWarning("Attempting to draw uninitialized quad");
         return;
     }
 
