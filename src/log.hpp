@@ -1,11 +1,11 @@
 #pragma once
 
+#include <glad/glad.h>
+
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <ctime>
-
-#include <glad/glad.h>
 
 enum LogLevel
 {
@@ -13,11 +13,10 @@ enum LogLevel
 };
 
 // TODO: Add severity filtering
-// TODO: Add the message severity to the log message
 // TODO: Add logging into file
 class Log final
 {
-    private:
+    // private:
     // inline static std::string _logFilePath;
     // inline static std::fstream _logFileStream;
 
@@ -75,7 +74,37 @@ class Log final
         char currentTimeStr[9];
         strftime(currentTimeStr, 9, "%T", currentTime);
 
-        std::cout << "[" << currentTimeStr << "] " << message << std::endl;
+        // Get the log level
+        // NOTE: There is probably a more elegant and better way of converting the enum to a string but I can't be arsed right now
+        std::string logLevelStr;
+        switch(severity)
+        {
+            case LogLevel::Info:
+            {
+                logLevelStr = "Info";
+            }
+            break;
+        
+            case LogLevel::Warning:
+            {
+                logLevelStr = "Warning";
+            }
+            break;
+
+            case LogLevel::Error:
+            {
+                logLevelStr = "Error";
+            }
+            break;
+
+            case LogLevel::Fatal:
+            {
+                logLevelStr = "Fatal";
+            }
+            break;
+        }
+
+        std::cout << "[" << currentTimeStr << "] " << logLevelStr << ": " << message << std::endl;
     }
     static void LogMessage(LogLevel severity, const std::string &message)
     {
@@ -91,6 +120,36 @@ class Log final
         
         char currentTimeStr[9];
         strftime(currentTimeStr, 9, "%T", currentTime);
+
+        // Get the log level
+        // NOTE: There is probably a more elegant and better way of converting the enum to a string but I can't be arsed right now
+        std::string logLevelStr;
+        switch(severity)
+        {
+            case LogLevel::Info:
+            {
+                logLevelStr = "Info";
+            }
+            break;
+        
+            case LogLevel::Warning:
+            {
+                logLevelStr = "Warning";
+            }
+            break;
+
+            case LogLevel::Error:
+            {
+                logLevelStr = "Error";
+            }
+            break;
+
+            case LogLevel::Fatal:
+            {
+                logLevelStr = "Fatal";
+            }
+            break;
+        }
 
         std::cout << "[" << currentTimeStr << "] " << message << std::endl;
     }
