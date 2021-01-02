@@ -15,6 +15,8 @@ static const std::string WINDOW_TITLE = "Tenshin Model Viewer";
 
 int main()
 {
+    Log::SetLogLevelFilter(LogLevel::Info);
+
     // if(!Log::InitFileLog("../../debug_output.txt"))
     // {
     //     Log::LogWarning("Couldn't initialize file log");

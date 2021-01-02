@@ -12,11 +12,12 @@ enum LogLevel
     Info = 0, Warning, Error, Fatal
 };
 
-// TODO: Add severity filtering
 // TODO: Add logging into file
 class Log final
 {
-    // private:
+    private:
+    // NOTE: A bit mask might be better
+    inline static LogLevel _levelFilter;
     // inline static std::string _logFilePath;
     // inline static std::fstream _logFileStream;
 
@@ -45,6 +46,11 @@ class Log final
     //     }
     // }
 
+    static void SetLogLevelFilter(LogLevel filter)
+    {
+        Log::_levelFilter = filter;
+    }
+
     static void LogInfo(const char *message)            { Log::LogMessage(LogLevel::Info, message); }
     static void LogInfo(const std::string &message)     { Log::LogMessage(LogLevel::Info, message); }
 
@@ -61,6 +67,11 @@ class Log final
     // NOTE: There has to be a better way to print messages. This reuses way too much code
     static void LogMessage(LogLevel severity, const char *message)
     {
+        if(severity < (int)Log::_levelFilter)
+        {
+            return;
+        }
+
         // if(_logFileStream.is_open())
         // {
         //     _logFileStream << message;
@@ -108,6 +119,11 @@ class Log final
     }
     static void LogMessage(LogLevel severity, const std::string &message)
     {
+        if(severity < (int)Log::_levelFilter)
+        {
+            return;
+        }
+        
         // if(_logFileStream.is_open())
         // {
         //     _logFileStream << message;
