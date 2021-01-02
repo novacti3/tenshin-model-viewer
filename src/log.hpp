@@ -64,58 +64,9 @@ class Log final
     static void LogFatal(const std::string &message)    { Log::LogMessage(LogLevel::Fatal, message); }
 
     private:
-    // NOTE: There has to be a better way to print messages. This reuses way too much code
     static void LogMessage(LogLevel severity, const char *message)
     {
-        if(severity < (int)Log::_levelFilter)
-        {
-            return;
-        }
-
-        // if(_logFileStream.is_open())
-        // {
-        //     _logFileStream << message;
-        // }
-
-        // Get the current time in HH:MM:SS format
-        time_t rawCurrentTime;
-        time(&rawCurrentTime);
-        tm *currentTime = localtime(&rawCurrentTime);
-
-        char currentTimeStr[9];
-        strftime(currentTimeStr, 9, "%T", currentTime);
-
-        // Get the log level
-        // NOTE: There is probably a more elegant and better way of converting the enum to a string but I can't be arsed right now
-        std::string logLevelStr;
-        switch(severity)
-        {
-            case LogLevel::Info:
-            {
-                logLevelStr = "Info";
-            }
-            break;
-        
-            case LogLevel::Warning:
-            {
-                logLevelStr = "Warning";
-            }
-            break;
-
-            case LogLevel::Error:
-            {
-                logLevelStr = "Error";
-            }
-            break;
-
-            case LogLevel::Fatal:
-            {
-                logLevelStr = "Fatal";
-            }
-            break;
-        }
-
-        std::cout << "[" << currentTimeStr << "] " << logLevelStr << ": " << message << std::endl;
+        LogMessage(severity, std::string(message));
     }
     static void LogMessage(LogLevel severity, const std::string &message)
     {
@@ -167,7 +118,7 @@ class Log final
             break;
         }
 
-        std::cout << "[" << currentTimeStr << "] " << message << std::endl;
+        std::cout << "[" << currentTimeStr << "] " << logLevelStr << ": " << message << std::endl;
     }
 };
 
