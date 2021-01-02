@@ -15,7 +15,11 @@ static const std::string WINDOW_TITLE = "Tenshin Model Viewer";
 
 int main()
 {
-    // Log::SetLogLevelFilter(LogLevel::Info);
+#ifdef _DEBUG
+    Log::SetLogLevelFilter(LogLevel::Info);
+#else
+    Log::SetLogLevelFilter(LogLevel::Error);
+#endif
 
     App app;
     if(!app.Init(glm::uvec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE))
