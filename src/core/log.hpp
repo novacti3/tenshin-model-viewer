@@ -12,40 +12,18 @@ enum LogLevel
     Info = 0, Warning, Error, Fatal
 };
 
-// TODO: Add logging into file
+// NOTE: Logging into file?
 class Log final
 {
     private:
     // NOTE: A bit mask might be better
-    inline static LogLevel _levelFilter;
-    // inline static std::string _logFilePath;
-    // inline static std::fstream _logFileStream;
+    inline static LogLevel _levelFilter = LogLevel::Info;
 
     private:
     Log() {}
-    ~Log()
-    {
-        // DeInitFileLog();
-    }
+    ~Log() {}
 
     public:
-    // static bool InitFileLog(const std::string filePath)
-    // {
-    //     _logFilePath = filePath;
-
-    //     _logFileStream.open(filePath, ios::);
-
-    //     return Log::_logFileStream.is_open();
-    // }
-
-    // static void DeInitFileLog()
-    // {
-    //     if(_logFileStream.is_open())
-    //     {
-    //         _logFileStream.close();
-    //     }
-    // }
-
     static void SetLogLevelFilter(LogLevel filter)
     {
         Log::_levelFilter = filter;
@@ -74,11 +52,6 @@ class Log final
         {
             return;
         }
-        
-        // if(_logFileStream.is_open())
-        // {
-        //     _logFileStream << message;
-        // }
 
         // Get the current time in HH:MM:SS format
         time_t rawCurrentTime;

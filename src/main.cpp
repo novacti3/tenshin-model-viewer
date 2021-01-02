@@ -1,9 +1,9 @@
-#include "log.hpp"
-#include "types.hpp"
-#include "window.hpp"
+#include "core/log.hpp"
+#include "core/types.hpp"
+#include "core/window.hpp"
 #include "rendering/shader.hpp"
-#include "resource_manager.hpp"
-#include "app.hpp"
+#include "core/resource_manager.hpp"
+#include "core/app.hpp"
 
 #include <glad/glad.h>
 
@@ -15,12 +15,7 @@ static const std::string WINDOW_TITLE = "Tenshin Model Viewer";
 
 int main()
 {
-    Log::SetLogLevelFilter(LogLevel::Info);
-
-    // if(!Log::InitFileLog("../../debug_output.txt"))
-    // {
-    //     Log::LogWarning("Couldn't initialize file log");
-    // }
+    // Log::SetLogLevelFilter(LogLevel::Info);
 
     App app;
     if(!app.Init(glm::uvec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE))

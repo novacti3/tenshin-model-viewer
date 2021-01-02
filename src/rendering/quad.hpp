@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../types.hpp"
+#include "../core/types.hpp"
 #include "shader.hpp"
 
 #include <glm/vec3.hpp>

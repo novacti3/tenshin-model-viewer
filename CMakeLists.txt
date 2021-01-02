@@ -23,16 +23,16 @@ list(APPEND INCLUDES
     libs/glad/include
     libs/glm/
 
-    "src/log.hpp"
-    "src/types.hpp"
-    "src/utils.hpp"
+    "src/core/log.hpp"
+    "src/core/types.hpp"
+    "src/core/utils.hpp"
 
     "src/rendering/shader.hpp"
     "src/rendering/quad.hpp"
 
-    "src/resource_manager.hpp"
-    "src/window.hpp"
-    "rc/app.hpp"
+    "src/core/resource_manager.hpp"
+    "src/core/window.hpp"
+    "src/core/app.hpp"
 )
 
 list(APPEND SOURCES
@@ -42,9 +42,9 @@ list(APPEND SOURCES
     "src/rendering/shader.cpp"
     "src/rendering/quad.cpp"
 
-    "src/resource_manager.cpp"
-    "src/window.cpp"
-    "src/app.cpp"
+    "src/core/resource_manager.cpp"
+    "src/core/window.cpp"
+    "src/core/app.cpp"
 )
 
 add_executable(ModelViewer src/main.cpp)
