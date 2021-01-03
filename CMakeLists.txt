@@ -29,6 +29,7 @@ list(APPEND INCLUDES
 
     "src/rendering/shader.hpp"
     "src/rendering/quad.hpp"
+    "src/rendering/cube.hpp"
     "src/rendering/camera.hpp"
 
     "src/core/resource_manager.hpp"
@@ -42,6 +43,7 @@ list(APPEND SOURCES
 
     "src/rendering/shader.cpp"
     "src/rendering/quad.cpp"
+    "src/rendering/cube.cpp"
     "src/rendering/camera.cpp"
 
     "src/core/resource_manager.cpp"

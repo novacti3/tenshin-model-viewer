@@ -1,7 +1,6 @@
 #pragma once
 
 #include "window.hpp"
-#include "../rendering/quad.hpp"
 #include "../rendering/camera.hpp"
 
 #include <glm/vec2.hpp>
