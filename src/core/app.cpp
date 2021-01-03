@@ -8,14 +8,6 @@
 
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
-    // Init GLFW
-    if(!glfwInit())
-    {
-        Log::LogFatal("Failed initializing GLFW");
-        return false;
-    }
-    Log::LogInfo("GLFW initialized");
-
     // Create window
     _window = new Window();
     if(!_window->Init(windowSize, windowTitle))
@@ -24,14 +16,6 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
         return false;
     }
     Log::LogInfo("Window initialized");
-
-    // Init GLAD
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        Log::LogFatal("Failed initializing GLAD");
-        return false;
-    }
-    Log::LogInfo("GLAD initialized");
 
     return true;
 }
@@ -55,12 +39,12 @@ void App::Render()
 {
     Quad rect(glm::vec3(-0.5, -0.5, 0.0f), glm::vec3(-0.5, 0.5, 0.0f), glm::vec3(0.5, -0.5, 0.0f), glm::vec3(0.5, 0.5, 0.0f));
 
-    glfwSwapBuffers(_window->getHandle());
-
     glad_glClear(GL_COLOR_BUFFER_BIT);
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
     rect.Draw(*ResourceManager::GetShader("unlit-color"), glm::vec3(0.0f, 0.0f, -5.0f), 45.0f, glm::vec3(1.0f, 1.0f, 0.0f));
+
+    glfwSwapBuffers(_window->getHandle());
 }
 
 void App::Cleanup()

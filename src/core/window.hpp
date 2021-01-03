@@ -11,6 +11,8 @@
 class Window
 {
     private:
+    // NOTE: Read more about this shit.
+    // Is it even necesarry when it's basically guaranteed that there will only be 1 app instance with 1 window?
     static std::function<void(int, int)> _onResize;
     glm::uvec2 _size;
     std::string _title;

@@ -12,7 +12,11 @@ enum LogLevel
     Info = 0, Warning, Error, Fatal
 };
 
-// NOTE: Logging into file?
+// TODO: Logging into file per channel regardless of current filter
+// TODO: Color highlighting/output
+// TODO: Channels (eg. a channel for general stuff, another channel for rendering)
+// TODO: Channel filters (eg. only print general and rendering stuff)
+// NOTE: Crash dump?
 class Log final
 {
     private:
@@ -42,6 +46,7 @@ class Log final
     static void LogFatal(const std::string &message)    { Log::LogMessage(LogLevel::Fatal, message); }
 
     private:
+    // TODO: String formatting
     static void LogMessage(LogLevel severity, const char *message)
     {
         LogMessage(severity, std::string(message));
