@@ -24,7 +24,8 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_FOCUS_ON_SHOW, true);
-    glfwWindowHint(GLFW_RESIZABLE, true);
+    // NOTE: Turned off until I figure out a way to update the camera's projection matrix
+    glfwWindowHint(GLFW_RESIZABLE, false);
 
     // Make sure the start size of the window is above the specified minimum dimensions
     if(size.x < MIN_WINDOW_WIDTH)

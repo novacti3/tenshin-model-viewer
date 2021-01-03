@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/mat4x4.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -52,7 +52,7 @@ Quad::~Quad()
     GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
 }
 
-void Quad::Draw(Shader &shader, const glm::vec3 &pos, const float rot, const glm::vec3 &scale)
+void Quad::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
 {
     if(_VAO == 0 || _VBO == 0 || _EBO == 0)
     {
@@ -61,16 +61,14 @@ void Quad::Draw(Shader &shader, const glm::vec3 &pos, const float rot, const glm
         return;
     }
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, scale);
-    // model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::translate(model, pos);
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(rot), glm::vec3(1.0f, 0.0f, 0.0f));
 
+    glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
     shader.Bind();
     GL_CALL(glad_glBindVertexArray(_VAO));
-    GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(model)));
+    GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(MVP)));
     GL_CALL(glad_glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_BYTE, (void*)0));
     GL_CALL(glad_glBindVertexArray(0));
     shader.Unbind();

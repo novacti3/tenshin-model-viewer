@@ -4,6 +4,7 @@
 #include "shader.hpp"
 
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 #include <array>
 
@@ -14,10 +15,9 @@ class Quad
     unsigned int _VAO, _VBO, _EBO;
 
     public:
-    Quad(): _VAO(0), _VBO(0), _EBO(0)
-    {}
+    Quad(): _VAO(0), _VBO(0), _EBO(0){}
     Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 bottomRight, const glm::vec3 topRight);
     ~Quad();
 
-    void Draw(Shader &shader, const glm::vec3 &pos, const float rot, const glm::vec3 &scale);
+    void Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix);
 };

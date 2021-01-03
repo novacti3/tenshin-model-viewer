@@ -2,6 +2,7 @@
 
 #include "window.hpp"
 #include "../rendering/quad.hpp"
+#include "../rendering/camera.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -11,6 +12,7 @@ class App
 {
     private:
     Window *_window;
+    Camera *_cam;
 
     public:
     App(){}

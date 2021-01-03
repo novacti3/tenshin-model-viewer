@@ -17,6 +17,8 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Window initialized");
 
+    _cam = new Camera();
+
     return true;
 }
 
@@ -42,7 +44,7 @@ void App::Render()
     glad_glClear(GL_COLOR_BUFFER_BIT);
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
-    rect.Draw(*ResourceManager::GetShader("unlit-color"), glm::vec3(0.0f, 0.0f, -5.0f), 45.0f, glm::vec3(1.0f, 1.0f, 0.0f));
+    rect.Draw(*ResourceManager::GetShader("unlit-color"), -55.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
 
     glfwSwapBuffers(_window->getHandle());
 }
