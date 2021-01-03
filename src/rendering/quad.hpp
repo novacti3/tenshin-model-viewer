@@ -19,5 +19,5 @@ class Quad
     Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 bottomRight, const glm::vec3 topRight);
     ~Quad();
 
-    void Draw(Shader &shader);
+    void Draw(Shader &shader, const glm::vec3 &pos, const float rot, const glm::vec3 &scale);
 };

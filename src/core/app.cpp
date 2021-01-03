@@ -60,7 +60,7 @@ void App::Render()
     glad_glClear(GL_COLOR_BUFFER_BIT);
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
-    rect.Draw(*ResourceManager::GetShader("unlit-color"));
+    rect.Draw(*ResourceManager::GetShader("unlit-color"), glm::vec3(0.0f, 0.0f, -5.0f), 45.0f, glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 void App::Cleanup()

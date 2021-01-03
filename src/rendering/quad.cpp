@@ -1,8 +1,12 @@
 #include "quad.hpp"
 
-#include "../log.hpp"
+#include "../core/log.hpp"
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 Quad::Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 bottomRight, const glm::vec3 topRight)
 {
@@ -48,7 +52,7 @@ Quad::~Quad()
     GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
 }
 
-void Quad::Draw(Shader &shader)
+void Quad::Draw(Shader &shader, const glm::vec3 &pos, const float rot, const glm::vec3 &scale)
 {
     if(_VAO == 0 || _VBO == 0 || _EBO == 0)
     {
@@ -57,8 +61,16 @@ void Quad::Draw(Shader &shader)
         return;
     }
 
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::scale(model, scale);
+    // model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::translate(model, pos);
+
+
     shader.Bind();
     GL_CALL(glad_glBindVertexArray(_VAO));
+    GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(model)));
     GL_CALL(glad_glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_BYTE, (void*)0));
     GL_CALL(glad_glBindVertexArray(0));
     shader.Unbind();
