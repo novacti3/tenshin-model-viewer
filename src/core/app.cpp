@@ -37,7 +37,7 @@ void App::PollInput(float deltaTime)
 
 void App::Update(float deltaTime)
 {
-    
+    _cam->UpdatePos(glfwGetTime());
 }
 
 void App::Render()
@@ -49,7 +49,7 @@ void App::Render()
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
     // rect.Draw(*ResourceManager::GetShader("unlit-color"), -55.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
-    cube.Draw(*ResourceManager::GetShader("unlit-color"), 50.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
+    cube.Draw(*ResourceManager::GetShader("unlit-color"), 0.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
 
     glfwSwapBuffers(_window->getHandle());
 }
