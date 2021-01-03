@@ -63,6 +63,7 @@ void Quad::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, co
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rot), glm::vec3(1.0f, 0.0f, 0.0f));
+    modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
