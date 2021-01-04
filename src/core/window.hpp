@@ -26,9 +26,9 @@ class Window
     bool Init(glm::uvec2 size, const std::string title);
     void Cleanup();
 
-    inline glm::uvec2  &getSize()   { return _size; }
-    inline std::string &getTitle()  { return _title; }
-    inline GLFWwindow  *getHandle() { return _handle; }
+    inline const glm::uvec2  &getSize()   { return _size; }
+    inline const std::string &getTitle()  { return _title; }
+    inline GLFWwindow* const getHandle() { return _handle; }
 
     static void ResizeCallback(GLFWwindow *window, int width, int height) { _onResize(width, height); }
 

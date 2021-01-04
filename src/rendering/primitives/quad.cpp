@@ -1,13 +1,10 @@
 #include "quad.hpp"
 
-#include "../core/log.hpp"
+#include "../../core/log.hpp"
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+// NOTE: Move this to the header file?
 Quad::Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 bottomRight, const glm::vec3 topRight)
 {
     _vertices = 
@@ -45,32 +42,27 @@ Quad::Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 
     GL_CALL(glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
-Quad::~Quad()
-{
-    GL_CALL(glad_glDeleteBuffers(1, &_EBO));
-    GL_CALL(glad_glDeleteBuffers(1, &_VBO));
-    GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
-}
+Quad::~Quad(){}
 
-void Quad::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
-{
-    if(_VAO == 0 || _VBO == 0 || _EBO == 0)
-    {
-        // NOTE: Adding a line number and/or file would be cool
-        Log::LogWarning("Attempting to draw uninitialized quad");
-        return;
-    }
+// void Quad::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
+// {
+//     if(_VAO == 0 || _VBO == 0 || _EBO == 0)
+//     {
+//         // NOTE: Adding a line number and/or file would be cool
+//         Log::LogWarning("Attempting to draw uninitialized quad");
+//         return;
+//     }
 
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rot), glm::vec3(1.0f, 0.0f, 0.0f));
-    modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+//     glm::mat4 modelMatrix = glm::mat4(1.0f);
+//     modelMatrix = glm::rotate(modelMatrix, glm::radians(rot), glm::vec3(1.0f, 0.0f, 0.0f));
+//     modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-    glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
+//     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
-    shader.Bind();
-    GL_CALL(glad_glBindVertexArray(_VAO));
-    GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(MVP)));
-    GL_CALL(glad_glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_BYTE, (void*)0));
-    GL_CALL(glad_glBindVertexArray(0));
-    shader.Unbind();
-}
+//     shader.Bind();
+//     GL_CALL(glad_glBindVertexArray(_VAO));
+//     GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(MVP)));
+//     GL_CALL(glad_glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_BYTE, (void*)0));
+//     GL_CALL(glad_glBindVertexArray(0));
+//     shader.Unbind();
+// }

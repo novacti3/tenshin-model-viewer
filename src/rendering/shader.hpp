@@ -13,7 +13,7 @@ class Shader
     void Bind();
     void Unbind();
 
-    inline unsigned int getID() { return _id; }
+    inline const unsigned int getID() { return _id; }
 
     private:
     void CheckShaderForErrors(unsigned int shader);

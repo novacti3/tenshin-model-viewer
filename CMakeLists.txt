@@ -28,9 +28,12 @@ list(APPEND INCLUDES
     "src/core/utils.hpp"
 
     "src/rendering/shader.hpp"
-    "src/rendering/quad.hpp"
-    "src/rendering/cube.hpp"
     "src/rendering/camera.hpp"
+
+    "src/rendering/primitives/primitive.hpp"
+    "src/rendering/primitives/quad.hpp"
+    "src/rendering/primitives/cube.hpp"
+    "src/rendering/primitive_renderer.hpp"
 
     "src/core/resource_manager.hpp"
     "src/core/window.hpp"
@@ -40,12 +43,14 @@ list(APPEND INCLUDES
 list(APPEND SOURCES
     # external sources
     "libs/glad/src/glad.c"
-
+    
     "src/rendering/shader.cpp"
-    "src/rendering/quad.cpp"
-    "src/rendering/cube.cpp"
     "src/rendering/camera.cpp"
 
+    "src/rendering/primitives/quad.cpp"
+    "src/rendering/primitives/cube.cpp"
+    "src/rendering/primitive_renderer.cpp"
+    
     "src/core/resource_manager.cpp"
     "src/core/window.cpp"
     "src/core/app.cpp"

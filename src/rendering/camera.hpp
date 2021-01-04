@@ -21,6 +21,6 @@ class Camera
 
     void UpdatePos(float deltaTime);
 
-    inline glm::mat4 &getProjMatrix() { return _projMatrix; }
-    inline glm::mat4 &getViewMatrix() { return _viewMatrix; }
+    inline const glm::mat4 &getProjMatrix() { return _projMatrix; }
+    inline const glm::mat4 &getViewMatrix() { return _viewMatrix; }
 };

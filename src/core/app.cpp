@@ -3,8 +3,9 @@
 #include "log.hpp"
 #include "resource_manager.hpp"
 
-#include "../rendering/quad.hpp"
-#include "../rendering/cube.hpp"
+#include "../rendering/primitives/quad.hpp"
+#include "../rendering/primitives/cube.hpp"
+#include "../rendering/primitive_renderer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -42,14 +43,13 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
-    // Quad rect(glm::vec3(-0.5, -0.5, 0.0f), glm::vec3(-0.5, 0.5, 0.0f), glm::vec3(0.5, -0.5, 0.0f), glm::vec3(0.5, 0.5, 0.0f));
     Cube cube;
+    PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
 
     glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
 
-    // rect.Draw(*ResourceManager::GetShader("unlit-color"), -55.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
-    cube.Draw(*ResourceManager::GetShader("unlit-color"), 0.0f, _cam->getViewMatrix(), _cam->getProjMatrix());
+    cubeRenderer.Draw(Transform(glm::vec3(0.0f), glm::vec3(1.0f)), _cam->getViewMatrix(), _cam->getProjMatrix());
 
     glfwSwapBuffers(_window->getHandle());
 }

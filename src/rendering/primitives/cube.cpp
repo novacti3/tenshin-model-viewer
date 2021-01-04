@@ -1,13 +1,10 @@
 #include "cube.hpp"
 
-#include "../core/log.hpp"
+#include "../../core/log.hpp"
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+// NOTE: Move this to the header file?
 Cube::Cube()
 {
     _vertices = 
@@ -72,32 +69,28 @@ Cube::Cube()
     GL_CALL(glad_glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-Cube::~Cube()
-{
-    GL_CALL(glad_glDeleteBuffers(1, &_VBO));
-    GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
-}
+Cube::~Cube(){}
 
-void Cube::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
-{
-    if(_VAO == 0 || _VBO == 0)
-    {
-        // NOTE: Adding a line number and/or file would be cool
-        Log::LogWarning("Attempting to draw uninitialized cube");
-        return;
-    }
+// void Cube::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
+// {
+//     if(_VAO == 0 || _VBO == 0)
+//     {
+//         // NOTE: Adding a line number and/or file would be cool
+//         Log::LogWarning("Attempting to draw uninitialized cube");
+//         return;
+//     }
 
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime() * glm::radians(rot), glm::vec3(0.5f, 1.0f, 0.0f));
+//     glm::mat4 modelMatrix = glm::mat4(1.0f);
+//     modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime() * glm::radians(rot), glm::vec3(0.5f, 1.0f, 0.0f));
 
-    glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
+//     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
-    glad_glEnable(GL_DEPTH_TEST);
+//     glad_glEnable(GL_DEPTH_TEST);
 
-    shader.Bind();
-    GL_CALL(glad_glBindVertexArray(_VAO));
-    GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(MVP)));
-    GL_CALL(glad_glDrawArrays(GL_TRIANGLES, 0, 36));
-    GL_CALL(glad_glBindVertexArray(0));
-    shader.Unbind();
-}
+//     shader.Bind();
+//     GL_CALL(glad_glBindVertexArray(_VAO));
+//     GL_CALL(glad_glUniformMatrix4fv(glad_glGetUniformLocation(shader.getID(), "u_MVP"), 1, false, glm::value_ptr(MVP)));
+//     GL_CALL(glad_glDrawArrays(GL_TRIANGLES, 0, 36));
+//     GL_CALL(glad_glBindVertexArray(0));
+//     shader.Unbind();
+// }
