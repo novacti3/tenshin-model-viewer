@@ -34,14 +34,16 @@ int main()
     float lastTime = 0, currentTime = 0, deltaTime = 0;
     while(!glfwWindowShouldClose(app.getWindow()->getHandle()))
     {
+        // FIXME: The way the deltaTime is calculated must be goofd because it makes everything spazz out and anything but consistent and constant
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere
         currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = deltaTime;
 
-        app.PollInput(deltaTime);
+        glfwPollEvents();
         app.Update(deltaTime);
         app.Render();
+        App::UpdateKeys();
     }
 
     app.Cleanup();

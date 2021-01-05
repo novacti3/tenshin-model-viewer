@@ -17,10 +17,5 @@ Camera::~Camera(){}
 
 void Camera::LookAt(const glm::vec3 &target)
 {
-    // float camX = sin(deltaTime) * 5.0f;
-    // float camZ = cos(deltaTime) * 5.0f;
-
-    // _pos = glm::vec3(camX, 0.0f, camZ);
-
     _viewMatrix = glm::lookAt(transform.position, target, glm::vec3(0.0f, 1.0f, 0.0f));
 }

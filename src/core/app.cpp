@@ -12,6 +12,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+std::array<Key, 512> App::_keys;
+std::array<Key, 512> App::_prevKeys;
+
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     // Create window
@@ -23,6 +26,8 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Window initialized");
 
+    glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
+
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
 
     return true;
@@ -33,18 +38,29 @@ void App::LoadResources()
     ResourceManager::AddShader(ResourceManager::CreateShaderFromFiles("../../res/shaders/unlit-color.vs", "../../res/shaders/unlit-color.fs"), "unlit-color");
 }
 
-void App::PollInput(float deltaTime)
-{
-    glfwPollEvents();
-}
-
 void App::Update(float deltaTime)
 {
-    float camX = sin(glfwGetTime()) * 5.0f;
-    float camZ = cos(glfwGetTime()) * 5.0f;
+    // FIXME: Move the camera instead of the cube
+    // TODO: Change into orbit camera movement
+    if(IsKeyDown(GLFW_KEY_W))
+    {
+        _cubeTransform.position.z += _camMovementSpeed;
+    }
 
-    _cam->transform.position = glm::vec3(camX, 0.0f, camZ);
-    _cam->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+    if(IsKeyDown(GLFW_KEY_S))
+    {
+        _cubeTransform.position.z -= _camMovementSpeed;
+    }
+
+    if(IsKeyDown(GLFW_KEY_A))
+    {
+        _cubeTransform.position.x += _camMovementSpeed;
+    }
+
+    if(IsKeyDown(GLFW_KEY_D))
+    {
+        _cubeTransform.position.x -= _camMovementSpeed;
+    }
 }
 
 void App::Render()
@@ -55,7 +71,7 @@ void App::Render()
     GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
 
-    cubeRenderer.Draw(Transform(glm::vec3(0.0f), glm::vec3(1.0f)), _cam->getViewMatrix(), _cam->getProjMatrix());
+    cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
     glfwSwapBuffers(_window->getHandle());
 }
@@ -69,4 +85,31 @@ void App::Cleanup()
     _window = 0;
 
     Log::LogInfo("App instance destroyed");
+}
+
+void App::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    if(key < _keys.size())
+    {
+        Key newKey(key, action);
+        _keys[key] = newKey;
+    }
+}
+
+void App::UpdateKeys()
+{
+    _prevKeys = _keys;
+}
+
+bool App::IsKeyPressed(int key)
+{
+    return _keys[key].state == GLFW_PRESS;
+}
+bool App::IsKeyDown(int key)
+{
+    return _prevKeys[key].state == GLFW_PRESS && _keys[key].state == GLFW_PRESS;
+}
+bool App::IsKeyReleased(int key)
+{
+    return _keys[key].state == GLFW_RELEASE;
 }
