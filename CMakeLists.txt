@@ -23,18 +23,25 @@ list(APPEND INCLUDES
     libs/glad/include
     libs/glm/
 
+    # General stuff
     "src/core/log.hpp"
     "src/core/types.hpp"
     "src/core/utils.hpp"
 
+    # Rendering
     "src/rendering/shader.hpp"
-    "src/rendering/camera.hpp"
 
+    # Primitives
     "src/rendering/primitives/primitive.hpp"
     "src/rendering/primitives/quad.hpp"
     "src/rendering/primitives/cube.hpp"
-    "src/rendering/primitive_renderer.hpp"
 
+    # Components
+    "src/components/transform.hpp"
+    "src/components/camera.hpp"
+    "src/components/primitive_renderer.hpp"
+
+    # Core engine stuff
     "src/core/resource_manager.hpp"
     "src/core/window.hpp"
     "src/core/app.hpp"
@@ -44,13 +51,18 @@ list(APPEND SOURCES
     # external sources
     "libs/glad/src/glad.c"
     
+    # Rendering
     "src/rendering/shader.cpp"
-    "src/rendering/camera.cpp"
 
+    # Primitives
     "src/rendering/primitives/quad.cpp"
     "src/rendering/primitives/cube.cpp"
-    "src/rendering/primitive_renderer.cpp"
     
+    # Components
+    "src/components/primitive_renderer.cpp"
+    "src/components/camera.cpp"
+    
+    # Core engine stuff
     "src/core/resource_manager.cpp"
     "src/core/window.cpp"
     "src/core/app.cpp"

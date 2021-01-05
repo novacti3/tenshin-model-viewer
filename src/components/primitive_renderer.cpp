@@ -7,7 +7,11 @@
 
 PrimitiveRenderer::PrimitiveRenderer(Primitive *primitive, Shader *shader)
     : _primitive(primitive), _shader(shader){}
-PrimitiveRenderer::~PrimitiveRenderer(){}
+PrimitiveRenderer::~PrimitiveRenderer()
+{
+    _primitive = nullptr;
+    _shader = nullptr;
+}
 
 void PrimitiveRenderer::Draw(const Transform &transform, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
 {

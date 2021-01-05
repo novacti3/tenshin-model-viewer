@@ -1,7 +1,7 @@
 #pragma once
 
 #include "window.hpp"
-#include "../rendering/camera.hpp"
+#include "../components/camera.hpp"
 
 #include <glm/vec2.hpp>
 

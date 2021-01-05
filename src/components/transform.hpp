@@ -22,6 +22,9 @@ struct Transform
     ~Transform(){}
 
     // TODO: Get forward vector
+    inline glm::vec3 GetWorldForwardVector() { return glm::vec3(0.0f, 0.0f, -1.0f); }
     // TODO: Get right vector
+    inline glm::vec3 GetWorldRightVector() { return glm::vec3(1.0f, 0.0f, 0.0f); }
     // TODO: Get up vector
+    inline glm::vec3 GetWorldUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
 };

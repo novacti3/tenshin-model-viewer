@@ -5,7 +5,9 @@
 
 #include "../rendering/primitives/quad.hpp"
 #include "../rendering/primitives/cube.hpp"
-#include "../rendering/primitive_renderer.hpp"
+
+#include "../components/transform.hpp"
+#include "../components/primitive_renderer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,7 +23,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Window initialized");
 
-    _cam = new Camera();
+    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
 
     return true;
 }
@@ -38,7 +40,11 @@ void App::PollInput(float deltaTime)
 
 void App::Update(float deltaTime)
 {
-    _cam->UpdatePos(glfwGetTime());
+    float camX = sin(glfwGetTime()) * 5.0f;
+    float camZ = cos(glfwGetTime()) * 5.0f;
+
+    _cam->transform.position = glm::vec3(camX, 0.0f, camZ);
+    _cam->LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void App::Render()
@@ -46,8 +52,8 @@ void App::Render()
     Cube cube;
     PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
 
-    glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
+    GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
 
     cubeRenderer.Draw(Transform(glm::vec3(0.0f), glm::vec3(1.0f)), _cam->getViewMatrix(), _cam->getProjMatrix());
 

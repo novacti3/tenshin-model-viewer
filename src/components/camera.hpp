@@ -1,25 +1,28 @@
 #pragma once
 
+#include "transform.hpp"
+
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
 class Camera
 {
+    public:
+    Transform transform;
+
     private:
+    glm::vec3 _lookDir;
+
+    float _FOV, _ratio, _nearPlane, _farPlane;
+
     glm::mat4 _projMatrix = glm::mat4(1.0f);
     glm::mat4 _viewMatrix = glm::mat4(1.0f);
 
-    glm::vec3 _pos = glm::vec3(0.0f);
-    glm::vec3 _target = glm::vec3(0.0f);
-    glm::vec3 _lookDir;
-    glm::vec3 _camRight;
-    glm::vec3 _camUp;
-
     public:
-    Camera();
+    Camera(const Transform transform, const float FOV, const float ratio, const float nearPlane, const float farPlane);
     ~Camera();
 
-    void UpdatePos(float deltaTime);
+    void LookAt(const glm::vec3 &target);
 
     inline const glm::mat4 &getProjMatrix() { return _projMatrix; }
     inline const glm::mat4 &getViewMatrix() { return _viewMatrix; }

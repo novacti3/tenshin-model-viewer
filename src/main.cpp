@@ -35,7 +35,7 @@ int main()
     while(!glfwWindowShouldClose(app.getWindow()->getHandle()))
     {
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere
-        currentTime = glfwGetTime() / 1000;
+        currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = deltaTime;
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "shader.hpp"
-#include "primitives/primitive.hpp"
-#include "../components/transform.hpp"
+#include "../rendering/shader.hpp"
+#include "../rendering/primitives/primitive.hpp"
+#include "transform.hpp"
 
 #include <glm/mat4x4.hpp>
 
