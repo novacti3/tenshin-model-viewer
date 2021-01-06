@@ -12,8 +12,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-std::array<Key, 512> App::_keys;
-std::array<Key, 512> App::_prevKeys;
+std::function<void(int, int)> App::_onKeyPressed;
 
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
@@ -26,10 +25,15 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Window initialized");
 
-    glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
-
+    _input = new Input();
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
 
+    _onKeyPressed = [this](int key, int action)
+    {
+        App::OnKeyPressed(key, action);
+    };
+    glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
+    
     return true;
 }
 
@@ -40,6 +44,11 @@ void App::LoadResources()
 
 void App::Update(float deltaTime)
 {
+    if(_input->IsKeyPressed(GLFW_KEY_ESCAPE))
+    {
+        glfwSetWindowShouldClose(_window->getHandle(), true);
+    }
+
     // TODO: Arcball cam
 }
 
@@ -67,29 +76,7 @@ void App::Cleanup()
     Log::LogInfo("App instance destroyed");
 }
 
-void App::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void App::OnKeyPressed(int key, int action)
 {
-    if(key < _keys.size())
-    {
-        Key newKey(key, action);
-        _keys[key] = newKey;
-    }
-}
-
-void App::UpdateKeys()
-{
-    _prevKeys = _keys;
-}
-
-bool App::IsKeyPressed(int key)
-{
-    return _keys[key].state == GLFW_PRESS;
-}
-bool App::IsKeyDown(int key)
-{
-    return _prevKeys[key].state == GLFW_PRESS && _keys[key].state == GLFW_PRESS;
-}
-bool App::IsKeyReleased(int key)
-{
-    return _keys[key].state == GLFW_RELEASE;
+    _input->UpdateKey(Key(key, action));
 }

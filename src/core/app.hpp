@@ -1,39 +1,24 @@
 #pragma once
 
 #include "window.hpp"
+#include "input.hpp"
 #include "../components/camera.hpp"
 
 #include <glm/vec2.hpp>
 
 #include <string>
-
-#include <array>
-
-struct Key
-{
-    int keyCode;
-    int state;
-
-    Key(){}
-    Key(int keyCode, int state)
-    {
-        this->keyCode = keyCode;
-        this->state = state;
-    }
-    ~Key(){}
-};
+#include <functional>
 
 class App
 {
     private:
     Window *_window;
+    Input *_input;
     Camera *_cam;
-    float _camMovementSpeed = 0.1f;
+
+    static std::function<void(int, int)> _onKeyPressed;
 
     Transform _cubeTransform;
-
-    static std::array<Key, 512> _keys;
-    static std::array<Key, 512> _prevKeys;
 
     public:
     App(){}
@@ -48,11 +33,8 @@ class App
 
     inline Window *getWindow() { return _window; }
 
-    // FIXME: Unstaticify this shit
-    static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-    // TODO: Move into Input class or something
-    static void UpdateKeys();
-    static bool IsKeyPressed(int key);
-    static bool IsKeyDown(int key);
-    static bool IsKeyReleased(int key);
+    static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
+
+    private:
+    void OnKeyPressed(int key, int action);
 };

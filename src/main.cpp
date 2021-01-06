@@ -43,7 +43,6 @@ int main()
         glfwPollEvents();
         app.Update(deltaTime);
         app.Render();
-        App::UpdateKeys();
     }
 
     app.Cleanup();
