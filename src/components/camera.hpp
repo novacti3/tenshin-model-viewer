@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+// TODO: Arcball cam
 class Camera
 {
     public:
@@ -21,8 +22,6 @@ class Camera
     public:
     Camera(const Transform transform, const float FOV, const float ratio, const float nearPlane, const float farPlane);
     ~Camera();
-
-    void LookAt(const glm::vec3 &target);
 
     inline const glm::mat4 &getProjMatrix() { return _projMatrix; }
     inline const glm::mat4 &getViewMatrix() { return _viewMatrix; }

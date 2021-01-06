@@ -9,8 +9,8 @@ static const unsigned int MIN_WINDOW_HEIGHT = 360;
 
 bool Window::Init(glm::uvec2 size, const std::string title)
 {
-    _size = size;
-    _title = title;
+    _size = std::move(size);
+    _title = std::move(title);
 
     // Init GLFW
     if(!glfwInit())

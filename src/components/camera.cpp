@@ -3,9 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera(const Transform transform, const float FOV, const float ratio, const float nearPlane, const float farPlane)
-    : _FOV(FOV), _ratio(ratio), _nearPlane(nearPlane), _farPlane(farPlane)
+    : _FOV(std::move(FOV)), _ratio(std::move(ratio)), _nearPlane(std::move(nearPlane)), _farPlane(std::move(farPlane))
 {
-    this->transform = transform;
+    this->transform = std::move(transform);
     _lookDir = glm::normalize(transform.position - glm::vec3(0.0f, 0.0f, -1.0f));
 
     _projMatrix = glm::perspective(glm::radians(FOV), ratio, nearPlane, farPlane);
@@ -14,8 +14,3 @@ Camera::Camera(const Transform transform, const float FOV, const float ratio, co
     _viewMatrix = glm::lookAt(transform.position, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 Camera::~Camera(){}
-
-void Camera::LookAt(const glm::vec3 &target)
-{
-    _viewMatrix = glm::lookAt(transform.position, target, glm::vec3(0.0f, 1.0f, 0.0f));
-}

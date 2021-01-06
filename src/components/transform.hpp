@@ -16,8 +16,8 @@ struct Transform
     }
     Transform(glm::vec3 position, glm::vec3 scale = glm::vec3(1.0f))
     {
-        this->position = position;
-        this->scale    = scale;
+        this->position = std::move(position);
+        this->scale    = std::move(scale);
     }
     ~Transform(){}
 

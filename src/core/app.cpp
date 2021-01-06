@@ -40,27 +40,7 @@ void App::LoadResources()
 
 void App::Update(float deltaTime)
 {
-    // FIXME: Move the camera instead of the cube
-    // TODO: Change into orbit camera movement
-    if(IsKeyDown(GLFW_KEY_W))
-    {
-        _cubeTransform.position.z += _camMovementSpeed;
-    }
-
-    if(IsKeyDown(GLFW_KEY_S))
-    {
-        _cubeTransform.position.z -= _camMovementSpeed;
-    }
-
-    if(IsKeyDown(GLFW_KEY_A))
-    {
-        _cubeTransform.position.x += _camMovementSpeed;
-    }
-
-    if(IsKeyDown(GLFW_KEY_D))
-    {
-        _cubeTransform.position.x -= _camMovementSpeed;
-    }
+    // TODO: Arcball cam
 }
 
 void App::Render()
