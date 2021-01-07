@@ -27,6 +27,7 @@ class App
     public:
     bool Init(const glm::uvec2 windowSize, const std::string windowTitle);
     void LoadResources();
+    void ProcessEvents();
     void Update(float deltaTime);
     void Render();
     void Cleanup();

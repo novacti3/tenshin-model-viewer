@@ -49,11 +49,22 @@ void App::Update(float deltaTime)
         glfwSetWindowShouldClose(_window->getHandle(), true);
     }
 
+    if(_input->IsKeyDown(GLFW_KEY_W))
+    {
+        _cubeTransform.position.y += 0.01f * deltaTime;
+    }
+    if(_input->IsKeyReleased(GLFW_KEY_W))
+    {
+        _cubeTransform.position.y = 0.0f;
+    }
+
     // TODO: Arcball cam
 }
 
 void App::Render()
 {
+    _input->SaveKeys();
+
     Cube cube;
     PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
 
@@ -78,5 +89,18 @@ void App::Cleanup()
 
 void App::OnKeyPressed(int key, int action)
 {
-    _input->UpdateKey(Key(key, action));
+    // _input->UpdateKey(Key(key, action));
+
+    bool state;
+
+    if(action != GLFW_RELEASE)
+    {
+        state = true;
+    }
+    else
+    {
+        state = false;
+    }
+
+    _input->UpdateKey(key, state);
 }

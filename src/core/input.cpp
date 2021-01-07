@@ -4,42 +4,43 @@
 
 Input::Input()
 {
-    for(Key key: _keys)
+    for (size_t i = 0; i < 512; i++)
     {
-        key.state = GLFW_RELEASE;
+        _keyMap[i] = false;
     }
-
-    for(Key prevKey: _prevKeys)
+    
+    for (size_t i = 0; i < 512; i++)
     {
-        prevKey.state = GLFW_RELEASE;
-    } 
+        _prevKeyMap[i] = false;
+    }
 }
 
-void Input::UpdateKey(Key key)
+void Input::UpdateKey (int key, bool state)
 {
-    if(key.keyCode < _keys.size())
+    if(key < _keyMap.size())
     {
-        _keys[key.keyCode] = std::move(key);
+        _keyMap[key] = state;
     }
 }
 
 void Input::SaveKeys()
 {
-    _prevKeys = _keys;
-
-    for(Key key: _keys)
-    {
-        key.state = 0;
-    }
+    _prevKeyMap = _keyMap;
 }
 
 // Function which returns 1 if a key was just pressed
 bool Input::IsKeyPressed(int key)
 {
-    return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_PRESS;
+    // return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_PRESS;
+    return _prevKeyMap[key] == false && _keyMap[key] == true;
+}
+bool Input::IsKeyDown(int key)
+{
+    return _keyMap[key];
 }
 // Function which returns 1 if a key was just released
 bool Input::IsKeyReleased(int key)
 {
-    return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_RELEASE;
+    // return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_RELEASE;
+    return _prevKeyMap[key] == true && _keyMap[key] == false;
 }
