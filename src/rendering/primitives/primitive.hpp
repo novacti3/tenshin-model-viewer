@@ -24,10 +24,10 @@ class Primitive
     }
 
     public:
-    inline const std::vector<Vertex> &getVertices() { return _vertices; }
-    inline const std::vector<unsigned int> &getIndices() { return _indices; }
+    inline const std::vector<Vertex>       &getVertices() const { return _vertices; }
+    inline const std::vector<unsigned int> &getIndices()  const { return _indices; }
 
-    inline const unsigned int &getVAO() { return _VAO; }
-    inline const unsigned int &getVBO() { return _VBO; }
-    inline const unsigned int &getEBO() { return _EBO; }
+    inline const unsigned int getVAO() const { return _VAO; }
+    inline const unsigned int getVBO() const { return _VBO; }
+    inline const unsigned int getEBO() const { return _EBO; }
 };

@@ -23,6 +23,6 @@ class Camera
     Camera(const Transform transform, const float FOV, const float ratio, const float nearPlane, const float farPlane);
     ~Camera();
 
-    inline const glm::mat4 &getProjMatrix() { return _projMatrix; }
-    inline const glm::mat4 &getViewMatrix() { return _viewMatrix; }
+    inline const glm::mat4 getProjMatrix() const { return _projMatrix; }
+    inline const glm::mat4 getViewMatrix() const { return _viewMatrix; }
 };
