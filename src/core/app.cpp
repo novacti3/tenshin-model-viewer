@@ -49,14 +49,44 @@ void App::Update(float deltaTime)
         glfwSetWindowShouldClose(_window->getHandle(), true);
     }
 
+    // Pitch up
     if(_input->IsKeyDown(GLFW_KEY_W))
     {
-        _cubeTransform.position.y += 0.01f * deltaTime;
+        _cubeTransform.rotation.x -= 1.0f;
     }
-    if(_input->IsKeyReleased(GLFW_KEY_W))
+    // Pitch down
+    if(_input->IsKeyDown(GLFW_KEY_S))
     {
-        _cubeTransform.position.y = 0.0f;
+        _cubeTransform.rotation.x += 1.0f;
     }
+    // Yaw left
+    if(_input->IsKeyDown(GLFW_KEY_A))
+    {
+        _cubeTransform.rotation.y -= 1.0f;
+    }
+    // Yaw right
+    if(_input->IsKeyDown(GLFW_KEY_D))
+    {
+        _cubeTransform.rotation.y += 1.0f;
+    }
+
+    // Roll left
+    if(_input->IsKeyDown(GLFW_KEY_Q))
+    {
+        _cubeTransform.rotation.z -= 1.0f;
+    }
+    // Roll right
+    if(_input->IsKeyDown(GLFW_KEY_E))
+    {
+        _cubeTransform.rotation.z += 1.0f;
+    }
+
+    // Reset rotation
+    if(_input->IsKeyPressed(GLFW_KEY_R))
+    {
+        _cubeTransform.rotation = glm::vec3(0.0f);
+    }
+
 
     // TODO: Arcball cam
 }

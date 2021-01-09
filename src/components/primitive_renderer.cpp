@@ -2,7 +2,6 @@
 
 #include "../core/log.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 PrimitiveRenderer::PrimitiveRenderer(Primitive *primitive, Shader *shader)
@@ -22,10 +21,7 @@ void PrimitiveRenderer::Draw(const Transform &transform, const glm::mat4 &viewMa
         return;
     }
 
-    // Calculate model matrix
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::scale(modelMatrix, transform.scale);
-    modelMatrix = glm::translate(modelMatrix, transform.position);
+    glm::mat4 modelMatrix = transform.CalculateModelMatrix();
 
     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
