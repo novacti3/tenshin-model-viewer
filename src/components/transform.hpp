@@ -7,54 +7,101 @@
 
 struct Transform
 {
-    glm::vec3 position;
-    glm::vec3 rotation;
-    glm::vec3 scale;
+    private:
+    glm::vec3 _position;
+    glm::vec3 _rotation;
+    glm::vec3 _scale;
 
+    public:
     Transform(const glm::vec3 position = glm::vec3(0.0f), const glm::vec3 rotation = glm::vec3(0.0f), const glm::vec3 scale = glm::vec3(1.0f))
-    {
-        this->position = std::move(position);
-        this->rotation = std::move(rotation);
-        this->scale    = std::move(scale);
-    }
+        : _position(std::move(position)), _rotation(std::move(rotation)), _scale(std::move(scale)){}
     ~Transform(){}
 
-    // TODO: Clamp rotation between 0-360
-
+    public:
     glm::mat4 CalculateModelMatrix() const
     {
         glm::mat4 model = glm::mat4(1.0f);
 
-        model = glm::scale(model, scale);
+        model = glm::scale(model, _scale);
         // Yaw (Y axis)
-        model = glm::rotate(model, glm::radians(rotation.y), GetWorldUpVector());
+        model = glm::rotate(model, glm::radians(_rotation.y), GetWorldUpVector());
         // Roll (Z axis)
-        model = glm::rotate(model, glm::radians(rotation.z), GetWorldForwardVector());
+        model = glm::rotate(model, glm::radians(_rotation.z), GetWorldForwardVector());
         // Pitch (X axis)
-        model = glm::rotate(model, glm::radians(rotation.x), GetWorldRightVector());
+        model = glm::rotate(model, glm::radians(_rotation.x), GetWorldRightVector());
 
-        model = glm::translate(model, position);
+        model = glm::translate(model, _position);
 
         return model;
     }
 
-    // glm::vec3 GetLocalForwardVector() const
-    // {
-    //     glm::vec3 vector = glm::vec3(0.0f);
+    inline const glm::vec3 &getPosition() const { return _position; }
+    inline const glm::vec3 &getRotation() const { return _rotation; }
+    inline const glm::vec3 &getScale()    const { return _scale; }
 
-    //     vector = glm::cross(GetWorldRightVector(), GetWorldUpVector());
-    //     // Yaw (Y axis)
-    //     vector = glm::rotateY(vector, glm::radians(rotation.y));
-    //     // Roll (Z axis)
-    //     vector = glm::rotateZ(vector, glm::radians(rotation.z));
-    //     // Pitch (X axis)
-    //     vector = glm::rotateX(vector, glm::radians(rotation.x));
+    inline const glm::vec3 &setPosition(const glm::vec3 newPosition)
+    {
+        _position = newPosition; 
+        return _position; 
+    }
+    inline const glm::vec3 &setRotation(const glm::vec3 newRotation) 
+    { 
+        _rotation = newRotation;
+        
+        // Clamp rotation between -360 and 360 degrees
+        if(_rotation.x >= 360 || _rotation.x <= -360)
+        {
+            _rotation.x = 0;
+        }
+        if(_rotation.y >= 360 || _rotation.y <= -360)
+        {
+            _rotation.y = 0;
+        }
+        if(_rotation.z >= 360 || _rotation.z <= -360)
+        {
+            _rotation.z = 0;
+        }
 
-    //     return -glm::normalize(vector);
-    // }
-    inline glm::vec3 GetWorldForwardVector() const { return glm::vec3(0.0f, 0.0f, -1.0f); }
-    // TODO: Get right vector
-    inline glm::vec3 GetWorldRightVector() const { return glm::vec3(1.0f, 0.0f, 0.0f); }
-    // TODO: Get up vector
-    inline glm::vec3 GetWorldUpVector() const { return glm::vec3(0.0f, 1.0f, 0.0f); }
+        return _rotation; 
+    }
+    inline const glm::vec3 &setScale(const glm::vec3 newScale)
+    {
+        _scale = newScale; 
+        return _scale; 
+    }
+
+    inline const glm::vec3 &addPosition(const glm::vec3 newPosition)
+    {
+        _position += newPosition; 
+        return _position; 
+    }
+    inline const glm::vec3 &addRotation(const glm::vec3 newRotation) 
+    { 
+        _rotation += newRotation;
+        
+        // Clamp rotation between -360 and 360 degrees
+        if(_rotation.x >= 360 || _rotation.x <= -360)
+        {
+            _rotation.x = 0;
+        }
+        if(_rotation.y >= 360 || _rotation.y <= -360)
+        {
+            _rotation.y = 0;
+        }
+        if(_rotation.z >= 360 || _rotation.z <= -360)
+        {
+            _rotation.z = 0;
+        }
+
+        return _rotation; 
+    }
+    inline const glm::vec3 &addScale(const glm::vec3 newScale)
+    {
+        _scale += newScale; 
+        return _scale; 
+    }
+
+    static inline glm::vec3 GetWorldForwardVector() { return glm::vec3(0.0f, 0.0f, -1.0f); }
+    static inline glm::vec3   GetWorldRightVector() { return glm::vec3(1.0f, 0.0f, 0.0f); }
+    static inline glm::vec3      GetWorldUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
 };

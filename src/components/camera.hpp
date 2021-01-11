@@ -24,5 +24,9 @@ class Camera
     ~Camera();
 
     inline const glm::mat4 getProjMatrix() const { return _projMatrix; }
-    inline const glm::mat4 getViewMatrix() const { return _viewMatrix; }
+    inline const glm::mat4 getViewMatrix() 
+    {
+        _viewMatrix = glm::inverse(transform.CalculateModelMatrix());
+        return _viewMatrix; 
+    }
 };
