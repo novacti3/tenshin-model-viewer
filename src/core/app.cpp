@@ -49,39 +49,82 @@ void App::Update(float deltaTime)
         glfwSetWindowShouldClose(_window->getHandle(), true);
     }
 
-    static float camSpeed = 1.0f;
+    // NOTE: Perhaps move this camera code elsewhere
+    // TODO: Add mouse camera movement (pan and zoom)
+    static const float rotationSpeed = 1.0f;
+    static float yaw = 0.0f;
+    static float pitch = 0.0f;
+    static const float MIN_PITCH = -90.0f;
+    static const float MAX_PITCH = 90.0f;
+    // static float elevationSpeed = 0.05f;
+    static const float zoomSpeed = 0.05f;
+    static float zoomAmount = 0.0f;
+    static const float MIN_ZOOM = 0.5f;
+    static const float MAX_ZOOM = 5.0f;
 
-    // NOTE: The fuck is this? Can this even be called an orbit cam? I mean, it works but... what?
     // Move up
+    // FIXME: Make the elevation move the camera along the world Y axis instead of the local Y axis
+    // if(_input->IsKeyDown(GLFW_KEY_E) || _input->IsKeyDown(GLFW_KEY_KP_8))
+    // {
+    //     _cam->transform.addPosition(glm::vec3(0.0f, elevationSpeed, 0.0f));
+    // }
+    // // Move down
+    // if(_input->IsKeyDown(GLFW_KEY_Q) || _input->IsKeyDown(GLFW_KEY_KP_2))
+    // {
+    //     _cam->transform.addPosition(glm::vec3(0.0f, -elevationSpeed, 0.0f));
+    // }
+
+    // Zoom in
+    if(_input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) || _input->IsKeyDown(GLFW_KEY_KP_ADD))
+    {
+        zoomAmount = _cam->transform.getPosition().z + zoomSpeed;
+        zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
+
+        _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
+    }
+    // Zoom out
+    if(_input->IsKeyDown(GLFW_KEY_LEFT_CONTROL) || _input->IsKeyDown(GLFW_KEY_KP_SUBTRACT))
+    {
+        zoomAmount = _cam->transform.getPosition().z - zoomSpeed;
+        zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
+
+        _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
+    }
+
+    // Pitch up
     if(_input->IsKeyDown(GLFW_KEY_W) || _input->IsKeyDown(GLFW_KEY_UP))
     {
-        _cam->transform.addRotation(glm::vec3(-camSpeed, 0.0f, 0.0f));
+        pitch = _cam->transform.getRotation().x + (-rotationSpeed);
+        pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
+
+        _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
     }
-    // Move down
+    // Pitch down
     if(_input->IsKeyDown(GLFW_KEY_S) || _input->IsKeyDown(GLFW_KEY_DOWN))
     {
-        _cam->transform.addRotation(glm::vec3(camSpeed, 0.0f, 0.0f));
+        pitch = _cam->transform.getRotation().x + rotationSpeed;
+        pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
+
+        _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
     }
-    // Move left
+    // Yaw left
     if(_input->IsKeyDown(GLFW_KEY_A) || _input->IsKeyDown(GLFW_KEY_LEFT))
     {
-        _cam->transform.addRotation(glm::vec3(0.0f, -camSpeed, 0.0f));
+        _cam->transform.addRotation(glm::vec3(0.0f, -rotationSpeed, 0.0f));
     }
-    // Move right
+    // Yaw right
     if(_input->IsKeyDown(GLFW_KEY_D) || _input->IsKeyDown(GLFW_KEY_RIGHT))
     {
-        _cam->transform.addRotation(glm::vec3(0.0f, camSpeed, 0.0f));
+        _cam->transform.addRotation(glm::vec3(0.0f, rotationSpeed, 0.0f));
     }
-
-    // TODO: Arcball cam
 }
 
 void App::Render()
 {
     _input->SaveKeys();
 
-    Cube cube;
-    PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
+    static Cube cube;
+    static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
 
     GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));

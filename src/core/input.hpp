@@ -4,6 +4,7 @@
 
 // TODO: Add support for different keybinds for the same action (eg. move cam with WASD, arrow keys and mouse)
 // TODO: Modifier keys (eg. allow CTRL+O)
+// TODO: Add mouse input support
 class Input
 {
     private:
