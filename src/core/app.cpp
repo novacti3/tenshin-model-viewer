@@ -9,6 +9,10 @@
 #include "../components/transform.hpp"
 #include "../components/primitive_renderer.hpp"
 
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -16,6 +20,7 @@ std::function<void(int, int)> App::_onKeyPressed;
 
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
+    const char *glslVersion = "#version 330";
     // Create window
     _window = new Window();
     if(!_window->Init(windowSize, windowTitle))
@@ -34,6 +39,17 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     };
     glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
     
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    // TODO: Add ImGui docking support
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(_window->getHandle(), true);
+    ImGui_ImplOpenGL3_Init(glslVersion);
+
     return true;
 }
 
@@ -123,21 +139,39 @@ void App::Render()
 {
     _input->SaveKeys();
 
-    static Cube cube;
-    static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    if(_showDemoWindow)
+    {
+        ImGui::ShowDemoWindow(&_showDemoWindow);
+    }
+
+    ImGui::Render();
 
     GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
 
+    static Cube cube;
+    static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
     cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(_window->getHandle());
 }
 
 void App::Cleanup()
 {
+    // Clean up internal engine stuff
     ResourceManager::Cleanup();
 
+    // Clean up ImGui
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+
+    // Clean up window and GLFW
     _window->Cleanup();
     delete _window;
     _window = 0;

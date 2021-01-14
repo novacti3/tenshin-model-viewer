@@ -19,9 +19,10 @@ set(GLFW_INSTALL OFF)
 
 list(APPEND INCLUDES
     # external includes
-    libs/glfw/include
-    libs/glad/include
-    libs/glm/
+    "libs/glfw/include"
+    "libs/glad/include"
+    "libs/glm/"
+    "libs/Dear ImGui/"
 
     # General stuff
     "src/core/log.hpp"
@@ -51,6 +52,13 @@ list(APPEND INCLUDES
 list(APPEND SOURCES
     # external sources
     "libs/glad/src/glad.c"
+    "libs/Dear ImGui/imgui_demo.cpp"
+    "libs/Dear ImGui/imgui_draw.cpp"
+    "libs/Dear ImGui/imgui_tables.cpp"
+    "libs/Dear ImGui/imgui_widgets.cpp"
+    "libs/Dear ImGui/imgui.cpp"
+    "libs/Dear ImGui/backends/imgui_impl_opengl3.cpp"
+    "libs/Dear ImGui/backends/imgui_impl_glfw.cpp"
     
     # Rendering
     "src/rendering/shader.cpp"

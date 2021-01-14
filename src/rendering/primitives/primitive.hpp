@@ -18,6 +18,7 @@ class Primitive
     public:
     virtual ~Primitive()
     {
+        // FIXME: All of these produce OpenGL Error 1282
         GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
         GL_CALL(glad_glDeleteBuffers(1, &_VBO));
         GL_CALL(glad_glDeleteBuffers(1, &_EBO));
