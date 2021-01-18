@@ -9,8 +9,8 @@
 
 #include <array>
 
-static const unsigned int WINDOW_WIDTH = 800;
-static const unsigned int WINDOW_HEIGHT = 600;
+static const unsigned int WINDOW_WIDTH = 1600;
+static const unsigned int WINDOW_HEIGHT = 1200;
 static const std::string WINDOW_TITLE = "Tenshin Model Viewer";
 
 int main()

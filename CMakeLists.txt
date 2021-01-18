@@ -44,6 +44,7 @@ list(APPEND INCLUDES
 
     # Core engine stuff
     "src/core/resource_manager.hpp"
+    "src/core/ui_manager.hpp"
     "src/core/window.hpp"
     "src/core/input.hpp"
     "src/core/app.hpp"
@@ -73,6 +74,7 @@ list(APPEND SOURCES
     
     # Core engine stuff
     "src/core/resource_manager.cpp"
+    "src/core/ui_manager.cpp"
     "src/core/window.cpp"
     "src/core/input.cpp"
     "src/core/app.cpp"

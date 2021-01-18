@@ -11,8 +11,8 @@ class ResourceManager final
     static std::unordered_map<std::string, Shader*> _loadedShaders;
 
     private:
-    ResourceManager(){}
-    ~ResourceManager(){}
+    ResourceManager() = default;
+    ~ResourceManager() = default;
 
     public:
     static void Cleanup();

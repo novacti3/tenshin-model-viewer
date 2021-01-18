@@ -2,16 +2,13 @@
 
 #include "log.hpp"
 #include "resource_manager.hpp"
+#include "ui_manager.hpp"
 
 #include "../rendering/primitives/quad.hpp"
 #include "../rendering/primitives/cube.hpp"
 
 #include "../components/transform.hpp"
 #include "../components/primitive_renderer.hpp"
-
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -39,16 +36,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     };
     glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
     
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    // TODO: Add ImGui docking support
-
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplGlfw_InitForOpenGL(_window->getHandle(), true);
-    ImGui_ImplOpenGL3_Init(glslVersion);
+    UIManager::Init(_window->getHandle(), glslVersion);
 
     return true;
 }
@@ -93,7 +81,7 @@ void App::Update(float deltaTime)
     // Zoom in
     if(_input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) || _input->IsKeyDown(GLFW_KEY_KP_ADD))
     {
-        zoomAmount = _cam->transform.getPosition().z + zoomSpeed;
+        zoomAmount = _cam->transform.getPosition().z - zoomSpeed;
         zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
 
         _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
@@ -101,7 +89,7 @@ void App::Update(float deltaTime)
     // Zoom out
     if(_input->IsKeyDown(GLFW_KEY_LEFT_CONTROL) || _input->IsKeyDown(GLFW_KEY_KP_SUBTRACT))
     {
-        zoomAmount = _cam->transform.getPosition().z - zoomSpeed;
+        zoomAmount = _cam->transform.getPosition().z + zoomSpeed;
         zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
 
         _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
@@ -139,17 +127,6 @@ void App::Render()
 {
     _input->SaveKeys();
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    if(_showDemoWindow)
-    {
-        ImGui::ShowDemoWindow(&_showDemoWindow);
-    }
-
-    ImGui::Render();
-
     GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
 
@@ -157,7 +134,7 @@ void App::Render()
     static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
     cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    UIManager::Render();
 
     glfwSwapBuffers(_window->getHandle());
 }
@@ -166,10 +143,7 @@ void App::Cleanup()
 {
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
-
-    // Clean up ImGui
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
+    UIManager::Cleanup();
 
     // Clean up window and GLFW
     _window->Cleanup();
@@ -181,8 +155,6 @@ void App::Cleanup()
 
 void App::OnKeyPressed(int key, int action)
 {
-    // _input->UpdateKey(Key(key, action));
-
     bool state;
 
     if(action != GLFW_RELEASE)

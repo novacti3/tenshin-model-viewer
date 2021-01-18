@@ -16,8 +16,6 @@ class App
     Input *_input;
     Camera *_cam;
 
-    bool _showDemoWindow = true;
-
     static std::function<void(int, int)> _onKeyPressed;
 
     Transform _cubeTransform;
