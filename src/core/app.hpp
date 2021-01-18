@@ -2,7 +2,7 @@
 
 #include "window.hpp"
 #include "input.hpp"
-#include "../components/camera.hpp"
+#include "components/camera.hpp"
 
 #include <glm/vec2.hpp>
 

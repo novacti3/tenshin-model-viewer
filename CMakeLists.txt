@@ -23,31 +23,7 @@ list(APPEND INCLUDES
     "libs/glad/include"
     "libs/glm/"
     "libs/Dear ImGui/"
-
-    # General stuff
-    "src/core/log.hpp"
-    "src/core/types.hpp"
-    "src/core/utils.hpp"
-
-    # Rendering
-    "src/rendering/shader.hpp"
-
-    # Primitives
-    "src/rendering/primitives/primitive.hpp"
-    "src/rendering/primitives/quad.hpp"
-    "src/rendering/primitives/cube.hpp"
-
-    # Components
-    "src/components/transform.hpp"
-    "src/components/camera.hpp"
-    "src/components/primitive_renderer.hpp"
-
-    # Core engine stuff
-    "src/core/resource_manager.hpp"
-    "src/core/ui_manager.hpp"
-    "src/core/window.hpp"
-    "src/core/input.hpp"
-    "src/core/app.hpp"
+    "./src/"
 )
 
 list(APPEND SOURCES

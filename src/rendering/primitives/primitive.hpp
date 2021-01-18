@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../core/log.hpp"
-#include "../../core/types.hpp"
+#include "core/log.hpp"
+#include "core/types.hpp"
 
 #include <glad/glad.h>
 #include <vector>

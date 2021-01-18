@@ -1,14 +1,14 @@
 #include "app.hpp"
 
-#include "log.hpp"
-#include "resource_manager.hpp"
-#include "ui_manager.hpp"
+#include "core/log.hpp"
+#include "core/resource_manager.hpp"
+#include "core/ui_manager.hpp"
 
-#include "../rendering/primitives/quad.hpp"
-#include "../rendering/primitives/cube.hpp"
+#include "rendering/primitives/quad.hpp"
+#include "rendering/primitives/cube.hpp"
 
-#include "../components/transform.hpp"
-#include "../components/primitive_renderer.hpp"
+#include "components/transform.hpp"
+#include "components/primitive_renderer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

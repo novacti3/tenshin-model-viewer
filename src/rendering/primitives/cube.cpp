@@ -1,6 +1,6 @@
 #include "cube.hpp"
 
-#include "../../core/log.hpp"
+#include "core/log.hpp"
 
 #include <glad/glad.h>
 

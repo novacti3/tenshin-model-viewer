@@ -1,8 +1,8 @@
 #include "ui_manager.hpp"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
 
 void UIManager::Init(GLFWwindow *window, const char *glslVersion)
 {
@@ -11,7 +11,6 @@ void UIManager::Init(GLFWwindow *window, const char *glslVersion)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    // TODO: Add ImGui docking support
 
     ImGui::StyleColorsDark();
 

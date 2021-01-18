@@ -1,7 +1,7 @@
 #include "shader.hpp"
 
 #include <glad/glad.h>
-#include "../core/log.hpp"
+#include "core/log.hpp"
 
 Shader::Shader(const char *vertSource, const char *fragSource)
     : _id(0)
