@@ -20,7 +20,7 @@ class Event
 
     public:
     Event(): _type(EventType::EMPTY) {}
-    Event(EventType type): _type(std::move(type)) {}
+    explicit Event(EventType type): _type(std::move(type)) {}
     virtual ~Event() = default;
     // NOTE: Remove copy and move constructors and operators?
 
@@ -35,7 +35,7 @@ class WindowResizedEvent final : public Event
 
     public:
     WindowResizedEvent() = delete;
-    WindowResizedEvent(EventType type, glm::vec2 newSize): Event(type), _newSize(newSize) {}
+    explicit WindowResizedEvent(EventType type, glm::vec2 newSize): Event(type), _newSize(newSize) {}
     ~WindowResizedEvent() = default;
     // NOTE: Remove copy and move constructors and operators?
 

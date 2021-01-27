@@ -5,7 +5,7 @@
 std::function<void(int, int)> Window::_onResize;
 
 static const unsigned int MIN_WINDOW_WIDTH = 640;
-static const unsigned int MIN_WINDOW_HEIGHT = 360;
+static const unsigned int MIN_WINDOW_HEIGHT = 480;
 
 bool Window::Init(glm::uvec2 size, const std::string title)
 {
@@ -23,7 +23,7 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_FOCUS_ON_SHOW, true);
+    glfwWindowHint(GLFW_FOCUSED, true);
     // TODO: Figure out how to properly scale the contents of the window so it's not all stretched and shit
     glfwWindowHint(GLFW_RESIZABLE, true);
 

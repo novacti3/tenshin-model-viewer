@@ -1,6 +1,6 @@
 #pragma once
 
-#include "event.hpp"
+#include "core/event.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -32,6 +32,7 @@ class Window final : public EventSender
     inline const std::string  getTitle() const { return _title; }
     inline       GLFWwindow* getHandle() const { return _handle; }
 
+    // NOTE: Figure out how to tie this in with the window resize event of the event system
     static void ResizeCallback(GLFWwindow *window, int width, int height) { _onResize(width, height); }
 
     private:
