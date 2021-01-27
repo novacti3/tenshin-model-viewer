@@ -1,14 +1,15 @@
 #pragma once
 
-#include <glm/vec2.hpp>
+#include "core/event.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
 
 #include <string>
 #include <functional>
 
-class Window
+class Window final : public EventSender
 {
     private:
     glm::uvec2 _size;
@@ -31,6 +32,7 @@ class Window
     inline const std::string  getTitle() const { return _title; }
     inline       GLFWwindow* getHandle() const { return _handle; }
 
+    // NOTE: Figure out how to tie this in with the window resize event of the event system
     static void ResizeCallback(GLFWwindow *window, int width, int height) { _onResize(width, height); }
 
     private:

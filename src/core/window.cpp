@@ -5,7 +5,7 @@
 std::function<void(int, int)> Window::_onResize;
 
 static const unsigned int MIN_WINDOW_WIDTH = 640;
-static const unsigned int MIN_WINDOW_HEIGHT = 360;
+static const unsigned int MIN_WINDOW_HEIGHT = 480;
 
 bool Window::Init(glm::uvec2 size, const std::string title)
 {
@@ -23,9 +23,9 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_FOCUS_ON_SHOW, true);
-    // NOTE: Turned off until I figure out a way to update the camera's projection matrix
-    glfwWindowHint(GLFW_RESIZABLE, false);
+    glfwWindowHint(GLFW_FOCUSED, true);
+    // TODO: Figure out how to properly scale the contents of the window so it's not all stretched and shit
+    glfwWindowHint(GLFW_RESIZABLE, true);
 
     // Make sure the start size of the window is above the specified minimum dimensions
     if(size.x < MIN_WINDOW_WIDTH)
@@ -85,4 +85,5 @@ void Window::OnResize(int width, int height)
     _size.x = width;
     _size.y = height;
     GL_CALL(glad_glViewport(0, 0, width, height));
+    NotifyListeners(WindowResizedEvent(EventType::WINDOW_RESIZED_EVENT, _size));
 }
