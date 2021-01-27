@@ -1,5 +1,10 @@
 #pragma once
 
+#include <glm/vec2.hpp>
+
+#include <vector>
+#include <utility>
+
 enum class EventType
 {
     EMPTY = 0,
@@ -8,7 +13,6 @@ enum class EventType
     // TODO: Add more events
 };
 
-#include <utility>
 class Event
 {
     protected:
@@ -24,7 +28,6 @@ class Event
     EventType getType() { return _type; }
 };
 
-#include <glm/vec2.hpp>
 class WindowResizedEvent final : public Event
 {
     private:
@@ -61,7 +64,6 @@ class EventListener
     virtual void OnEvent(Event &event) = 0;
 };
 
-#include <vector>
 class EventSender
 {
     private:
@@ -69,56 +71,14 @@ class EventSender
 
     protected:
     EventSender() = default;
-    virtual ~EventSender()
-    {
-        for(EventListener *listener: _listeners)
-        {
-            listener = nullptr;
-        }
-    }
+    virtual ~EventSender();
 
     public:
-    void AddListener(EventListener *listener)
-    {
-        if(!ContainsListener(listener))
-        {
-            _listeners.push_back(listener);
-        }
-    }
-    void RemoveListener(EventListener *listener)
-    {
-        if(ContainsListener(listener))
-        {
-            for (auto i = _listeners.begin(); i < _listeners.end(); i++)
-            {
-                if(*i == listener)
-                {
-                    _listeners.erase(i);
-                }
-            }
-            
-        }
-    }
+    void AddListener(EventListener *listener);
+    void RemoveListener(EventListener *listener);
     // NOTE: Maybe make this return a tuple with an iterator to the listener as well
-    bool ContainsListener(EventListener *listener)
-    {
-        for(EventListener *entry: _listeners)
-        {
-            if(entry == listener)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    bool ContainsListener(EventListener *listener);
 
     protected:
-    void NotifyListeners(Event &event)
-    {
-        for(EventListener *listener: _listeners)
-        {
-            listener->OnEvent(event);
-        }
-    }
+    void NotifyListeners(Event &event);
 };
