@@ -23,7 +23,7 @@ list(APPEND INCLUDES
     "libs/glad/include"
     "libs/glm/"
     "libs/Dear ImGui/"
-    "./src/"
+    "src/"
 )
 
 list(APPEND SOURCES
