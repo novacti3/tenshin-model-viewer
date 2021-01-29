@@ -23,7 +23,7 @@ list(APPEND INCLUDES
     "libs/glad/include"
     "libs/glm/"
     "libs/Dear ImGui/"
-    "./src/"
+    "src/"
 )
 
 list(APPEND SOURCES
@@ -49,6 +49,7 @@ list(APPEND SOURCES
     "src/components/camera.cpp"
     
     # Core engine stuff
+    "src/core/event.cpp"
     "src/core/resource_manager.cpp"
     "src/core/ui_manager.cpp"
     "src/core/window.cpp"

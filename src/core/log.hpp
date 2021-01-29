@@ -15,7 +15,7 @@ enum LogLevel
 // TODO: Logging into file per channel regardless of current filter
 // TODO: Color highlighting/output
 // TODO: Channels (eg. a channel for general stuff, another channel for rendering)
-// TODO: Channel filters (eg. only print general and rendering stuff)
+// TODO: Channel filters (eg. only print general and rendering stuff) (through a bitmask again probably)
 // NOTE: Crash dump?
 class Log final
 {
@@ -97,6 +97,8 @@ class Log final
         }
 
         std::cout << "[" << currentTimeStr << "] " << logLevelStr << ": " << message << std::endl;
+
+        // TODO: Log message event so the message gets printed out to the Console UI window as well
     }
 };
 

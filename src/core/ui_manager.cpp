@@ -39,17 +39,6 @@ void UIManager::Render(unsigned int width, unsigned int height)
     // Menu bar
     ShowMenuBar();
 
-    
-    if(_showDemoWindow)
-    {
-        ImGui::ShowDemoWindow();
-    }
-
-    if(_showModelProperties)
-    {
-        ShowModelProperties();
-    }
-
     if(_showMaterialProperties)
     {
         ShowMaterialProperties();
@@ -80,7 +69,12 @@ void UIManager::ShowMenuBar()
     {
         if(ImGui::BeginMenu("File"))
         {
-            if(ImGui::MenuItem("Open..."))
+            if(ImGui::MenuItem("Load model in current tab..."))
+            {
+
+            }
+
+            if(ImGui::MenuItem("Load model in new tab..."))
             {
 
             }
@@ -90,7 +84,7 @@ void UIManager::ShowMenuBar()
 
         if(ImGui::BeginMenu("Edit"))
         {
-            if(ImGui::MenuItem("Preferences"))
+            if(ImGui::MenuItem("Preferences..."))
             {
 
             }
@@ -101,10 +95,6 @@ void UIManager::ShowMenuBar()
         if(ImGui::BeginMenu("View"))
         {
             // TODO: Show a checkmark or something next to the menu item to indicate that the window is currently active in the editor
-            if(ImGui::MenuItem("Show Demo Window"))
-            {
-                _showDemoWindow = !_showDemoWindow;
-            }
 
             if(ImGui::MenuItem("Show Model Properties"))
             {
@@ -136,15 +126,6 @@ void UIManager::ShowMenuBar()
 
         ImGui::EndMainMenuBar();
     }
-}
-
-void UIManager::ShowModelProperties()
-{
-    ImGui::Begin("Model Properties###ModelProperties", &_showModelProperties, _windowFlags);
-    {
-        ImGui::Text("Model properties");
-    }
-    ImGui::End();
 }
 
 void UIManager::ShowMaterialProperties()

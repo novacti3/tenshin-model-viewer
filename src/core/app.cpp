@@ -26,6 +26,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
         return false;
     }
     Log::LogInfo("Window initialized");
+    _window->AddListener(this);
 
     _input = new Input();
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
@@ -171,4 +172,12 @@ void App::OnKeyPressed(int key, int action)
     }
 
     _input->UpdateKey(key, state);
+}
+
+void App::OnEvent(Event &event)
+{
+    if(event.getType() == EventType::WINDOW_RESIZED_EVENT)
+    {
+        Log::LogInfo("Window resize event fired");
+    }
 }

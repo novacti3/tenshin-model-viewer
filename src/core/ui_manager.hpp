@@ -1,14 +1,15 @@
 #pragma once
 
+#include "core/event.hpp"
+
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-class UIManager
+class UIManager : public EventSender
 {
     private:
     static inline const char *DOCKSPACE_ID = "EditorDockspace";
-
-    static inline bool _showDemoWindow = false;
+    
     static inline bool _showModelProperties = true;
     static inline bool _showMaterialProperties = true;
     static inline bool _showRendererProperties = true;
@@ -28,7 +29,6 @@ class UIManager
 
     private:
     static void ShowMenuBar();
-    static void ShowModelProperties();
     static void ShowMaterialProperties();
     static void ShowRendererProperties();
     static void ShowDebugConsole();
