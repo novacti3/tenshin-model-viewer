@@ -8,7 +8,7 @@ void UIManager::Init(GLFWwindow *window, const char *glslVersion)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
@@ -96,22 +96,17 @@ void UIManager::ShowMenuBar()
         {
             // TODO: Show a checkmark or something next to the menu item to indicate that the window is currently active in the editor
 
-            if(ImGui::MenuItem("Show Model Properties"))
-            {
-                _showModelProperties = !_showModelProperties;
-            }
-
-            if(ImGui::MenuItem("Show Material Properties"))
+            if(ImGui::MenuItem("Show Material properties"))
             {
                 _showMaterialProperties = !_showMaterialProperties;
             }
 
-            if(ImGui::MenuItem("Show Renderer Properties"))
+            if(ImGui::MenuItem("Show Rendering properties"))
             {
                 _showRendererProperties = !_showRendererProperties;
             }
 
-            if(ImGui::MenuItem("Show Console"))
+            if(ImGui::MenuItem("Show Debug console"))
             {
                 _showDebugConsole = !_showDebugConsole;
             }
@@ -130,7 +125,7 @@ void UIManager::ShowMenuBar()
 
 void UIManager::ShowMaterialProperties()
 {
-    ImGui::Begin("Material Properties###MaterialProperties", &_showMaterialProperties, _windowFlags);
+    ImGui::Begin("Material properties###MaterialProperties", &_showMaterialProperties, _windowFlags);
     {
         ImGui::Text("Material properties");
     }
@@ -139,7 +134,7 @@ void UIManager::ShowMaterialProperties()
 
 void UIManager::ShowRendererProperties()
 {
-    ImGui::Begin("Renderer Properties###RendererProperties", &_showRendererProperties, _windowFlags);
+    ImGui::Begin("Rendering properties###RenderingProperties", &_showRendererProperties, _windowFlags);
     {
         ImGui::Text("Renderer properties");
     }
