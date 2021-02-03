@@ -206,5 +206,6 @@ void App::QuitProgram(Action& action)
 
 void App::RotateCamera(Action &action, glm::ivec2 value)
 {
+    // FIXME: This is fucking horrible and needs to be changed to something more sane ASAP
     Log::LogInfo(std::string("RotateCamera value:\n x: ") + std::to_string(value.x) + std::string("\n y: ") + std::to_string(value.y));
 }

@@ -19,7 +19,7 @@ Input::Input()
     _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, 
     { 
         new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S),
-        new TwoDimensionalKeybind(GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_UP, GLFW_KEY_DOWN),
+        new TwoDimensionalKeybind(GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_UP, GLFW_KEY_DOWN),
     })));
 }
 
@@ -64,7 +64,7 @@ void Input::BindFuncToAction(const std::string &actionName, ButtonActionFunc fun
 
     using BoundFuncsList = std::vector<ButtonActionFunc>;
 
-    // Check if the given Action already has an entry in boundFuncs map. If not, add it
+    // Check if the given Action already has an entry in the appropriate map. If not, add it
     if(_buttonActionFunctions.find(actionName) == _buttonActionFunctions.end())
     {
         _buttonActionFunctions.insert(std::make_pair(actionName, BoundFuncsList{func}));
@@ -130,7 +130,7 @@ void Input::BindFuncToAction(const std::string &actionName, OneDimensionalAction
 
     using BoundFuncsList = std::vector<OneDimensionalActionFunc>;
 
-    // Check if the given Action already has an entry in boundFuncs map. If not, add it
+    // Check if the given Action already has an entry in the appropriate map. If not, add it
     if(_oneDimensionalActionFunctions.find(actionName) == _oneDimensionalActionFunctions.end())
     {
         _oneDimensionalActionFunctions.insert(std::make_pair(actionName, BoundFuncsList{func}));
@@ -196,7 +196,7 @@ void Input::BindFuncToAction(const std::string &actionName, TwoDimensionalAction
 
     using BoundFuncsList = std::vector<TwoDimensionalActionFunc>;
 
-    // Check if the given Action already has an entry in boundFuncs map. If not, add it
+    // Check if the given Action already has an entry in the appropriate map. If not, add it
     if(_twoDimensionalActionFunctions.find(actionName) == _twoDimensionalActionFunctions.end())
     {
         _twoDimensionalActionFunctions.insert(std::make_pair(actionName, BoundFuncsList{func}));
@@ -270,12 +270,19 @@ void Input::ExecuteActions()
         const std::string &actionName = entry.first;
         Action &action = *(entry.second);
 
+        // Each ActionType requires slightly different triggering logic. Use the appropriate one based on the type of the current Action
         switch(action.getType())
         {
             case ActionType::Button:
             {
+                // Loop through each keybind and check if the key isn't pressed. 
+                // If it is, call all of the functions bound to the Action in question
+                // NOTE: Not exiting out of the loop once the first suitable key is pressed might theoretically result in the Action triggering twice
                 for (auto i = action.getKeybinds().begin(); i < action.getKeybinds().end(); i++)
                 {
+                    // NOTE: dynamic_cast is used here to cast down from parent class IKeybind to a child class. 
+                    // const_cast is used to de-constify the const IKeybind* returned by Action.getKeybinds()
+                    // The cast object MUST be a pointer, otherwise object slicing and a read-access violation occurs (more info about object slicing in the Action class declaration)  
                     ButtonKeybind *keybind = dynamic_cast<ButtonKeybind*>(const_cast<IKeybind*>(*i));
                     if(IsKeyPressed(keybind->getKeyCode()))
                     {
@@ -290,6 +297,8 @@ void Input::ExecuteActions()
 
             case ActionType::OneDimensional:
             {
+                // Loop through each "keybind set" and check if any of the keys aren't currently down. 
+                // If the positive key is down return 1, if the negative key is down return -1 in all of the functions bound to the current Action 
                 for (auto i = action.getKeybinds().begin(); i < action.getKeybinds().end(); i++)
                 {
                     OneDimensionalKeybind *keybind = dynamic_cast<OneDimensionalKeybind*>(const_cast<IKeybind*>(*i));
@@ -311,6 +320,8 @@ void Input::ExecuteActions()
             }
             break;
 
+            // Loop through each "keybind set" and check if any of the keys for each axis aren't currently down.
+            // Construct an ivec2 based on the combination of positive and negative keys held down and return it in all of the functions bound to this Action
             case ActionType::TwoDimensional:
             {
                 for (auto i = action.getKeybinds().begin(); i < action.getKeybinds().end(); i++)
@@ -359,8 +370,6 @@ void Input::ExecuteActions()
                 } 
             }
             break;
-
-            // NOTE: Add the rest
         }
     }
 }

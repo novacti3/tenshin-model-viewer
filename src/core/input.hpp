@@ -6,6 +6,7 @@
 #include <string>
 #include <functional>
 
+// The abstract base class for all keybind types. Used in the Action class to "generify" it
 class IKeybind
 {
     public:
@@ -13,6 +14,7 @@ class IKeybind
     virtual ~IKeybind() = default;
 };
 
+// Simple press-a-button true/false keybind
 class ButtonKeybind final : public IKeybind
 {
     private:
@@ -26,10 +28,11 @@ class ButtonKeybind final : public IKeybind
     int getKeyCode() const { return _keyCode; }
 };
 
+// Keybind with a keycode for 1 and a keycode for -1
 class OneDimensionalKeybind final : public IKeybind
 {
     private:
-    // NOTE: Changing this to a vec2 would maybe be cleaner
+    // NOTE: Changing this to a ivec2 would maybe be cleaner
     int _positiveKeyCode, _negativeKeyCode;
 
     public:
@@ -41,10 +44,11 @@ class OneDimensionalKeybind final : public IKeybind
     int getNegativeKeyCode() const { return _negativeKeyCode; }
 };
 
+// Keybind with two axis, each with a keycode for 1 and -1 respectively
 class TwoDimensionalKeybind final : public IKeybind
 {
     private:
-    // NOTE: Changing this to vec2s would maybe be cleaner
+    // NOTE: Changing this to ivec2s would maybe be cleaner
     int _positiveXKeyCode, _negativeXKeyCode;
     int _positiveYKeyCode, _negativeYKeyCode;
 
@@ -59,6 +63,7 @@ class TwoDimensionalKeybind final : public IKeybind
     int getNegativeYKeyCode() const { return _negativeYKeyCode; }
 };
 
+// All of the possible Action types
 enum class ActionType
 {
     Button = 0,
@@ -69,7 +74,11 @@ enum class ActionType
 class Action final
 {
     private:
+    // NOTE: Maybe add a field for the action name?
     ActionType _type;
+    // List of all possible keybinds that will trigger this action (the actual triggering depends on the keybind type)
+    // A pointer to IKeybind is stored here because casting down to derivatives of the class on a non-pointer causes object slicing
+    // (the additional data from the deriving class gets erased)
     std::vector<IKeybind*> _keybinds;
 
     public:
@@ -88,6 +97,7 @@ class Action final
     const std::vector<IKeybind*> &getKeybinds() const { return _keybinds; }
 };
 
+// Ease of use type aliases for the function pointers belonging to each ActionType
 using ButtonActionFunc = std::function<void(Action&)>;
 using OneDimensionalActionFunc = std::function<void(Action&, char value)>;
 using TwoDimensionalActionFunc = std::function<void(Action&, glm::ivec2 value)>;
@@ -98,12 +108,15 @@ using TwoDimensionalActionFunc = std::function<void(Action&, glm::ivec2 value)>;
 class Input
 {
     private:
+    // Hashmap of all registered Actions that the input system will check for
     std::unordered_map<std::string, Action*> _actions;
-    // TODO: Make an alias for all of the function pointers
+
+    // Hashmaps of lists of functions bound to Actions inside of _actions
     std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
     std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
     std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
 
+    // Keymaps used to determine the current state of a key
     std::unordered_map<int, bool> _currentFrameKeyMap;
     std::unordered_map<int, bool> _prevFrameKeyMap;
 
