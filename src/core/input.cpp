@@ -18,7 +18,8 @@ Input::Input()
     _actions.insert(std::make_pair("QuitProgram", new Action(ActionType::Button, { new ButtonKeybind(GLFW_KEY_ESCAPE) })));
     _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, 
     { 
-        new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S)
+        new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S),
+        new TwoDimensionalKeybind(GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_UP, GLFW_KEY_DOWN),
     })));
 }
 
@@ -316,6 +317,9 @@ void Input::ExecuteActions()
                 {
                     TwoDimensionalKeybind *keybind = dynamic_cast<TwoDimensionalKeybind*>(const_cast<IKeybind*>(*i));
                     
+                    // NOTE: The way this is set up now doesn't allow for two "keybind sets" to influence each other
+                    // (eg. you can't press W and right arrow at the same time and get (1, 1))
+                    // This could probably be changed by moving the value var outside of the keybinds loop if necesarry
                     glm::ivec2 value;
                     // X axis
                     if(IsKeyDown(keybind->getPositiveXKeyCode()))
