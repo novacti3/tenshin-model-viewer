@@ -12,27 +12,41 @@ class IKeybind
     virtual ~IKeybind() = default;
 };
 
-class ButtonKeybind : public IKeybind
+class ButtonKeybind final : public IKeybind
 {
     private:
     int _keyCode;
 
     public:
     ButtonKeybind(int keyCode): _keyCode(keyCode) {}
-    virtual ~ButtonKeybind() = default;
+    ~ButtonKeybind() = default;
 
     public:
-    int getKeyCode() { return _keyCode; }
+    int getKeyCode() const { return _keyCode; }
+};
+
+class OneDimensionalKeybind final : public IKeybind
+{
+    private:
+    int _positiveKeyCode, _negativeKeyCode;
+
+    public:
+    OneDimensionalKeybind(int positiveKeyCode, int negativeKeyCode): _positiveKeyCode(positiveKeyCode), _negativeKeyCode(negativeKeyCode) {}
+    ~OneDimensionalKeybind() = default;
+
+    public:
+    int getPositiveKeyCode() const { return _positiveKeyCode; }
+    int getNegativeKeyCode() const { return _negativeKeyCode; }
 };
 
 enum class ActionType
 {
     Button = 0,
-    // OneDimensional,
+    OneDimensional,
     // TwoDimensional
 };
 
-class Action
+class Action final
 {
     private:
     ActionType _type;
@@ -61,8 +75,8 @@ class Input
 {
     private:
     std::unordered_map<std::string, Action*> _actions;
-    using BoundFuncsList = std::vector<std::function<void(Action&)>>;
-    std::unordered_map<std::string, BoundFuncsList> _boundFunctions;
+    std::unordered_map<std::string, std::vector<std::function<void(Action&)>>> _buttonActionFunctions;
+    std::unordered_map<std::string, std::vector<std::function<void(Action&, char value)>>> _oneDimensionalActionFunctions;
 
     std::unordered_map<int, bool> _currentFrameKeyMap;
     std::unordered_map<int, bool> _prevFrameKeyMap;
@@ -78,8 +92,12 @@ class Input
     void StoreKeys();
 
     const Action* const GetAction(const std::string &name);
+    // Button action
     void BindFuncToAction(const std::string &actionName, std::function<void(Action&)> func);
     void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&)> func);
+    // One Dimensional action
+    void BindFuncToAction(const std::string &actionName, std::function<void(Action&, char value)> func);
+    void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, char value)> func);
 
     private:
     bool IsKeyPressed(int key);

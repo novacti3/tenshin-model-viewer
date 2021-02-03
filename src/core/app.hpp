@@ -41,5 +41,7 @@ class App final : public EventListener
     void OnKeyPressed(int key, int action);
 
     // TODO: Unstaticify this shit and do the same mumbo-jumbo as with the rest
+    // NOTE: Maybe take in a const Action ref so it can't be changed
     static void QuitProgram(Action& action);
+    static void RotateCameraYaw(Action &action, char value);
 };

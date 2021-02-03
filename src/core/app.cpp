@@ -31,6 +31,8 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     _input = new Input();
     std::function<void(Action&)> quitProgramFunc = &QuitProgram;
     _input->BindFuncToAction("QuitProgram", quitProgramFunc);
+    std::function<void(Action&, char value)> rotateCamYawFunc = &RotateCameraYaw;
+    _input->BindFuncToAction("CamYaw", rotateCamYawFunc);
 
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
 
@@ -82,7 +84,7 @@ void App::Update(float deltaTime)
     //     _cam->transform.addPosition(glm::vec3(0.0f, -elevationSpeed, 0.0f));
     // }
 
-    // Zoom in
+    // // Zoom in
     // if(_input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) || _input->IsKeyDown(GLFW_KEY_KP_ADD))
     // {
     //     zoomAmount = _cam->transform.getPosition().z - zoomSpeed;
@@ -149,6 +151,11 @@ void App::Render()
 
 void App::Cleanup()
 {
+    std::function<void(Action&)> quitProgramFunc = &QuitProgram;
+    _input->UnbindFuncFromAction("QuitProgram", quitProgramFunc);
+    std::function<void(Action&, char value)> rotateCamYawFunc = &RotateCameraYaw;
+    _input->UnbindFuncFromAction("CamYaw", rotateCamYawFunc);
+
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
     UIManager::Cleanup();
@@ -195,4 +202,18 @@ void App::QuitProgram(Action& action)
 {
     // TODO: Quit the program
     Log::LogInfo("Quit program action fired");
+}
+
+void App::RotateCameraYaw(Action &action, char value)
+{
+    switch(value)
+    {
+        case -1:
+        Log::LogInfo("Cam yaw negative");
+        break;
+
+        case 1:
+        Log::LogInfo("Cam yaw positive");
+        break;
+    }
 }
