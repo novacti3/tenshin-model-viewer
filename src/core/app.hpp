@@ -41,4 +41,7 @@ class App final : public EventListener
     void OnEvent(Event &event) override;
 
     void OnKeyPressed(int key, int action);
+
+    // TODO: Unstaticify this shit and do the same mumbo-jumbo as with the rest
+    static void QuitProgram(Action& action);
 };
