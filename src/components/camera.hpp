@@ -5,7 +5,6 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
-// TODO: Arcball cam
 class Camera
 {
     public:
