@@ -88,6 +88,10 @@ class Action final
     const std::vector<IKeybind*> &getKeybinds() const { return _keybinds; }
 };
 
+using ButtonActionFunc = std::function<void(Action&)>;
+using OneDimensionalActionFunc = std::function<void(Action&, char value)>;
+using TwoDimensionalActionFunc = std::function<void(Action&, glm::ivec2 value)>;
+
 // TODO: Add support for different keybinds for the same action (eg. move cam with WASD, arrow keys and mouse)
 // TODO: Modifier keys (eg. allow CTRL+O)
 // TODO: Add mouse input support
@@ -96,9 +100,9 @@ class Input
     private:
     std::unordered_map<std::string, Action*> _actions;
     // TODO: Make an alias for all of the function pointers
-    std::unordered_map<std::string, std::vector<std::function<void(Action&)>>> _buttonActionFunctions;
-    std::unordered_map<std::string, std::vector<std::function<void(Action&, char value)>>> _oneDimensionalActionFunctions;
-    std::unordered_map<std::string, std::vector<std::function<void(Action&, glm::ivec2 value)>>> _twoDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
+    std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
 
     std::unordered_map<int, bool> _currentFrameKeyMap;
     std::unordered_map<int, bool> _prevFrameKeyMap;
@@ -115,14 +119,14 @@ class Input
 
     const Action* const GetAction(const std::string &name);
     // Button action
-    void BindFuncToAction(const std::string &actionName, std::function<void(Action&)> func);
-    void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&)> func);
+    void BindFuncToAction(const std::string &actionName, ButtonActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func);
     // One Dimensional action
-    void BindFuncToAction(const std::string &actionName, std::function<void(Action&, char value)> func);
-    void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, char value)> func);
+    void BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func);
     // Two Dimensional action
-    void BindFuncToAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func);
-    void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func);
+    void BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func);
 
     private:
     bool IsKeyPressed(int key);

@@ -29,9 +29,9 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     _window->AddListener(this);
 
     _input = new Input();
-    std::function<void(Action&)> quitProgramFunc = &QuitProgram;
+    ButtonActionFunc quitProgramFunc = &QuitProgram;
     _input->BindFuncToAction("QuitProgram", quitProgramFunc);
-    std::function<void(Action&, glm::ivec2 value)> rotateCamFunc = &RotateCamera;
+    TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
     _input->BindFuncToAction("RotateCamera", rotateCamFunc);
 
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
@@ -151,9 +151,9 @@ void App::Render()
 
 void App::Cleanup()
 {
-    std::function<void(Action&)> quitProgramFunc = &QuitProgram;
+    ButtonActionFunc quitProgramFunc = &QuitProgram;
     _input->UnbindFuncFromAction("QuitProgram", quitProgramFunc);
-    std::function<void(Action&, glm::ivec2 value)> rotateCamFunc = &RotateCamera;
+    TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
     _input->UnbindFuncFromAction("RotateCamera", rotateCamFunc);
 
     // Clean up internal engine stuff

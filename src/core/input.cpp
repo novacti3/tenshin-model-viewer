@@ -16,7 +16,10 @@ Input::Input()
 
     // TODO: Eventually load all of these actions from some sort of keybinds file that's also editable by the user
     _actions.insert(std::make_pair("QuitProgram", new Action(ActionType::Button, { new ButtonKeybind(GLFW_KEY_ESCAPE) })));
-    _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, { new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S) })));
+    _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, 
+    { 
+        new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S)
+    })));
 }
 
 Input::~Input()
@@ -49,7 +52,7 @@ const Action* const Input::GetAction(const std::string &name)
 }
 
 // Button action 
-void Input::BindFuncToAction(const std::string &actionName, std::function<void(Action&)> func)
+void Input::BindFuncToAction(const std::string &actionName, ButtonActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -58,7 +61,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&)>>;
+    using BoundFuncsList = std::vector<ButtonActionFunc>;
 
     // Check if the given Action already has an entry in boundFuncs map. If not, add it
     if(_buttonActionFunctions.find(actionName) == _buttonActionFunctions.end())
@@ -82,7 +85,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         boundFuncs.push_back(func);
     }
 }
-void Input::UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&)> func)
+void Input::UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -91,7 +94,7 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&)>>;
+    using BoundFuncsList = std::vector<ButtonActionFunc>;
 
     // Check if there even are any funcs bound to provided Action
     if(_buttonActionFunctions.find(actionName) == _buttonActionFunctions.end())
@@ -115,7 +118,7 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
 }
 
 // One Dimensional action 
-void Input::BindFuncToAction(const std::string &actionName, std::function<void(Action&, char value)> func)
+void Input::BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -124,7 +127,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&, char value)>>;
+    using BoundFuncsList = std::vector<OneDimensionalActionFunc>;
 
     // Check if the given Action already has an entry in boundFuncs map. If not, add it
     if(_oneDimensionalActionFunctions.find(actionName) == _oneDimensionalActionFunctions.end())
@@ -148,7 +151,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         boundFuncs.push_back(func);
     }
 }
-void Input::UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, char value)> func)
+void Input::UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -157,7 +160,7 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&, char value)>>;
+    using BoundFuncsList = std::vector<OneDimensionalActionFunc>;
 
     // Check if there even are any funcs bound to provided Action
     if(_oneDimensionalActionFunctions.find(actionName) == _oneDimensionalActionFunctions.end())
@@ -181,7 +184,7 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
 }
 
 // Two Dimensional action 
-void Input::BindFuncToAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func)
+void Input::BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -190,7 +193,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&, glm::ivec2 value)>>;
+    using BoundFuncsList = std::vector<TwoDimensionalActionFunc>;
 
     // Check if the given Action already has an entry in boundFuncs map. If not, add it
     if(_twoDimensionalActionFunctions.find(actionName) == _twoDimensionalActionFunctions.end())
@@ -214,7 +217,7 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         boundFuncs.push_back(func);
     }
 }
-void Input::UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func)
+void Input::UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func)
 {
     // Check if the given Action even exists in the actions map
     if(GetAction(actionName) == nullptr)
@@ -223,7 +226,7 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
         return;
     }
 
-    using BoundFuncsList = std::vector<std::function<void(Action&, glm::ivec2 value)>>;
+    using BoundFuncsList = std::vector<TwoDimensionalActionFunc>;
 
     // Check if there even are any funcs bound to provided Action
     if(_twoDimensionalActionFunctions.find(actionName) == _twoDimensionalActionFunctions.end())
