@@ -16,7 +16,7 @@ Input::Input()
 
     // TODO: Eventually load all of these actions from some sort of keybinds file that's also editable by the user
     _actions.insert(std::make_pair("QuitProgram", new Action(ActionType::Button, { new ButtonKeybind(GLFW_KEY_ESCAPE) })));
-    _actions.insert(std::make_pair("CamYaw", new Action(ActionType::OneDimensional, { new OneDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A) })));
+    _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, { new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S) })));
 }
 
 Input::~Input()
@@ -180,6 +180,72 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
     }
 }
 
+// Two Dimensional action 
+void Input::BindFuncToAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func)
+{
+    // Check if the given Action even exists in the actions map
+    if(GetAction(actionName) == nullptr)
+    {
+        // NOTE: some sort of assert here?
+        return;
+    }
+
+    using BoundFuncsList = std::vector<std::function<void(Action&, glm::ivec2 value)>>;
+
+    // Check if the given Action already has an entry in boundFuncs map. If not, add it
+    if(_twoDimensionalActionFunctions.find(actionName) == _twoDimensionalActionFunctions.end())
+    {
+        _twoDimensionalActionFunctions.insert(std::make_pair(actionName, BoundFuncsList{func}));
+    }
+    else
+    {
+        BoundFuncsList boundFuncs = _twoDimensionalActionFunctions.at(actionName);
+
+        // Add the function to the bound funcs under the provided Action if the same func isn't already bound to it
+        // (prevents calling the func several times)
+        for(auto boundFunc: boundFuncs)
+        {
+            if(boundFunc.target_type() == func.target_type())
+            {
+                return;
+            }
+        }
+
+        boundFuncs.push_back(func);
+    }
+}
+void Input::UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func)
+{
+    // Check if the given Action even exists in the actions map
+    if(GetAction(actionName) == nullptr)
+    {
+        // NOTE: some sort of assert here?
+        return;
+    }
+
+    using BoundFuncsList = std::vector<std::function<void(Action&, glm::ivec2 value)>>;
+
+    // Check if there even are any funcs bound to provided Action
+    if(_twoDimensionalActionFunctions.find(actionName) == _twoDimensionalActionFunctions.end())
+    {
+        return;
+    }
+    else
+    {
+        BoundFuncsList boundFuncs = _twoDimensionalActionFunctions.at(actionName);
+
+        // Remove the funct from the Action if it's in the list
+        for(auto i = boundFuncs.begin(); i < boundFuncs.end(); i++)
+        {
+            if((*i).target_type() == func.target_type())
+            {
+                boundFuncs.erase(i);
+                return;
+            }
+        }
+    }
+}
+
 bool Input::IsKeyPressed(int key)
 {
     return _prevFrameKeyMap[key] == false && _currentFrameKeyMap[key] == true;
@@ -235,6 +301,52 @@ void Input::ExecuteActions()
                         for(auto boundFunc: _oneDimensionalActionFunctions[actionName])
                         {
                             boundFunc(action, -1);
+                        }
+                    }
+                } 
+            }
+            break;
+
+            case ActionType::TwoDimensional:
+            {
+                for (auto i = action.getKeybinds().begin(); i < action.getKeybinds().end(); i++)
+                {
+                    TwoDimensionalKeybind *keybind = dynamic_cast<TwoDimensionalKeybind*>(const_cast<IKeybind*>(*i));
+                    
+                    glm::ivec2 value;
+                    // X axis
+                    if(IsKeyDown(keybind->getPositiveXKeyCode()))
+                    {
+                        value.x = 1;
+                    }
+                    else if(IsKeyDown(keybind->getNegativeXKeyCode()))
+                    {
+                        value.x = -1;
+                    }
+                    else
+                    {
+                        value.x = 0;
+                    }
+
+                    // Y axis
+                    if(IsKeyDown(keybind->getPositiveYKeyCode()))
+                    {
+                        value.y = 1;
+                    }
+                    else if(IsKeyDown(keybind->getNegativeYKeyCode()))
+                    {
+                        value.y = -1;
+                    }
+                    else
+                    {
+                        value.y = 0;
+                    }
+
+                    if(value.x != 0 || value.y != 0)
+                    {
+                        for(auto boundFunc: _twoDimensionalActionFunctions[actionName])
+                        {
+                            boundFunc(action, value);
                         }
                     }
                 } 

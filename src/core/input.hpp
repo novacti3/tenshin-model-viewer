@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/vec2.hpp>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -28,6 +29,7 @@ class ButtonKeybind final : public IKeybind
 class OneDimensionalKeybind final : public IKeybind
 {
     private:
+    // NOTE: Changing this to a vec2 would maybe be cleaner
     int _positiveKeyCode, _negativeKeyCode;
 
     public:
@@ -39,11 +41,29 @@ class OneDimensionalKeybind final : public IKeybind
     int getNegativeKeyCode() const { return _negativeKeyCode; }
 };
 
+class TwoDimensionalKeybind final : public IKeybind
+{
+    private:
+    // NOTE: Changing this to vec2s would maybe be cleaner
+    int _positiveXKeyCode, _negativeXKeyCode;
+    int _positiveYKeyCode, _negativeYKeyCode;
+
+    public:
+    TwoDimensionalKeybind(int positiveXKeyCode, int negativeXKeyCode, int positiveYKeyCode, int negativeYKeyCode): _positiveXKeyCode(positiveXKeyCode), _negativeXKeyCode(negativeXKeyCode), _positiveYKeyCode(positiveYKeyCode), _negativeYKeyCode(negativeYKeyCode) {}
+    ~TwoDimensionalKeybind() = default;
+
+    public:
+    int getPositiveXKeyCode() const { return _positiveXKeyCode; }
+    int getNegativeXKeyCode() const { return _negativeXKeyCode; }
+    int getPositiveYKeyCode() const { return _positiveYKeyCode; }
+    int getNegativeYKeyCode() const { return _negativeYKeyCode; }
+};
+
 enum class ActionType
 {
     Button = 0,
     OneDimensional,
-    // TwoDimensional
+    TwoDimensional
 };
 
 class Action final
@@ -75,8 +95,10 @@ class Input
 {
     private:
     std::unordered_map<std::string, Action*> _actions;
+    // TODO: Make an alias for all of the function pointers
     std::unordered_map<std::string, std::vector<std::function<void(Action&)>>> _buttonActionFunctions;
     std::unordered_map<std::string, std::vector<std::function<void(Action&, char value)>>> _oneDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<std::function<void(Action&, glm::ivec2 value)>>> _twoDimensionalActionFunctions;
 
     std::unordered_map<int, bool> _currentFrameKeyMap;
     std::unordered_map<int, bool> _prevFrameKeyMap;
@@ -98,6 +120,9 @@ class Input
     // One Dimensional action
     void BindFuncToAction(const std::string &actionName, std::function<void(Action&, char value)> func);
     void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, char value)> func);
+    // Two Dimensional action
+    void BindFuncToAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func);
+    void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&, glm::ivec2 value)> func);
 
     private:
     bool IsKeyPressed(int key);
