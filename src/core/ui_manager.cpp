@@ -82,16 +82,6 @@ void UIManager::ShowMenuBar()
             ImGui::EndMenu();
         }
 
-        if(ImGui::BeginMenu("Edit"))
-        {
-            if(ImGui::MenuItem("Preferences..."))
-            {
-
-            }
-
-            ImGui::EndMenu();
-        }
-
         if(ImGui::BeginMenu("View"))
         {
             // TODO: Show a checkmark or something next to the menu item to indicate that the window is currently active in the editor
