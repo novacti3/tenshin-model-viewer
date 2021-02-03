@@ -38,7 +38,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     {
         App::OnKeyPressed(key, action);
     };
-    glfwSetKeyCallback(_window->getHandle(), App::KeyCallback);
+    glfwSetKeyCallback(_window->getHandle(), App::GLFWKeyCallback);
     
     UIManager::Init(_window->getHandle(), glslVersion);
 
@@ -129,7 +129,7 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
-    _input->SaveKeys();
+    _input->StoreKeys();
 
     // TODO: Make an event system (eg. have an OnOpenFilePressed event that pings the ResourceManager to load a model and return a OnFileOpened event that does other stuff)
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
@@ -167,6 +167,14 @@ void App::Cleanup()
     Log::LogInfo("App instance destroyed");
 }
 
+void App::OnEvent(Event &event)
+{
+    if(event.getType() == EventType::WINDOW_RESIZED_EVENT)
+    {
+        Log::LogInfo("Window resize event fired");
+    }
+}
+
 void App::OnKeyPressed(int key, int action)
 {
     bool state;
@@ -181,14 +189,6 @@ void App::OnKeyPressed(int key, int action)
     }
 
     _input->UpdateKey(key, state);
-}
-
-void App::OnEvent(Event &event)
-{
-    if(event.getType() == EventType::WINDOW_RESIZED_EVENT)
-    {
-        Log::LogInfo("Window resize event fired");
-    }
 }
 
 void App::QuitProgram(Action& action)

@@ -36,15 +36,22 @@ class Action
 {
     private:
     ActionType _type;
-    std::vector<IKeybind> _keybinds;
+    std::vector<IKeybind*> _keybinds;
 
     public:
-    Action(ActionType type, std::vector<IKeybind> keybinds): _type(type), _keybinds(std::move(_keybinds)) {} 
-    virtual ~Action() = default;
+    Action(ActionType type, std::vector<IKeybind*> keybinds): _type(type), _keybinds(std::move(keybinds)) {} 
+    virtual ~Action()
+    {
+        for(IKeybind *keybind: _keybinds)
+        {
+            delete keybind;
+            keybind = 0;
+        }
+    }
 
     public:
     ActionType getType() const { return _type; }
-    const std::vector<IKeybind> &getKeybinds() const { return _keybinds; }
+    const std::vector<IKeybind*> &getKeybinds() const { return _keybinds; }
 };
 
 // TODO: Add support for different keybinds for the same action (eg. move cam with WASD, arrow keys and mouse)
@@ -53,32 +60,31 @@ class Action
 class Input
 {
     private:
-    std::unordered_map<std::string, Action> _actions;
-
+    std::unordered_map<std::string, Action*> _actions;
     using BoundFuncsList = std::vector<std::function<void(Action&)>>;
     std::unordered_map<std::string, BoundFuncsList> _boundFunctions;
 
-    std::unordered_map<int, bool> _keyMap;
-    std::unordered_map<int, bool> _prevKeyMap;
+    std::unordered_map<int, bool> _currentFrameKeyMap;
+    std::unordered_map<int, bool> _prevFrameKeyMap;
 
     public:
     Input();
-    ~Input() = default;
+    ~Input();
 
     public:
+    // Updates the provided key in THIS FRAME'S keymap
     void UpdateKey (int key, bool state);
-    // TODO: Find a better name
-    void SaveKeys();
-    
-    // Returns 1 if a key was just pressed
-    bool IsKeyPressed(int key);
-    // Returns 1 if a key has been down
-    bool IsKeyDown(int key);
-    // Returns 1 if a key was just released
-    bool IsKeyReleased(int key);
+    // Stores the current frame's keymap and prepares it for the next frame 
+    void StoreKeys();
 
-    // TODO: Function which sends an OnActionStarted event (or something like that) along with the Action which happened
     const Action* const GetAction(const std::string &name);
     void BindFuncToAction(const std::string &actionName, std::function<void(Action&)> func);
     void UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&)> func);
+
+    private:
+    bool IsKeyPressed(int key);
+    bool IsKeyDown(int key);
+    bool IsKeyReleased(int key);
+
+    void ExecuteActions();
 };

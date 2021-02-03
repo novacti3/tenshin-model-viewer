@@ -6,51 +6,48 @@ Input::Input()
 {
     for (size_t i = 0; i < 512; i++)
     {
-        _keyMap[i] = false;
+        _currentFrameKeyMap[i] = false;
     }
     
     for (size_t i = 0; i < 512; i++)
     {
-        _prevKeyMap[i] = false;
+        _prevFrameKeyMap[i] = false;
     }
 
     // TODO: Eventually load all of these actions from some sort of keybinds file that's also editable by the user
-    _actions.insert(std::make_pair("QuitProgram", Action(ActionType::Button, {ButtonKeybind(GLFW_KEY_ESCAPE)} )));
+    // ButtonKeybind *quitProgramButton = ;
+    // std::vector<ButtonKeybind*> quitProgramKeybinds;
+    // quitProgramKeybinds.push_back(quitProgramButton);
+
+    _actions.insert(std::make_pair("QuitProgram", new Action(ActionType::Button, { new ButtonKeybind(GLFW_KEY_ESCAPE) })));
+}
+
+Input::~Input()
+{
+    for(auto entry: _actions)
+    {
+        delete entry.second;
+        entry.second = nullptr;
+    }
 }
 
 void Input::UpdateKey (int key, bool state)
 {
-    if(key < _keyMap.size())
+    if(key < _currentFrameKeyMap.size())
     {
-        _keyMap[key] = state;
+        _currentFrameKeyMap[key] = state;
+        ExecuteActions();
     }
 }
 
-void Input::SaveKeys()
+void Input::StoreKeys()
 {
-    _prevKeyMap = _keyMap;
-}
-
-// Function which returns 1 if a key was just pressed
-bool Input::IsKeyPressed(int key)
-{
-    // return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_PRESS;
-    return _prevKeyMap[key] == false && _keyMap[key] == true;
-}
-bool Input::IsKeyDown(int key)
-{
-    return _keyMap[key];
-}
-// Function which returns 1 if a key was just released
-bool Input::IsKeyReleased(int key)
-{
-    // return _prevKeys[key].state != GLFW_RELEASE && _keys[key].state == GLFW_RELEASE;
-    return _prevKeyMap[key] == true && _keyMap[key] == false;
+    _prevFrameKeyMap = _currentFrameKeyMap;
 }
 
 const Action* const Input::GetAction(const std::string &name)
 {
-    Action *action = &_actions.at(name); 
+    Action *action = _actions.at(name); 
     return action != nullptr ? action : nullptr;
 }
 
@@ -85,7 +82,6 @@ void Input::BindFuncToAction(const std::string &actionName, std::function<void(A
         boundFuncs.push_back(func);
     }
 }
-
 void Input::UnbindFuncFromAction(const std::string &actionName, std::function<void(Action&)> func)
 {
     // Check if the given Action even exists in the actions map
@@ -112,6 +108,49 @@ void Input::UnbindFuncFromAction(const std::string &actionName, std::function<vo
                 boundFuncs.erase(i);
                 return;
             }
+        }
+    }
+}
+
+bool Input::IsKeyPressed(int key)
+{
+    return _prevFrameKeyMap[key] == false && _currentFrameKeyMap[key] == true;
+}
+bool Input::IsKeyDown(int key)
+{
+    return _currentFrameKeyMap[key];
+}
+bool Input::IsKeyReleased(int key)
+{
+    return _prevFrameKeyMap[key] == true && _currentFrameKeyMap[key] == false;
+}
+
+void Input::ExecuteActions()
+{
+    for(auto entry: _actions)
+    {
+        const std::string &actionName = entry.first;
+        Action &action = *(entry.second);
+
+        switch(action.getType())
+        {
+            case ActionType::Button:
+            {
+                for (auto i = action.getKeybinds().begin(); i < action.getKeybinds().end(); i++)
+                {
+                    ButtonKeybind *keybind = dynamic_cast<ButtonKeybind*>(const_cast<IKeybind*>(*i));
+                    if(IsKeyPressed(keybind->getKeyCode()))
+                    {
+                        for(auto boundFunc: _boundFunctions[actionName])
+                        {
+                            boundFunc(action);
+                        }
+                    }
+                }
+            }
+            break;
+
+            // NOTE: Add the rest
         }
     }
 }

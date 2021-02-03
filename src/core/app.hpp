@@ -28,18 +28,16 @@ class App final : public EventListener
     public:
     bool Init(const glm::uvec2 windowSize, const std::string windowTitle);
     void LoadResources();
-    void ProcessEvents();
     void Update(float deltaTime);
     void Render();
     void Cleanup();
 
     inline Window *getWindow() { return _window; }
 
-    static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
+    static void GLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
 
     private:
     void OnEvent(Event &event) override;
-
     void OnKeyPressed(int key, int action);
 
     // TODO: Unstaticify this shit and do the same mumbo-jumbo as with the rest
