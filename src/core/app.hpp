@@ -13,7 +13,6 @@
 class App final : public EventListener
 {
     private:
-    Window *_window;
     Input *_input;
     Camera *_cam;
 
@@ -32,7 +31,7 @@ class App final : public EventListener
     void Render();
     void Cleanup();
 
-    inline Window *getWindow() { return _window; }
+    // inline Window *getWindow() { return _window; }
 
     static void GLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
 

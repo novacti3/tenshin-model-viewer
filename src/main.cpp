@@ -32,7 +32,7 @@ int main()
     app.LoadResources();
 
     float lastTime = 0, currentTime = 0, deltaTime = 0;
-    while(!glfwWindowShouldClose(app.getWindow()->getHandle()))
+    while(!glfwWindowShouldClose(Window::getHandle()))
     {
         // FIXME: The way the deltaTime is calculated must be goofd because it makes everything spazz out and anything but consistent and constant
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere

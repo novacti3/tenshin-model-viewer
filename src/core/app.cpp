@@ -19,14 +19,13 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     const char *glslVersion = "#version 330";
     // Create window
-    _window = new Window();
-    if(!_window->Init(windowSize, windowTitle))
+    if(!Window::Init(windowSize, windowTitle))
     {
         Log::LogFatal("Failed initializing window");
         return false;
     }
     Log::LogInfo("Window initialized");
-    _window->AddListener(this);
+    // Window::AddListener(this);
 
     _input = new Input();
     ButtonActionFunc quitProgramFunc = &QuitProgram;
@@ -34,15 +33,15 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
     _input->BindFuncToAction("RotateCamera", rotateCamFunc);
 
-    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
+    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f);
 
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
     };
-    glfwSetKeyCallback(_window->getHandle(), App::GLFWKeyCallback);
+    glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
     
-    UIManager::Init(_window->getHandle(), glslVersion);
+    UIManager::Init(Window::getHandle(), glslVersion);
 
     return true;
 }
@@ -144,9 +143,9 @@ void App::Render()
     static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
     cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
-    UIManager::Render(_window->getSize().x, _window->getSize().y);
+    UIManager::Render(Window::getSize().x, Window::getSize().y);
 
-    glfwSwapBuffers(_window->getHandle());
+    glfwSwapBuffers(Window::getHandle());
 }
 
 void App::Cleanup()
@@ -167,9 +166,7 @@ void App::Cleanup()
     _cam = nullptr;
 
     // Clean up window and GLFW
-    _window->Cleanup();
-    delete _window;
-    _window = nullptr;
+    Window::Cleanup();
 
     Log::LogInfo("App instance destroyed");
 }
