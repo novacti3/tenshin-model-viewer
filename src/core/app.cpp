@@ -42,8 +42,8 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     
     UIManager::Init(Window::getHandle(), glslVersion);
 
-    SceneObject *camera = new SceneObject(TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
-    camera->AddComponent<CameraComponent>(new CameraComponent(camera->transform, 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
+    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
+    camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
 
@@ -156,6 +156,14 @@ void App::Render()
 
 void App::Cleanup()
 {
+    // Delete scenes
+    for(Scene *scene: _scenes)
+    {
+        delete scene;
+        scene = nullptr;
+    }
+    _currentScene = nullptr; 
+
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
     UIManager::Cleanup();    
