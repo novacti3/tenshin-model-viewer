@@ -10,10 +10,10 @@
 #include <string>
 #include <functional>
 
+// TODO: Turn into a static class
 class App final : public EventListener
 {
     private:
-    Input *_input;
     Camera *_cam;
 
     static std::function<void(int, int)> _onKeyPressed;
