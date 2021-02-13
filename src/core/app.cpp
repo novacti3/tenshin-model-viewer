@@ -132,11 +132,16 @@ void App::Render()
 {
     Input::StoreKeys();
 
-    // TODO: Make an event system (eg. have an OnOpenFilePressed event that pings the ResourceManager to load a model and return a OnFileOpened event that does other stuff)
+    // TODO: Render everything in a Scene object to a framebuffer texture thing for the UI manager to display
+    // Renderer::RenderScene(currentScene) (takes in a currentScene of type Scene which holds all data relative to a single scene (eg. the loaded Model, its Camera etc.)) 
+    // TODO: Display rendered Scene in UI
+    // UIManager::DisplayScene(Renderer::getRenderedScene())
+
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
     // TODO: Separate input between each layer
     GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    // TODO: 
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
     
     static Cube cube;
