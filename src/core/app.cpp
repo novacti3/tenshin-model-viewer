@@ -130,7 +130,7 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
-    _input->StoreKeys();
+    Input::StoreKeys();
 
     // TODO: Make an event system (eg. have an OnOpenFilePressed event that pings the ResourceManager to load a model and return a OnFileOpened event that does other stuff)
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
@@ -150,11 +150,6 @@ void App::Render()
 
 void App::Cleanup()
 {
-    ButtonActionFunc quitProgramFunc = &QuitProgram;
-    _input->UnbindFuncFromAction("QuitProgram", quitProgramFunc);
-    TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
-    _input->UnbindFuncFromAction("RotateCamera", rotateCamFunc);
-
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
     UIManager::Cleanup();    
@@ -190,7 +185,7 @@ void App::OnKeyPressed(int key, int action)
         state = false;
     }
 
-    _input->UpdateKey(key, state);
+    Input::UpdateKey(key, state);
 }
 
 void App::QuitProgram(Action& action)
