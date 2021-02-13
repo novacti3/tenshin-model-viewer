@@ -39,6 +39,7 @@ list(APPEND SOURCES
     
     # Rendering
     "src/rendering/shader.cpp"
+    "src/rendering/renderer.cpp"
 
     # Primitives
     "src/rendering/primitives/quad.cpp"

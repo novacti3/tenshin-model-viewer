@@ -19,30 +19,29 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     const char *glslVersion = "#version 330";
     // Create window
-    _window = new Window();
-    if(!_window->Init(windowSize, windowTitle))
+    if(!Window::Init(windowSize, windowTitle))
     {
         Log::LogFatal("Failed initializing window");
         return false;
     }
     Log::LogInfo("Window initialized");
-    _window->AddListener(this);
+    // Window::AddListener(this);
 
-    _input = new Input();
+    Input::Init();
     ButtonActionFunc quitProgramFunc = &QuitProgram;
-    _input->BindFuncToAction("QuitProgram", quitProgramFunc);
+    Input::BindFuncToAction("QuitProgram", quitProgramFunc);
     TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
-    _input->BindFuncToAction("RotateCamera", rotateCamFunc);
+    Input::BindFuncToAction("RotateCamera", rotateCamFunc);
 
-    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)_window->getSize().x/(float)_window->getSize().y, 0.01f, 100.0f);
+    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f);
 
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
     };
-    glfwSetKeyCallback(_window->getHandle(), App::GLFWKeyCallback);
+    glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
     
-    UIManager::Init(_window->getHandle(), glslVersion);
+    UIManager::Init(Window::getHandle(), glslVersion);
 
     return true;
 }
@@ -131,7 +130,7 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
-    _input->StoreKeys();
+    Input::StoreKeys();
 
     // TODO: Make an event system (eg. have an OnOpenFilePressed event that pings the ResourceManager to load a model and return a OnFileOpened event that does other stuff)
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
@@ -144,32 +143,23 @@ void App::Render()
     static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
     cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
-    UIManager::Render(_window->getSize().x, _window->getSize().y);
+    UIManager::Render(Window::getSize().x, Window::getSize().y);
 
-    glfwSwapBuffers(_window->getHandle());
+    glfwSwapBuffers(Window::getHandle());
 }
 
 void App::Cleanup()
 {
-    ButtonActionFunc quitProgramFunc = &QuitProgram;
-    _input->UnbindFuncFromAction("QuitProgram", quitProgramFunc);
-    TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
-    _input->UnbindFuncFromAction("RotateCamera", rotateCamFunc);
-
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
-    UIManager::Cleanup();
-    
-    delete _input;
-    _input = nullptr;
+    UIManager::Cleanup();    
+    Input::Cleanup();
 
     delete _cam;
     _cam = nullptr;
 
     // Clean up window and GLFW
-    _window->Cleanup();
-    delete _window;
-    _window = nullptr;
+    Window::Cleanup();
 
     Log::LogInfo("App instance destroyed");
 }
@@ -195,13 +185,12 @@ void App::OnKeyPressed(int key, int action)
         state = false;
     }
 
-    _input->UpdateKey(key, state);
+    Input::UpdateKey(key, state);
 }
 
 void App::QuitProgram(Action& action)
 {
-    // TODO: Quit the program
-    Log::LogInfo("QuitProgram action fired");
+    glfwSetWindowShouldClose(Window::getHandle(), true);
 }
 
 void App::RotateCamera(Action &action, glm::ivec2 value)

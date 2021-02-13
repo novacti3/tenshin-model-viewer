@@ -2,7 +2,9 @@
 
 #include "log.hpp"
 
-std::function<void(int, int)> Window::_onResize;
+glm::uvec2  Window::_size;
+std::string Window::_title;
+GLFWwindow *Window::_handle;
 
 static const unsigned int MIN_WINDOW_WIDTH = 640;
 static const unsigned int MIN_WINDOW_HEIGHT = 480;
@@ -28,17 +30,17 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     glfwWindowHint(GLFW_RESIZABLE, true);
 
     // Make sure the start size of the window is above the specified minimum dimensions
-    if(size.x < MIN_WINDOW_WIDTH)
+    if(_size.x < MIN_WINDOW_WIDTH)
     {
-        size.x = MIN_WINDOW_WIDTH;
+        _size.x = MIN_WINDOW_WIDTH;
     }
-    if(size.y < MIN_WINDOW_HEIGHT)
+    if(_size.y < MIN_WINDOW_HEIGHT)
     {
-        size.y = MIN_WINDOW_HEIGHT;
+        _size.y = MIN_WINDOW_HEIGHT;
     }
 
     // Create window and OpenGL context
-    _handle = glfwCreateWindow(size.x, size.y, title.c_str(), NULL, NULL);
+    _handle = glfwCreateWindow(_size.x, _size.y, _title.c_str(), NULL, NULL);
     if(_handle == nullptr)
     {
         Log::LogFatal("Failed creating window");
@@ -54,7 +56,7 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     }
     Log::LogInfo("GLAD initialized");
     
-    GL_CALL(glad_glViewport(0, 0, size.x, size.y));
+    GL_CALL(glad_glViewport(0, 0, _size.x, _size.y));
 
     glfwSetWindowSizeLimits(_handle, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
     // NOTE: Is limiting the aspect ratio even worth it?
@@ -62,10 +64,10 @@ bool Window::Init(glm::uvec2 size, const std::string title)
     // glfwSetWindowAspectRatio(_handle, 16, 9);
     
     // Set up framebuffer resize callback
-    _onResize = [this](int width, int height)
-    {
-        Window::OnResize(width, height);
-    };
+    // _onResize = [this](int width, int height)
+    // {
+    //     Window::OnResize(width, height);
+    // };
     glfwSetFramebufferSizeCallback(_handle, Window::ResizeCallback);
 
     return true;
@@ -80,10 +82,7 @@ void Window::Cleanup()
     Log::LogInfo("GLFW terminated");
 }
 
-void Window::OnResize(int width, int height)
+void Window::ResizeCallback(GLFWwindow *window, int width, int height)
 {
-    _size.x = width;
-    _size.y = height;
-    GL_CALL(glad_glViewport(0, 0, width, height));
-    NotifyListeners(WindowResizedEvent(EventType::WINDOW_RESIZED_EVENT, _size));
+    _size = glm::uvec2(width, height);
 }
