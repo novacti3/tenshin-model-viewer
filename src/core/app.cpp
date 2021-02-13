@@ -27,11 +27,11 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     Log::LogInfo("Window initialized");
     // Window::AddListener(this);
 
-    _input = new Input();
+    Input::Init();
     ButtonActionFunc quitProgramFunc = &QuitProgram;
-    _input->BindFuncToAction("QuitProgram", quitProgramFunc);
+    Input::BindFuncToAction("QuitProgram", quitProgramFunc);
     TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
-    _input->BindFuncToAction("RotateCamera", rotateCamFunc);
+    Input::BindFuncToAction("RotateCamera", rotateCamFunc);
 
     _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f);
 
@@ -157,10 +157,8 @@ void App::Cleanup()
 
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
-    UIManager::Cleanup();
-    
-    delete _input;
-    _input = nullptr;
+    UIManager::Cleanup();    
+    Input::Cleanup();
 
     delete _cam;
     _cam = nullptr;
@@ -197,8 +195,7 @@ void App::OnKeyPressed(int key, int action)
 
 void App::QuitProgram(Action& action)
 {
-    // TODO: Quit the program
-    Log::LogInfo("QuitProgram action fired");
+    glfwSetWindowShouldClose(Window::getHandle(), true);
 }
 
 void App::RotateCamera(Action &action, glm::ivec2 value)

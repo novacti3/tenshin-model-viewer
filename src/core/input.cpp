@@ -2,7 +2,15 @@
 
 #include <GLFW/glfw3.h>
 
-Input::Input()
+std::unordered_map<std::string, Action*> Input::_actions;
+std::unordered_map<std::string, std::vector<ButtonActionFunc>> Input::_buttonActionFunctions;
+std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> Input::_oneDimensionalActionFunctions;
+std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> Input::_twoDimensionalActionFunctions;
+
+std::unordered_map<int, bool> Input::_currentFrameKeyMap;
+std::unordered_map<int, bool> Input::_prevFrameKeyMap;
+
+void Input::Init()
 {
     for (size_t i = 0; i < 512; i++)
     {
@@ -19,11 +27,11 @@ Input::Input()
     _actions.insert(std::make_pair("RotateCamera", new Action(ActionType::TwoDimensional, 
     { 
         new TwoDimensionalKeybind(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W, GLFW_KEY_S),
-        new TwoDimensionalKeybind(GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_UP, GLFW_KEY_DOWN),
+        new TwoDimensionalKeybind(GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_UP, GLFW_KEY_DOWN)
     })));
 }
 
-Input::~Input()
+void Input::Cleanup()
 {
     for(auto entry: _actions)
     {
