@@ -37,6 +37,8 @@ list(APPEND SOURCES
     "libs/Dear ImGui/backends/imgui_impl_opengl3.cpp"
     "libs/Dear ImGui/backends/imgui_impl_glfw.cpp"
     
+    "src/core/scene.hpp"
+
     # Rendering
     "src/rendering/shader.cpp"
     "src/rendering/renderer.cpp"
@@ -47,7 +49,7 @@ list(APPEND SOURCES
     
     # Components
     "src/components/primitive_renderer.cpp"
-    "src/components/camera.cpp"
+    "src/components/camera_component.cpp"
     
     # Core engine stuff
     "src/core/event.cpp"

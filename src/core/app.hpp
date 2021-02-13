@@ -3,7 +3,7 @@
 #include "core/event.hpp"
 #include "core/window.hpp"
 #include "core/input.hpp"
-#include "components/camera.hpp"
+#include "core/scene.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -14,11 +14,12 @@
 class App final : public EventListener
 {
     private:
-    Camera *_cam;
+    std::vector<Scene*> _scenes;
+    Scene* _currentScene;
 
     static std::function<void(int, int)> _onKeyPressed;
 
-    Transform _cubeTransform;
+    TransformComponent _cubeTransform;
 
     public:
     App(){}

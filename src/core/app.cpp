@@ -7,7 +7,8 @@
 #include "rendering/primitives/quad.hpp"
 #include "rendering/primitives/cube.hpp"
 
-#include "components/transform.hpp"
+#include "components/transform_component.hpp"
+#include "components/camera_component.hpp"
 #include "components/primitive_renderer.hpp"
 
 #include <glad/glad.h>
@@ -33,8 +34,6 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
     Input::BindFuncToAction("RotateCamera", rotateCamFunc);
 
-    _cam = new Camera(Transform(glm::vec3(0.0f, 0.0f, 3.0f)), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f);
-
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
@@ -42,6 +41,11 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
     
     UIManager::Init(Window::getHandle(), glslVersion);
+
+    SceneObject *camera = new SceneObject(TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
+    camera->AddComponent<CameraComponent>(new CameraComponent(camera->transform, 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
+    _scenes.push_back(new Scene(camera));
+    _currentScene = _scenes[0];
 
     return true;
 }
@@ -140,13 +144,10 @@ void App::Render()
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
     // TODO: Separate input between each layer
-    GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    // TODO: 
-    GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
-    
-    static Cube cube;
-    static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
-    cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
+
+    // static Cube cube;
+    // static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
+    // cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
     UIManager::Render(Window::getSize().x, Window::getSize().y);
 
@@ -159,9 +160,6 @@ void App::Cleanup()
     ResourceManager::Cleanup();
     UIManager::Cleanup();    
     Input::Cleanup();
-
-    delete _cam;
-    _cam = nullptr;
 
     // Clean up window and GLFW
     Window::Cleanup();

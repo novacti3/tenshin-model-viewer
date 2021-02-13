@@ -12,7 +12,7 @@ PrimitiveRenderer::~PrimitiveRenderer()
     _shader = nullptr;
 }
 
-void PrimitiveRenderer::Draw(const Transform &transform, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
+void PrimitiveRenderer::Draw(const TransformComponent &transform, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
 {
     if(_primitive->getVAO() == 0 || _primitive->getVBO() == 0)
     {
