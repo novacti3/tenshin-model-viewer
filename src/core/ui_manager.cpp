@@ -144,7 +144,8 @@ void UIManager::ShowScene()
 {
     ImGui::Begin("Scene###SceneView", &_showScene, _windowFlags);
     {
-        ImGui::Text("Scene window");
+
+        // ImGui::Image();
     }
     ImGui::End();
 }

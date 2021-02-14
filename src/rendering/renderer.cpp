@@ -8,8 +8,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 unsigned int Renderer::_framebuffer;
-unsigned int Renderer::_colorBuffer;
-unsigned int Renderer::_depthBuffer;
+Texture *Renderer::_colorBuffer;
+Texture *Renderer::_depthBuffer;
 
 bool Renderer::Init()
 {
@@ -17,24 +17,27 @@ bool Renderer::Init()
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer));
 
     // Generate color buffer
-    GL_CALL(glad_glGenTextures(1, &_colorBuffer));
-    GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, _colorBuffer));
-    GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    // TODO: Replace with the current window size
-    GL_CALL(glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1600, 1200, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
-    GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, 0));
+    _colorBuffer = new Texture(GL_TEXTURE_2D, glm::uvec2(1600, 1200), GL_RGB8, GL_RGB);
+    // GL_CALL(glad_glGenTextures(1, &_colorBuffer));
+    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, _colorBuffer));
+    // GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    // GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    // // TODO: Replace with the current window size
+    // GL_CALL(glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1600, 1200, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
+    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, 0));
+    
     // Attach color buffer to framebuffer
-    GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorBuffer, 0));
+    GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorBuffer->getID(), 0));
 
-    // // Generate depth buffer
+    // Generate depth buffer
+    _depthBuffer = new Texture(GL_TEXTURE_2D, glm::uvec2(1600, 1200), GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT);
     // GL_CALL(glad_glGenTextures(1, &_depthBuffer));
     // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, _depthBuffer));
     // // TODO: Replace with the current window size
     // GL_CALL(glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1600, 1200, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL));
-    // // Attach depth buffer to framebuffer
-    // GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthBuffer, 0));
     // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, 0));
+    // Attach depth buffer to framebuffer
+    GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthBuffer->getID(), 0));
 
     // NOTE: Maybe add checks for more errors
     if(glad_glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -50,21 +53,23 @@ bool Renderer::Init()
 void Renderer::Cleanup()
 {
     GL_CALL(glad_glDeleteFramebuffers(1, &_framebuffer));
-    GL_CALL(glad_glDeleteTextures(1, &_colorBuffer));
-    GL_CALL(glad_glDeleteTextures(1, &_depthBuffer));
+    delete _colorBuffer;
+    _colorBuffer = nullptr;
+    delete _depthBuffer;
+    _depthBuffer = nullptr;
 }
 
 void Renderer::RenderScene(const Scene &scene)
 {
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer)); 
 
-    // GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT));
+    GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    // GL_CALL(glad_glClear(GL_COLOR_BUFFER_BIT));
     
-    // GL_CALL(glad_glEnable(GL_DEPTH_TEST));
+    GL_CALL(glad_glEnable(GL_DEPTH_TEST));
     // TODO: Make the clear color adjustable in the UI
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
-    // GL_CALL(glad_glDisable(GL_DEPTH_TEST));
+    GL_CALL(glad_glDisable(GL_DEPTH_TEST));
 
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

@@ -41,6 +41,7 @@ list(APPEND SOURCES
 
     # Rendering
     "src/rendering/shader.cpp"
+    "src/rendering/texture.cpp"
     "src/rendering/renderer.cpp"
 
     # Primitives
