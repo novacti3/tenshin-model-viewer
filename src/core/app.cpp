@@ -3,13 +3,10 @@
 #include "core/log.hpp"
 #include "core/resource_manager.hpp"
 #include "core/ui_manager.hpp"
-
-#include "rendering/primitives/quad.hpp"
-#include "rendering/primitives/cube.hpp"
+#include "rendering/renderer.hpp"
 
 #include "components/transform_component.hpp"
 #include "components/camera_component.hpp"
-#include "components/primitive_renderer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -46,6 +43,12 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
+
+    if(!Renderer::Init())
+    {
+        Log::LogFatal("Failed creating renderer");
+        return false;
+    }
 
     return true;
 }
@@ -137,7 +140,7 @@ void App::Render()
     Input::StoreKeys();
 
     // TODO: Render everything in a Scene object to a framebuffer texture thing for the UI manager to display
-    // Renderer::RenderScene(currentScene) (takes in a currentScene of type Scene which holds all data relative to a single scene (eg. the loaded Model, its Camera etc.)) 
+    Renderer::RenderScene(*_currentScene); //(takes in a currentScene of type Scene which holds all data relative to a single scene (eg. the loaded Model, its Camera etc.)) 
     // TODO: Display rendered Scene in UI
     // UIManager::DisplayScene(Renderer::getRenderedScene())
 
@@ -166,6 +169,7 @@ void App::Cleanup()
 
     // Clean up internal engine stuff
     ResourceManager::Cleanup();
+    Renderer::Cleanup();
     UIManager::Cleanup();    
     Input::Cleanup();
 
