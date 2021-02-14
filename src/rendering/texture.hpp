@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <glm/vec2.hpp>
 
 class Texture
@@ -21,7 +20,11 @@ class Texture
     ~Texture();
 
     public:
-    const unsigned int &getID() const { return _id; }
+    inline const unsigned int &getID()             const { return _id; }
+    inline const int          &getTarget()         const { return _target; }
+    inline const glm::uvec2   &getSize()           const { return _size; }
+    inline const int          &getInternalFormat() const { return _internalFormat; }
+    inline const int          &getFormat()         const { return _format; }
 
     void Bind() const;
     void Unbind() const;

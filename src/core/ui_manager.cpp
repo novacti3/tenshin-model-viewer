@@ -144,8 +144,7 @@ void UIManager::ShowScene()
 {
     ImGui::Begin("Scene###SceneView", &_showScene, _windowFlags);
     {
-
-        // ImGui::Image();
+        ImGui::Image((void*)Renderer::getColorBuffer().getID(), ImGui::GetWindowSize());
     }
     ImGui::End();
 }

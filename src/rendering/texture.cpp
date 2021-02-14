@@ -2,6 +2,8 @@
 
 #include "core/log.hpp"
 
+#include <glad/glad.h>
+
 Texture::Texture(int target, glm::uvec2 size, int internalFormat, int format, const void *data)
     : _target(std::move(target)), _size(std::move(size)), _internalFormat(std::move(internalFormat)), _format(std::move(format))
 {

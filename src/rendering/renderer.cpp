@@ -10,6 +10,8 @@
 unsigned int Renderer::_framebuffer;
 Texture *Renderer::_colorBuffer;
 Texture *Renderer::_depthBuffer;
+// unsigned int *Renderer::_colorBufferData;
+// unsigned int *Renderer::_depthBufferData;
 
 bool Renderer::Init()
 {
@@ -18,24 +20,11 @@ bool Renderer::Init()
 
     // Generate color buffer
     _colorBuffer = new Texture(GL_TEXTURE_2D, glm::uvec2(1600, 1200), GL_RGB8, GL_RGB);
-    // GL_CALL(glad_glGenTextures(1, &_colorBuffer));
-    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, _colorBuffer));
-    // GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    // GL_CALL(glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    // // TODO: Replace with the current window size
-    // GL_CALL(glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1600, 1200, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
-    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, 0));
-    
     // Attach color buffer to framebuffer
     GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorBuffer->getID(), 0));
 
     // Generate depth buffer
     _depthBuffer = new Texture(GL_TEXTURE_2D, glm::uvec2(1600, 1200), GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT);
-    // GL_CALL(glad_glGenTextures(1, &_depthBuffer));
-    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, _depthBuffer));
-    // // TODO: Replace with the current window size
-    // GL_CALL(glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1600, 1200, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL));
-    // GL_CALL(glad_glBindTexture(GL_TEXTURE_2D, 0));
     // Attach depth buffer to framebuffer
     GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthBuffer->getID(), 0));
 
@@ -45,6 +34,12 @@ bool Renderer::Init()
         Log::LogInfo("Framebuffer incomplete");
         return false;
     }
+
+    // _colorBufferData = (unsigned int*)malloc(sizeof(unsigned int) * _colorBuffer->getSize().x * _colorBuffer->getSize().y);
+    // _depthBufferData = (unsigned int*)malloc(sizeof(unsigned int) * _depthBuffer->getSize().x * _depthBuffer->getSize().y);
+
+    // GL_CALL(glad_glReadPixels(0, 0, _colorBuffer->getSize().x, _colorBuffer->getSize().y, _colorBuffer->getFormat(), GL_UNSIGNED_BYTE, (unsigned int*)_colorBufferData));
+    // GL_CALL(glad_glReadPixels(0, 0, _colorBuffer->getSize().x, _colorBuffer->getSize().y, _depthBuffer->getFormat(), GL_UNSIGNED_BYTE, (unsigned int*)_depthBufferData));
 
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, 0));
     return true;
@@ -70,6 +65,9 @@ void Renderer::RenderScene(const Scene &scene)
     // TODO: Make the clear color adjustable in the UI
     GL_CALL(glad_glClearColor(0.2f, 0.0f, 0.2f, 1.0f));
     GL_CALL(glad_glDisable(GL_DEPTH_TEST));
+
+    // GL_CALL(glad_glReadPixels(0, 0, _colorBuffer->getSize().x, _colorBuffer->getSize().y, _colorBuffer->getFormat(), GL_UNSIGNED_BYTE, (unsigned int*)_colorBufferData));
+    // GL_CALL(glad_glReadPixels(0, 0, _colorBuffer->getSize().x, _colorBuffer->getSize().y, _depthBuffer->getFormat(), GL_UNSIGNED_BYTE, (unsigned int*)_depthBufferData));
 
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

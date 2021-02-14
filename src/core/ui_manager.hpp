@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/event.hpp"
+#include "rendering/renderer.hpp"
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
