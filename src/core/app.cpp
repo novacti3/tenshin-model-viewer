@@ -26,6 +26,8 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     // Window::AddListener(this);
 
     Input::Init();
+    Log::LogInfo("Input initialized");
+
     ButtonActionFunc quitProgramFunc = &QuitProgram;
     Input::BindFuncToAction("QuitProgram", quitProgramFunc);
     TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
@@ -37,8 +39,6 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     };
     glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
     
-    UIManager::Init(Window::getHandle(), glslVersion);
-
     SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
     camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
@@ -46,10 +46,17 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 
     if(!Renderer::Init())
     {
-        Log::LogFatal("Failed creating renderer");
+        Log::LogFatal("Failed initializing renderer");
         return false;
     }
+    Log::LogInfo("Renderer initialized");
 
+    if(!UIManager::Init(Window::getHandle(), glslVersion))
+    {
+        Log::LogFatal("Failed initializing UI manager");
+    }
+    Log::LogInfo("UI manager initialized");
+    
     return true;
 }
 
@@ -139,10 +146,10 @@ void App::Render()
 {
     Input::StoreKeys();
 
-    // TODO: Render everything in a Scene object to a framebuffer texture thing for the UI manager to display
-    Renderer::RenderScene(*_currentScene); //(takes in a currentScene of type Scene which holds all data relative to a single scene (eg. the loaded Model, its Camera etc.)) 
-    // TODO: Display rendered Scene in UI
-    // UIManager::DisplayScene(Renderer::getRenderedScene())
+    // Render everything in the current Scene to a framebuffer so the UIManager can display it in the Scene window
+    Renderer::RenderScene(*_currentScene);
+    // Render UI
+    UIManager::Render(Window::getSize().x, Window::getSize().y);
 
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
@@ -151,8 +158,6 @@ void App::Render()
     // static Cube cube;
     // static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
     // cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
-
-    UIManager::Render(Window::getSize().x, Window::getSize().y);
 
     glfwSwapBuffers(Window::getHandle());
 }

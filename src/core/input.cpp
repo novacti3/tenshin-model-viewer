@@ -1,5 +1,7 @@
 #include "input.hpp"
 
+#include "core/log.hpp"
+
 #include <GLFW/glfw3.h>
 
 std::unordered_map<std::string, Action*> Input::_actions;
@@ -38,6 +40,8 @@ void Input::Cleanup()
         delete entry.second;
         entry.second = nullptr;
     }
+
+    Log::LogInfo("Input destroyed");
 }
 
 void Input::UpdateKey (int key, bool state)
