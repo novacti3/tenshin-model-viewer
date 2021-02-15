@@ -6,15 +6,17 @@
 
 #include <vector>
 
+// NOTE: Maybe move the function definitions to a cpp file
+
 class SceneObject
 {
     protected:
     std::vector<IComponent*> _components;
+    // TODO: Shortcut for the transform component would probably be cool
 
     public:
     SceneObject(TransformComponent *transform)
     {
-        // NOTE: Adding a shortcut for the transform component would probably be cool
         AddComponent(transform);
     }
     ~SceneObject() = default;
@@ -48,7 +50,7 @@ class SceneObject
     }
 
     template <class T>
-    T *GetComponent()
+    const T *GetComponent() const
     {
         // Loop through all of the components and return the desired component if it's present
         for (auto i = _components.begin(); i < _components.end(); i++)

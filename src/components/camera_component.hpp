@@ -21,9 +21,9 @@ class CameraComponent final : public IComponent
     ~CameraComponent();
 
     inline const glm::mat4 getProjMatrix() const { return _projMatrix; }
-    inline const glm::mat4 getViewMatrix(const TransformComponent &transform) 
+    inline const glm::mat4 getViewMatrix(const TransformComponent &camTransform) 
     {
-        _viewMatrix = glm::inverse(transform.CalculateModelMatrix());
+        _viewMatrix = glm::inverse(camTransform.CalculateModelMatrix());
         return _viewMatrix; 
     }
 };

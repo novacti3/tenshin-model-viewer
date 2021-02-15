@@ -1,5 +1,7 @@
 #include "event.hpp"
 
+// NOTE: Move stuff to their own cpp files?
+
 EventSender::~EventSender()
 {
     for(EventListener *listener: _listeners)

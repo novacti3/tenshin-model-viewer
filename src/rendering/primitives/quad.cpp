@@ -42,8 +42,6 @@ Quad::Quad(const glm::vec3 bottomLeft, const glm::vec3 topLeft, const glm::vec3 
     GL_CALL(glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
-Quad::~Quad(){}
-
 // void Quad::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
 // {
 //     if(_VAO == 0 || _VBO == 0 || _EBO == 0)

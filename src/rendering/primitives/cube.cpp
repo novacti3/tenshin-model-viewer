@@ -69,8 +69,6 @@ Cube::Cube()
     GL_CALL(glad_glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-Cube::~Cube(){}
-
 // void Cube::Draw(Shader &shader, const float rot, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
 // {
 //     if(_VAO == 0 || _VBO == 0)

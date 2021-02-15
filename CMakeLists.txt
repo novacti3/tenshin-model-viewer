@@ -51,6 +51,7 @@ list(APPEND SOURCES
     # Components
     "src/components/primitive_renderer.cpp"
     "src/components/camera_component.cpp"
+    "src/components/primitive_renderer.cpp"
     
     # Core engine stuff
     "src/core/event.cpp"

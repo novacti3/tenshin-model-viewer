@@ -7,11 +7,14 @@
 
 #include "components/transform_component.hpp"
 #include "components/camera_component.hpp"
+#include "components/primitive_renderer.hpp"
+#include "rendering/primitives/cube.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 std::function<void(int, int)> App::_onKeyPressed;
+std::function<void(Action&, glm::ivec2 value)> App::_rotateCam;
 
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
@@ -28,18 +31,23 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     Input::Init();
     Log::LogInfo("Input initialized");
 
+    // _rotateCam = [this](Action &action, glm::ivec2 value)
+    // {
+    //     App::RotateCamera(action, value);
+    // };
+
     ButtonActionFunc quitProgramFunc = &QuitProgram;
     Input::BindFuncToAction("QuitProgram", quitProgramFunc);
-    TwoDimensionalActionFunc rotateCamFunc = &RotateCamera;
-    Input::BindFuncToAction("RotateCamera", rotateCamFunc);
+    // FIXME: Stack overflow presumably because of how the func pointer is (std::function)
+    // Input::BindFuncToAction("RotateCamera", _rotateCam);
 
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
     };
     glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
-    
-    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
+
+    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 8.0f)));
     camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
@@ -63,83 +71,18 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 void App::LoadResources()
 {
     ResourceManager::AddShader(ResourceManager::CreateShaderFromFiles("../../res/shaders/unlit-color.vs", "../../res/shaders/unlit-color.fs"), "unlit-color");
+
+    // FIXME: The transform values are flipped for some reason (eg. -Y is +Y although it should be +Y)
+    // The rendering code might be scuffed because it appears that the camera moves and rotates ish rather than the individual cubes?
+    SceneObject *cubeOne = new SceneObject(new TransformComponent(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(20.0f, 0.0f, 0.0f)));
+    cubeOne->AddComponent<PrimitiveRenderer>(new PrimitiveRenderer(new Cube(), ResourceManager::GetShader("unlit-color")));
+
+    _currentScene->AddObject(cubeOne);
 }
 
 void App::Update(float deltaTime)
 {
-    // if(_input->IsKeyPressed(GLFW_KEY_ESCAPE))
-    // {
-    //     glfwSetWindowShouldClose(_window->getHandle(), true);
-    // }
 
-    // NOTE: Perhaps move this camera code elsewhere
-    // TODO: Add mouse camera movement (pan and zoom)
-    static const float rotationSpeed = 1.0f;
-    static float yaw = 0.0f;
-    static float pitch = 0.0f;
-    static const float MIN_PITCH = -90.0f;
-    static const float MAX_PITCH = 90.0f;
-    // static float elevationSpeed = 0.05f;
-    static const float zoomSpeed = 0.05f;
-    static float zoomAmount = 0.0f;
-    static const float MIN_ZOOM = 0.5f;
-    static const float MAX_ZOOM = 5.0f;
-
-    // Move up
-    // FIXME: Make the elevation move the camera along the world Y axis instead of the local Y axis
-    // if(_input->IsKeyDown(GLFW_KEY_E) || _input->IsKeyDown(GLFW_KEY_KP_8))
-    // {
-    //     _cam->transform.addPosition(glm::vec3(0.0f, elevationSpeed, 0.0f));
-    // }
-    // // Move down
-    // if(_input->IsKeyDown(GLFW_KEY_Q) || _input->IsKeyDown(GLFW_KEY_KP_2))
-    // {
-    //     _cam->transform.addPosition(glm::vec3(0.0f, -elevationSpeed, 0.0f));
-    // }
-
-    // // Zoom in
-    // if(_input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) || _input->IsKeyDown(GLFW_KEY_KP_ADD))
-    // {
-    //     zoomAmount = _cam->transform.getPosition().z - zoomSpeed;
-    //     zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
-
-    //     _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
-    // }
-    // // Zoom out
-    // if(_input->IsKeyDown(GLFW_KEY_LEFT_CONTROL) || _input->IsKeyDown(GLFW_KEY_KP_SUBTRACT))
-    // {
-    //     zoomAmount = _cam->transform.getPosition().z + zoomSpeed;
-    //     zoomAmount = glm::clamp(zoomAmount, MIN_ZOOM, MAX_ZOOM);
-
-    //     _cam->transform.setPosition(glm::vec3(_cam->transform.getPosition().x, _cam->transform.getPosition().y, zoomAmount));
-    // }
-
-    // // Pitch up
-    // if(_input->IsKeyDown(GLFW_KEY_W) || _input->IsKeyDown(GLFW_KEY_UP))
-    // {
-    //     pitch = _cam->transform.getRotation().x + (-rotationSpeed);
-    //     pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
-
-    //     _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
-    // }
-    // // Pitch down
-    // if(_input->IsKeyDown(GLFW_KEY_S) || _input->IsKeyDown(GLFW_KEY_DOWN))
-    // {
-    //     pitch = _cam->transform.getRotation().x + rotationSpeed;
-    //     pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
-
-    //     _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
-    // }
-    // // Yaw left
-    // if(_input->IsKeyDown(GLFW_KEY_A) || _input->IsKeyDown(GLFW_KEY_LEFT))
-    // {
-    //     _cam->transform.addRotation(glm::vec3(0.0f, -rotationSpeed, 0.0f));
-    // }
-    // // Yaw right
-    // if(_input->IsKeyDown(GLFW_KEY_D) || _input->IsKeyDown(GLFW_KEY_RIGHT))
-    // {
-    //     _cam->transform.addRotation(glm::vec3(0.0f, rotationSpeed, 0.0f));
-    // }
 }
 
 void App::Render()
@@ -154,10 +97,6 @@ void App::Render()
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
     // TODO: Separate input between each layer
-
-    // static Cube cube;
-    // static PrimitiveRenderer cubeRenderer(&cube, ResourceManager::GetShader("unlit-color"));
-    // cubeRenderer.Draw(_cubeTransform, _cam->getViewMatrix(), _cam->getProjMatrix());
 
     glfwSwapBuffers(Window::getHandle());
 }
@@ -213,8 +152,42 @@ void App::QuitProgram(Action& action)
     glfwSetWindowShouldClose(Window::getHandle(), true);
 }
 
-void App::RotateCamera(Action &action, glm::ivec2 value)
+void App::RotateCam(Action &action, glm::ivec2 value)
 {
     // FIXME: This is fucking horrible and needs to be changed to something more sane ASAP
     Log::LogInfo(std::string("RotateCamera value:\n x: ") + std::to_string(value.x) + std::string("\n y: ") + std::to_string(value.y));
+    
+    // // Pitch up
+    // if(_input->IsKeyDown(GLFW_KEY_W) || _input->IsKeyDown(GLFW_KEY_UP))
+    // {
+    //     pitch = _cam->transform.getRotation().x + (-rotationSpeed);
+    //     pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
+
+    //     _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
+    // }
+    // // Pitch down
+    // if(_input->IsKeyDown(GLFW_KEY_S) || _input->IsKeyDown(GLFW_KEY_DOWN))
+    // {
+    //     pitch = _cam->transform.getRotation().x + rotationSpeed;
+    //     pitch = glm::clamp(pitch, MIN_PITCH, MAX_PITCH);
+
+    //     _cam->transform.setRotation(glm::vec3(pitch, _cam->transform.getRotation().y, _cam->transform.getRotation().z));
+    // }
+    // // Yaw left
+    // if(_input->IsKeyDown(GLFW_KEY_A) || _input->IsKeyDown(GLFW_KEY_LEFT))
+    // {
+    //     _cam->transform.addRotation(glm::vec3(0.0f, -rotationSpeed, 0.0f));
+    // }
+    // // Yaw right
+    // if(_input->IsKeyDown(GLFW_KEY_D) || _input->IsKeyDown(GLFW_KEY_RIGHT))
+    // {
+    //     _cam->transform.addRotation(glm::vec3(0.0f, rotationSpeed, 0.0f));
+    // }
+
+    // TransformComponent &camTransform = *(const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>()));
+    // glm::vec3 camRot = camTransform.getRotation();
+    // camRot.x = glm::clamp((float)value.x * ROT_SPEED, MIN_PITCH, MAX_PITCH);
+    // camRot.y = (float)value.y * ROT_SPEED;
+
+    // camTransform.setRotation(camRot);
 }
