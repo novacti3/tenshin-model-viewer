@@ -23,7 +23,8 @@ class CameraComponent final : public IComponent
     inline const glm::mat4 getProjMatrix() const { return _projMatrix; }
     inline const glm::mat4 getViewMatrix(const TransformComponent &camTransform) 
     {
-        _viewMatrix = glm::inverse(camTransform.CalculateModelMatrix());
+        // FIXME: Causes every transform to be flipped (eg. 0.0, 1.0, 8.0 moves the camera down and back instead of up and forward)
+        _viewMatrix = glm::inverse(camTransform.CalculateModelMatrix());;
         return _viewMatrix; 
     }
 };

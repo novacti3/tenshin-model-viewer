@@ -22,7 +22,6 @@ void PrimitiveRenderer::Draw(const TransformComponent &objTransform, const glm::
     }
 
     glm::mat4 modelMatrix = objTransform.CalculateModelMatrix();
-
     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
     _shader->Bind();

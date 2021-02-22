@@ -28,10 +28,10 @@ bool Renderer::Init()
     // Attach depth buffer to framebuffer
     GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthBuffer->getID(), 0));
 
-    // NOTE: Maybe add checks for more errors
+    // TODO: Add checks for more errors
     if(glad_glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        Log::LogInfo("Framebuffer incomplete");
+        Log::LogError("Framebuffer incomplete");
         return false;
     }
 

@@ -20,8 +20,6 @@ class App final : public EventListener
     static std::function<void(int, int)> _onKeyPressed;
     static std::function<void(Action&, glm::ivec2 value)> _rotateCam;
 
-    TransformComponent _cubeTransform;
-
     const float ROT_SPEED = 1.0f;
     // float _yaw = 0.0f;
     // float _pitch = 0.0f;

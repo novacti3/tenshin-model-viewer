@@ -47,7 +47,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     };
     glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
 
-    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 8.0f)));
+    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, -5.0f)));
     camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
@@ -74,7 +74,7 @@ void App::LoadResources()
 
     // FIXME: The transform values are flipped for some reason (eg. -Y is +Y although it should be +Y)
     // The rendering code might be scuffed because it appears that the camera moves and rotates ish rather than the individual cubes?
-    SceneObject *cubeOne = new SceneObject(new TransformComponent(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(20.0f, 0.0f, 0.0f)));
+    SceneObject *cubeOne = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
     cubeOne->AddComponent<PrimitiveRenderer>(new PrimitiveRenderer(new Cube(), ResourceManager::GetShader("unlit-color")));
 
     _currentScene->AddObject(cubeOne);
