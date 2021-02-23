@@ -31,15 +31,15 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     Input::Init();
     Log::LogInfo("Input initialized");
 
-    // _rotateCam = [this](Action &action, glm::ivec2 value)
-    // {
-    //     App::RotateCamera(action, value);
-    // };
+    _rotateCam = [this](Action &action, glm::ivec2 value)
+    {
+        App::RotateCamera(action, value);
+    };
 
     ButtonActionFunc quitProgramFunc = &QuitProgram;
     Input::BindFuncToAction("QuitProgram", quitProgramFunc);
     // FIXME: Stack overflow presumably because of how the func pointer is (std::function)
-    // Input::BindFuncToAction("RotateCamera", _rotateCam);
+    Input::BindFuncToAction("RotateCamera", _rotateCam);
 
     _onKeyPressed = [this](int key, int action)
     {
