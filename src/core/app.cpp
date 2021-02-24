@@ -33,7 +33,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 
     _rotateCam = [this](Action &action, glm::ivec2 value)
     {
-        App::RotateCamera(action, value);
+        App::OnRotateCam(action, value);
     };
 
     ButtonActionFunc quitProgramFunc = &QuitProgram;
@@ -155,7 +155,7 @@ void App::QuitProgram(Action& action)
 void App::OnRotateCam(Action &action, glm::ivec2 value)
 {
     // FIXME: This is fucking horrible and needs to be changed to something more sane ASAP
-    Log::LogInfo(std::string("RotateCamera value:\n x: ") + std::to_string(value.x) + std::string("\n y: ") + std::to_string(value.y));
+    // Log::LogInfo(std::string("RotateCamera value:\n x: ") + std::to_string(value.x) + std::string("\n y: ") + std::to_string(value.y));
 
     // // Pitch up
     // if(_input->IsKeyDown(GLFW_KEY_W) || _input->IsKeyDown(GLFW_KEY_UP))
@@ -185,8 +185,8 @@ void App::OnRotateCam(Action &action, glm::ivec2 value)
     // }
 
     // Pitch
-    // TransformComponent *camTransform = const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>());
-    // glm::vec3 rot = glm::vec3(static_cast<float>(value.x * ROT_SPEED), static_cast<float>(value.y * ROT_SPEED), 0.0f);
-    // rot.x = glm::clamp(rot.x, MIN_PITCH, MAX_PITCH);
-    // camTransform->addRotation(rot);
+    TransformComponent *camTransform = const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>());
+    glm::vec3 rot = glm::vec3(static_cast<float>(value.x * ROT_SPEED), static_cast<float>(value.y * ROT_SPEED), 0.0f);
+    rot.x = glm::clamp(rot.x, MIN_PITCH, MAX_PITCH);
+    camTransform->addRotation(rot);
 }
