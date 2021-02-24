@@ -49,10 +49,11 @@ class App final : public EventListener
     private:
     void OnEvent(Event &event) override;
     void OnKeyPressed(int key, int action);
-    void RotateCam(Action &action, glm::ivec2 value);
+    void OnRotateCam(Action &action, glm::ivec2 value);
 
     // TODO: Unstaticify this shit and do the same mumbo-jumbo as with the rest
     // NOTE: Maybe take in a const Action ref so it can't be changed
     static void QuitProgram(Action& action);
+    // FIXME: Throws StackOverflow
     static void RotateCamera(Action &action, glm::ivec2 value) { _rotateCam(action, value); }
 };

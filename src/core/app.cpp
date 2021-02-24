@@ -20,7 +20,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     const char *glslVersion = "#version 330";
     // Create window
-    if(!Window::Init(windowSize, windowTitle))
+    if(!Window::getInstance().Init(windowSize, windowTitle))
     {
         Log::LogFatal("Failed initializing window");
         return false;
@@ -28,27 +28,27 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     Log::LogInfo("Window initialized");
     // Window::AddListener(this);
 
-    Input::Init();
+    Input::getInstance().Init();
     Log::LogInfo("Input initialized");
 
-    // _rotateCam = [this](Action &action, glm::ivec2 value)
-    // {
-    //     App::RotateCamera(action, value);
-    // };
+    _rotateCam = [this](Action &action, glm::ivec2 value)
+    {
+        App::RotateCamera(action, value);
+    };
 
     ButtonActionFunc quitProgramFunc = &QuitProgram;
-    Input::BindFuncToAction("QuitProgram", quitProgramFunc);
+    Input::getInstance().BindFuncToAction("QuitProgram", quitProgramFunc);
     // FIXME: Stack overflow presumably because of how the func pointer is (std::function)
-    // Input::BindFuncToAction("RotateCamera", _rotateCam);
+    Input::getInstance().BindFuncToAction("RotateCamera", _rotateCam);
 
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
     };
-    glfwSetKeyCallback(Window::getHandle(), App::GLFWKeyCallback);
+    glfwSetKeyCallback(Window::getInstance().getHandle(), App::GLFWKeyCallback);
 
-    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, -5.0f)));
-    camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getSize().x/(float)Window::getSize().y, 0.01f, 100.0f));
+    SceneObject *camera = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 3.0f)));
+    camera->AddComponent<CameraComponent>(new CameraComponent(*(camera->GetComponent<TransformComponent>()), 60.0f, (float)Window::getInstance().getSize().x/(float)Window::getInstance().getSize().y, 0.01f, 100.0f));
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
 
@@ -59,7 +59,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Renderer initialized");
 
-    if(!UIManager::Init(Window::getHandle(), glslVersion))
+    if(!UIManager::Init(Window::getInstance().getHandle(), glslVersion))
     {
         Log::LogFatal("Failed initializing UI manager");
     }
@@ -87,18 +87,18 @@ void App::Update(float deltaTime)
 
 void App::Render()
 {
-    Input::StoreKeys();
+    Input::getInstance().StoreKeys();
 
     // Render everything in the current Scene to a framebuffer so the UIManager can display it in the Scene window
     Renderer::RenderScene(*_currentScene);
     // Render UI
-    UIManager::Render(Window::getSize().x, Window::getSize().y);
+    UIManager::Render(Window::getInstance().getSize().x, Window::getInstance().getSize().y);
 
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
     // TODO: Separate input between each layer
 
-    glfwSwapBuffers(Window::getHandle());
+    glfwSwapBuffers(Window::getInstance().getHandle());
 }
 
 void App::Cleanup()
@@ -115,10 +115,10 @@ void App::Cleanup()
     ResourceManager::Cleanup();
     Renderer::Cleanup();
     UIManager::Cleanup();    
-    Input::Cleanup();
+    Input::getInstance().Cleanup();
 
     // Clean up window and GLFW
-    Window::Cleanup();
+    Window::getInstance().Cleanup();
 
     Log::LogInfo("App instance destroyed");
 }
@@ -144,19 +144,19 @@ void App::OnKeyPressed(int key, int action)
         state = false;
     }
 
-    Input::UpdateKey(key, state);
+    Input::getInstance().UpdateKey(key, state);
 }
 
 void App::QuitProgram(Action& action)
 {
-    glfwSetWindowShouldClose(Window::getHandle(), true);
+    glfwSetWindowShouldClose(Window::getInstance().getHandle(), true);
 }
 
-void App::RotateCam(Action &action, glm::ivec2 value)
+void App::OnRotateCam(Action &action, glm::ivec2 value)
 {
     // FIXME: This is fucking horrible and needs to be changed to something more sane ASAP
     Log::LogInfo(std::string("RotateCamera value:\n x: ") + std::to_string(value.x) + std::string("\n y: ") + std::to_string(value.y));
-    
+
     // // Pitch up
     // if(_input->IsKeyDown(GLFW_KEY_W) || _input->IsKeyDown(GLFW_KEY_UP))
     // {
@@ -184,10 +184,9 @@ void App::RotateCam(Action &action, glm::ivec2 value)
     //     _cam->transform.addRotation(glm::vec3(0.0f, rotationSpeed, 0.0f));
     // }
 
-    // TransformComponent &camTransform = *(const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>()));
-    // glm::vec3 camRot = camTransform.getRotation();
-    // camRot.x = glm::clamp((float)value.x * ROT_SPEED, MIN_PITCH, MAX_PITCH);
-    // camRot.y = (float)value.y * ROT_SPEED;
-
-    // camTransform.setRotation(camRot);
+    // Pitch
+    // TransformComponent *camTransform = const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>());
+    // glm::vec3 rot = glm::vec3(static_cast<float>(value.x * ROT_SPEED), static_cast<float>(value.y * ROT_SPEED), 0.0f);
+    // rot.x = glm::clamp(rot.x, MIN_PITCH, MAX_PITCH);
+    // camTransform->addRotation(rot);
 }

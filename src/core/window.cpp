@@ -2,10 +2,6 @@
 
 #include "log.hpp"
 
-glm::uvec2  Window::_size;
-std::string Window::_title;
-GLFWwindow *Window::_handle;
-
 static const unsigned int MIN_WINDOW_WIDTH = 640;
 static const unsigned int MIN_WINDOW_HEIGHT = 480;
 
@@ -84,5 +80,5 @@ void Window::Cleanup()
 
 void Window::ResizeCallback(GLFWwindow *window, int width, int height)
 {
-    _size = glm::uvec2(width, height);
+    Window::getInstance().setSize(glm::uvec2(width, height));
 }

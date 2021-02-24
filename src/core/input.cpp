@@ -4,14 +4,6 @@
 
 #include <GLFW/glfw3.h>
 
-std::unordered_map<std::string, Action*> Input::_actions;
-std::unordered_map<std::string, std::vector<ButtonActionFunc>> Input::_buttonActionFunctions;
-std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> Input::_oneDimensionalActionFunctions;
-std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> Input::_twoDimensionalActionFunctions;
-
-std::unordered_map<int, bool> Input::_currentFrameKeyMap;
-std::unordered_map<int, bool> Input::_prevFrameKeyMap;
-
 void Input::Init()
 {
     for (size_t i = 0; i < 512; i++)
@@ -376,6 +368,7 @@ void Input::ExecuteActions()
                     {
                         for(auto boundFunc: _twoDimensionalActionFunctions[actionName])
                         {
+                            // FIXME: Causes StackOverflow and access writing violation
                             boundFunc(action, value);
                         }
                     }

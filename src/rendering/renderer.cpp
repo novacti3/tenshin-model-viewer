@@ -19,12 +19,12 @@ bool Renderer::Init()
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer));
 
     // Generate color buffer
-    _colorBuffer = new Texture(GL_TEXTURE_2D, Window::getSize(), GL_RGB8, GL_RGB);
+    _colorBuffer = new Texture(GL_TEXTURE_2D, Window::getInstance().getSize(), GL_RGB8, GL_RGB);
     // Attach color buffer to framebuffer
     GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _colorBuffer->getID(), 0));
 
     // Generate depth buffer
-    _depthBuffer = new Texture(GL_TEXTURE_2D, Window::getSize(), GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT);
+    _depthBuffer = new Texture(GL_TEXTURE_2D, Window::getInstance().getSize(), GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT);
     // Attach depth buffer to framebuffer
     GL_CALL(glad_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depthBuffer->getID(), 0));
 

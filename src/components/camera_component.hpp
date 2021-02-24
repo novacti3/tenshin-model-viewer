@@ -9,8 +9,6 @@
 class CameraComponent final : public IComponent
 {
     private:
-    glm::vec3 _lookDir;
-
     float _FOV, _ratio, _nearPlane, _farPlane;
 
     glm::mat4 _projMatrix = glm::mat4(1.0f);
