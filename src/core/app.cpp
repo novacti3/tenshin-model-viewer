@@ -184,9 +184,9 @@ void App::OnRotateCam(Action &action, glm::ivec2 value)
     //     _cam->transform.addRotation(glm::vec3(0.0f, rotationSpeed, 0.0f));
     // }
 
-    // Pitch
+    // FIXME: There's a weird delay before the camera starts panning smoothly (eg. W is pressed, the camera moves up slightly, then there's a delay and only after the delay the camera starts to move up fluidly)
     TransformComponent *camTransform = const_cast<TransformComponent*>(_currentScene->FindObjectOfType<CameraComponent>()->GetComponent<TransformComponent>());
-    glm::vec3 rot = glm::vec3(static_cast<float>(value.x * ROT_SPEED), static_cast<float>(value.y * ROT_SPEED), 0.0f);
+    glm::vec3 rot = glm::vec3(static_cast<float>(value.y) * ROT_SPEED, static_cast<float>(value.x) * ROT_SPEED, 0.0f);
     rot.x = glm::clamp(rot.x, MIN_PITCH, MAX_PITCH);
     camTransform->addRotation(rot);
 }
