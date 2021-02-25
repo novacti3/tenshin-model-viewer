@@ -10,7 +10,7 @@
 #include <string>
 #include <functional>
 
-// TODO: Turn into a static class
+// TODO: Turn into singleton
 class App final : public EventListener
 {
     private:
@@ -18,11 +18,9 @@ class App final : public EventListener
     Scene* _currentScene;
 
     static std::function<void(int, int)> _onKeyPressed;
-    static std::function<void(Action&, glm::ivec2 value)> _rotateCam;
+    static std::function<void(Action&, glm::ivec2 value)> _onRotateCam;
 
     const float ROT_SPEED = 1.0f;
-    // float _yaw = 0.0f;
-    // float _pitch = 0.0f;
     const float MIN_PITCH = -90.0f;
     const float MAX_PITCH = 90.0f;
     // static float elevationSpeed = 0.05f;
@@ -32,8 +30,8 @@ class App final : public EventListener
     const float MAX_ZOOM = 5.0f;
 
     public:
-    App(){}
-    ~App(){}
+    App() = default;
+    ~App() = default;
 
     public:
     bool Init(const glm::uvec2 windowSize, const std::string windowTitle);
@@ -41,8 +39,6 @@ class App final : public EventListener
     void Update(float deltaTime);
     void Render();
     void Cleanup();
-
-    // inline Window *getWindow() { return _window; }
 
     static void GLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
 
@@ -54,6 +50,5 @@ class App final : public EventListener
     // TODO: Unstaticify this shit and do the same mumbo-jumbo as with the rest
     // NOTE: Maybe take in a const Action ref so it can't be changed
     static void QuitProgram(Action& action);
-    // FIXME: Throws StackOverflow
-    static void RotateCamera(Action &action, glm::ivec2 value) { _rotateCam(action, value); }
+    static void RotateCamera(Action &action, glm::ivec2 value) { _onRotateCam(action, value); }
 };

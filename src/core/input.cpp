@@ -368,7 +368,6 @@ void Input::ExecuteActions()
                     {
                         for(auto boundFunc: _twoDimensionalActionFunctions[actionName])
                         {
-                            // FIXME: Causes StackOverflow and access writing violation
                             boundFunc(action, value);
                         }
                     }

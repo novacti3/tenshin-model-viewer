@@ -14,7 +14,7 @@
 #include <GLFW/glfw3.h>
 
 std::function<void(int, int)> App::_onKeyPressed;
-std::function<void(Action&, glm::ivec2 value)> App::_rotateCam;
+std::function<void(Action&, glm::ivec2 value)> App::_onRotateCam;
 
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
@@ -31,15 +31,14 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     Input::getInstance().Init();
     Log::LogInfo("Input initialized");
 
-    _rotateCam = [this](Action &action, glm::ivec2 value)
+    _onRotateCam = [this](Action &action, glm::ivec2 value)
     {
         App::OnRotateCam(action, value);
     };
 
     ButtonActionFunc quitProgramFunc = &QuitProgram;
     Input::getInstance().BindFuncToAction("QuitProgram", quitProgramFunc);
-    // FIXME: Stack overflow presumably because of how the func pointer is (std::function)
-    Input::getInstance().BindFuncToAction("RotateCamera", _rotateCam);
+    Input::getInstance().BindFuncToAction("RotateCamera", _onRotateCam);
 
     _onKeyPressed = [this](int key, int action)
     {
