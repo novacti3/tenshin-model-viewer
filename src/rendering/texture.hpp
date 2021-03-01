@@ -18,6 +18,12 @@ class Texture
     // TODO: Adjustable tex params
     Texture(int target, glm::uvec2 size, int internalFormat, int format, const void *data = nullptr);
     ~Texture();
+    // Copy
+    Texture(const Texture &other);
+    Texture& operator=(Texture other);
+    // Move
+    Texture(Texture&& other);
+    Texture& operator=(Texture&& other);
 
     public:
     inline const unsigned int &getID()             const { return _id; }

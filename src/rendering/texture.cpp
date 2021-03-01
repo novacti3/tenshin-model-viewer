@@ -18,8 +18,55 @@ Texture::Texture(int target, glm::uvec2 size, int internalFormat, int format, co
 }
 Texture::~Texture()
 {
+
     GL_CALL(glad_glDeleteTextures(1, &_id));
 } 
+
+Texture::Texture(const Texture &other)
+{
+    memcpy(this->data, other.data, sizeof(other.data));
+    this->_id             = other._id;
+    this->_target         = other._target;
+    this->_size           = other._size;
+    this->_internalFormat = other._internalFormat;
+    this->_format         = other._format;
+}
+Texture& Texture::operator=(Texture other)
+{
+    memcpy(this->data, other.data, sizeof(other.data));
+    this->_id             = other._id;
+    this->_target         = other._target;
+    this->_size           = other._size;
+    this->_internalFormat = other._internalFormat;
+    this->_format         = other._format;
+
+    return *this;
+}
+
+Texture::Texture(Texture&& other)
+{
+    this->data = other.data;
+    other.data = nullptr;
+
+    this->_id             = std::move(other._id);
+    this->_target         = std::move(other._target);
+    this->_size           = std::move(other._size);
+    this->_internalFormat = std::move(other._internalFormat);
+    this->_format         = std::move(other._format);
+}
+Texture& Texture::operator=(Texture&& other)
+{
+    this->data = other.data;
+    other.data = nullptr;
+
+    this->_id             = std::move(other._id);
+    this->_target         = std::move(other._target);
+    this->_size           = std::move(other._size);
+    this->_internalFormat = std::move(other._internalFormat);
+    this->_format         = std::move(other._format);
+    
+    return *this;
+}
 
 void Texture::Bind() const
 {
