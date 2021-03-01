@@ -58,7 +58,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     }
     Log::LogInfo("Renderer initialized");
 
-    if(!UIManager::Init(Window::getInstance().getHandle(), glslVersion))
+    if(!UIManager::getInstance().Init(Window::getInstance().getHandle(), glslVersion))
     {
         Log::LogFatal("Failed initializing UI manager");
     }
@@ -91,7 +91,7 @@ void App::Render()
     // Render everything in the current Scene to a framebuffer so the UIManager can display it in the Scene window
     Renderer::RenderScene(*_currentScene);
     // Render UI
-    UIManager::Render(Window::getInstance().getSize().x, Window::getInstance().getSize().y);
+    UIManager::getInstance().Render(Window::getInstance().getSize().x, Window::getInstance().getSize().y);
 
     // TODO: Set up a layer system to which stuff can be added that will get rendered in the order the layers are in
     // eg. Editor UI layer = 0 (topmost layer, gets rendered over everything), in-scene UI layer, scene layer etc.
@@ -113,7 +113,7 @@ void App::Cleanup()
     // Clean up internal engine stuff
     ResourceManager::getInstance().Cleanup();
     Renderer::Cleanup();
-    UIManager::Cleanup();    
+    UIManager::getInstance().Cleanup();    
     Input::getInstance().Cleanup();
 
     // Clean up window and GLFW
