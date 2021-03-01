@@ -20,8 +20,8 @@ class App final : public Singleton<App>, public EventListener
     std::vector<Scene*> _scenes;
     Scene* _currentScene;
 
-    std::function<void(int, int)> _onKeyPressed;
-    std::function<void(Action&, glm::ivec2 value)> _onRotateCam;
+    static std::function<void(int, int)> _onKeyPressed;
+    static TwoDimensionalActionFunc _onRotateCam;
 
     const float ROT_SPEED = 1.0f;
     const float MIN_PITCH = -90.0f;
@@ -48,8 +48,8 @@ class App final : public Singleton<App>, public EventListener
     void OnKeyPressed(int key, int action);
     void OnRotateCam(Action &action, glm::ivec2 value);
 
-    static void GLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { App::getInstance()._onKeyPressed(key, action); }
+    static void GLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) { _onKeyPressed(key, action); }
     // NOTE: Maybe take in a const Action ref so it can't be changed
     static void QuitProgram(Action& action);
-    static void RotateCamera(Action &action, glm::ivec2 value) { App::getInstance()._onRotateCam(action, value); }
+    static void RotateCamera(Action &action, glm::ivec2 value) { _onRotateCam(action, value); }
 };

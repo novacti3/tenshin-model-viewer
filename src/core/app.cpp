@@ -13,6 +13,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+std::function<void(int, int)> App::_onKeyPressed;
+TwoDimensionalActionFunc App::_onRotateCam;
+
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     const char *glslVersion = "#version 330";
@@ -31,6 +34,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     ButtonActionFunc quitProgramFunc = &QuitProgram;
     Input::getInstance().BindFuncToAction("QuitProgram", quitProgramFunc);
     Input::getInstance().BindFuncToAction("RotateCamera", _onRotateCam);
+    // FIXME: Throws std::bad_function_call
     _onRotateCam = [this](Action &action, glm::ivec2 value)
     {
         App::OnRotateCam(action, value);

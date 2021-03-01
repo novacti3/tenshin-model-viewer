@@ -1,12 +1,12 @@
 #pragma once
+// NOTE: Function defs not in their own cpp file because template classes can't be in cpp files or something like that
 
 #include "core/log.hpp"
+
 #include "components/icomponent.hpp"
 #include "components/transform_component.hpp"
 
 #include <vector>
-
-// NOTE: Maybe move the function definitions to a cpp file
 
 class SceneObject
 {
@@ -19,7 +19,14 @@ class SceneObject
     {
         AddComponent(transform);
     }
-    ~SceneObject() = default;
+    ~SceneObject()
+    {
+        for(IComponent* comp: _components)
+        {
+            delete comp;
+            comp = nullptr;
+        }
+    }
 
     public:
     template <class T>
@@ -39,7 +46,7 @@ class SceneObject
     void RemoveComponent()
     {
         // Loop through all of the components and erase the component of the desired type 
-        for (auto i = _components.begin(); i < _components.end(); i++)
+        for(auto i = _components.begin(); i < _components.end(); i++)
         {
             if(dynamic_cast<T*>(*i) == component)
             {
@@ -48,7 +55,7 @@ class SceneObject
             }
         }
     }
-
+    
     template <class T>
     const T *GetComponent() const
     {

@@ -37,8 +37,8 @@ list(APPEND SOURCES
     "libs/Dear ImGui/backends/imgui_impl_opengl3.cpp"
     "libs/Dear ImGui/backends/imgui_impl_glfw.cpp"
     
-    "src/core/scene.hpp"
-
+    "src/core/scene.cpp"
+    
     # Rendering
     "src/rendering/shader.cpp"
     "src/rendering/texture.cpp"
