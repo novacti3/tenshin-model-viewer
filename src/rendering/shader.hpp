@@ -10,10 +10,10 @@ class Shader
     ~Shader();
 
     public:
-    void Bind();
-    void Unbind();
+    void Bind() const;
+    void Unbind() const;
 
-    inline const unsigned int getID() { return _id; }
+    inline const unsigned int &getID() const { return _id; }
 
     private:
     void CheckShaderForErrors(unsigned int shader);

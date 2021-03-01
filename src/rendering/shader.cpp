@@ -31,12 +31,12 @@ Shader::~Shader()
     GL_CALL(glad_glDeleteProgram(_id));
 }
 
-void Shader::Bind()
+void Shader::Bind() const
 {
     GL_CALL(glad_glUseProgram(_id));
 }
 
-void Shader::Unbind()
+void Shader::Unbind() const
 {
     GL_CALL(glad_glUseProgram(0));
 }

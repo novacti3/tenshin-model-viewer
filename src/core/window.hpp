@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/singleton.hpp"
 #include "core/event.hpp"
 
 #include <glad/glad.h>
@@ -9,25 +10,28 @@
 #include <string>
 #include <functional>
 
-class Window final : public EventSender
+class Window final : public Singleton<Window>, public EventSender
 {
-    private:
-    static glm::uvec2 _size;
-    static std::string _title;
-    static GLFWwindow *_handle;
+    friend class Singleton<Window>;
 
     private:
-    Window(){}
-    ~Window(){}
+    glm::uvec2 _size;
+    std::string _title;
+    GLFWwindow *_handle;
+
+    private:
+    Window() = default;
+    ~Window() = default;
 
     public:
-    static bool Init(glm::uvec2 size, const std::string title);
-    static void Cleanup();
+    bool Init(glm::uvec2 size, const std::string title);
+    void Cleanup();
 
-    static inline const glm::uvec2    getSize() { return _size; }
-    static inline const std::string  getTitle() { return _title; }
-    static inline       GLFWwindow* getHandle() { return _handle; }
+    inline const glm::uvec2    getSize() { return _size; }
+    inline const std::string  getTitle() { return _title; }
+    inline       GLFWwindow* getHandle() { return _handle; }
 
     private:
+    inline void setSize(glm::uvec2 newSize) { _size = std::move(newSize); }
     static void ResizeCallback(GLFWwindow *window, int width, int height);
 };

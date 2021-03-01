@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/event.hpp"
+#include "rendering/renderer.hpp"
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
@@ -23,7 +24,7 @@ class UIManager : public EventSender
     ~UIManager() = default;
 
     public:
-    static void Init(GLFWwindow *window, const char *glslVersion);
+    static bool Init(GLFWwindow *window, const char *glslVersion);
     static void Render(unsigned int width, unsigned int height);
     static void Cleanup();
 

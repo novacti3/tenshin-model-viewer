@@ -4,10 +4,15 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-void UIManager::Init(GLFWwindow *window, const char *glslVersion)
+bool UIManager::Init(GLFWwindow *window, const char *glslVersion)
 {
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
+    if(ImGui::CreateContext() == nullptr)
+    {
+        Log::LogFatal("Failed creating ImGui context");
+        return false;
+    }
+
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -15,16 +20,27 @@ void UIManager::Init(GLFWwindow *window, const char *glslVersion)
     ImGui::StyleColorsDark();
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImColor(0.0f, 0.0f, 0.0f, 1.0f).Value);
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glslVersion);
+    if(!ImGui_ImplGlfw_InitForOpenGL(window, true))
+    {
+        Log::LogFatal("Failed initializing ImGui GLFW backend");
+        return false;
+    }
+    if(!ImGui_ImplOpenGL3_Init(glslVersion))
+    {
+        Log::LogFatal("Failed initializing ImGui OpenGL backend");
+        return false;
+    }
 
     _windowFlags = ImGuiWindowFlags_NoCollapse;
+
+    return true;
 }
 
 void UIManager::Cleanup()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    Log::LogInfo("UI manager destroyed");
 }
 
 void UIManager::Render(unsigned int width, unsigned int height)
@@ -144,7 +160,8 @@ void UIManager::ShowScene()
 {
     ImGui::Begin("Scene###SceneView", &_showScene, _windowFlags);
     {
-        ImGui::Text("Scene window");
+        // TODO: Scale the texture to fit inside of the window
+        ImGui::Image((void*)Renderer::getColorBuffer().getID(), ImGui::GetWindowSize());
     }
     ImGui::End();
 }

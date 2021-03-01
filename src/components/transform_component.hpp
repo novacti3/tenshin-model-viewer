@@ -1,11 +1,13 @@
 #pragma once
 
+#include "components/icomponent.hpp"
+
 #include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-struct Transform
+struct TransformComponent final : public IComponent
 {
     private:
     glm::vec3 _position;
@@ -13,9 +15,9 @@ struct Transform
     glm::vec3 _scale;
 
     public:
-    Transform(const glm::vec3 position = glm::vec3(0.0f), const glm::vec3 rotation = glm::vec3(0.0f), const glm::vec3 scale = glm::vec3(1.0f))
+    TransformComponent(const glm::vec3 position = glm::vec3(0.0f), const glm::vec3 rotation = glm::vec3(0.0f), const glm::vec3 scale = glm::vec3(1.0f))
         : _position(std::move(position)), _rotation(std::move(rotation)), _scale(std::move(scale)){}
-    ~Transform(){}
+    ~TransformComponent(){}
 
     public:
     glm::mat4 CalculateModelMatrix() const

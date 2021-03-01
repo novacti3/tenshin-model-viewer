@@ -1,6 +1,6 @@
 #include "primitive_renderer.hpp"
 
-#include "../core/log.hpp"
+#include "core/log.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -12,7 +12,7 @@ PrimitiveRenderer::~PrimitiveRenderer()
     _shader = nullptr;
 }
 
-void PrimitiveRenderer::Draw(const Transform &transform, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix)
+void PrimitiveRenderer::Draw(const TransformComponent &objTransform, const glm::mat4 &viewMatrix, const glm::mat4 &projMatrix) const
 {
     if(_primitive->getVAO() == 0 || _primitive->getVBO() == 0)
     {
@@ -21,8 +21,7 @@ void PrimitiveRenderer::Draw(const Transform &transform, const glm::mat4 &viewMa
         return;
     }
 
-    glm::mat4 modelMatrix = transform.CalculateModelMatrix();
-
+    glm::mat4 modelMatrix = objTransform.CalculateModelMatrix();
     glm::mat4 MVP = projMatrix * viewMatrix * modelMatrix;
 
     _shader->Bind();
