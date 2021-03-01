@@ -1,25 +1,31 @@
 #pragma once
 
-#include "rendering/texture.hpp"
+#include "core/singleton.hpp"
 #include "core/scene.hpp"
 #include "core/event.hpp"
+#include "rendering/texture.hpp"
 
-class Renderer : public EventListener
+class Renderer : public Singleton<Renderer>, public EventListener
 {
+    friend class Singleton<Renderer>;
+
     private:
     // TODO: Resize framebuffer on window resize
-    static unsigned int _framebuffer;
-    static Texture *_colorBuffer;
-    static Texture *_depthBuffer;
+    unsigned int _framebuffer;
+    Texture *_colorBuffer;
+    Texture *_depthBuffer;
 
     public:
-    static bool Init();
-    static void Cleanup();
+    bool Init();
+    void Cleanup();
 
-    static inline const unsigned int &getFramebuffer() { return _framebuffer; }
-    static inline const Texture &getColorBuffer() { return *_colorBuffer; }
-    static inline const Texture &getDepthBuffer() { return *_depthBuffer; }
-
+    inline const unsigned int &getFramebuffer() { return _framebuffer; }
+    inline const Texture &getColorBuffer() { return *_colorBuffer; }
+    inline const Texture &getDepthBuffer() { return *_depthBuffer; }
+    
     // NOTE: maybe have it return a Texture object or whatever directly
-    static void RenderScene(const Scene &scene);
+    void RenderScene(const Scene &scene);
+
+    private:
+    void OnEvent(Event &event) override;
 };

@@ -51,7 +51,7 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
     _scenes.push_back(new Scene(camera));
     _currentScene = _scenes[0];
 
-    if(!Renderer::Init())
+    if(!Renderer::getInstance().Init())
     {
         Log::LogFatal("Failed initializing renderer");
         return false;
@@ -89,7 +89,7 @@ void App::Render()
     Input::getInstance().StoreKeys();
 
     // Render everything in the current Scene to a framebuffer so the UIManager can display it in the Scene window
-    Renderer::RenderScene(*_currentScene);
+    Renderer::getInstance().RenderScene(*_currentScene);
     // Render UI
     UIManager::getInstance().Render(Window::getInstance().getSize().x, Window::getInstance().getSize().y);
 
@@ -112,7 +112,7 @@ void App::Cleanup()
 
     // Clean up internal engine stuff
     ResourceManager::getInstance().Cleanup();
-    Renderer::Cleanup();
+    Renderer::getInstance().Cleanup();
     UIManager::getInstance().Cleanup();    
     Input::getInstance().Cleanup();
 

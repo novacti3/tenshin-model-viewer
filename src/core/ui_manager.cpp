@@ -161,7 +161,7 @@ void UIManager::ShowScene()
     ImGui::Begin("Scene###SceneView", &_showScene, _windowFlags);
     {
         // TODO: Scale the texture to fit inside of the window
-        ImGui::Image((void*)Renderer::getColorBuffer().getID(), ImGui::GetWindowSize());
+        ImGui::Image((void*)Renderer::getInstance().getColorBuffer().getID(), ImGui::GetWindowSize());
     }
     ImGui::End();
 }

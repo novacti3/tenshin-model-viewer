@@ -9,10 +9,6 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-unsigned int Renderer::_framebuffer;
-Texture *Renderer::_colorBuffer;
-Texture *Renderer::_depthBuffer;
-
 bool Renderer::Init()
 {
     GL_CALL(glad_glGenFramebuffers(1, &_framebuffer));
@@ -78,4 +74,9 @@ void Renderer::RenderScene(const Scene &scene)
     GL_CALL(glad_glDisable(GL_DEPTH_TEST));
 
     GL_CALL(glad_glBindFramebuffer(GL_FRAMEBUFFER, 0));
+}
+
+void Renderer::OnEvent(Event &event)
+{
+    return;
 }
