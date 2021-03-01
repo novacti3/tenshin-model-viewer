@@ -1,6 +1,9 @@
 #pragma once
 
+#include "core/singleton.hpp"
+
 #include <glm/vec2.hpp>
+
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -104,49 +107,51 @@ using TwoDimensionalActionFunc = std::function<void(Action&, glm::ivec2 value)>;
 
 // TODO: Modifier keys (eg. allow CTRL+O)
 // TODO: Add mouse input support
-class Input final
+class Input final : public Singleton<Input>
 {
+    friend class Singleton<Input>;
+
     private:
     // Hashmap of all registered Actions that the input system will check for
-    static std::unordered_map<std::string, Action*> _actions;
+    std::unordered_map<std::string, Action*> _actions;
 
     // Hashmaps of lists of functions bound to Actions inside of _actions
-    static std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
-    static std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
-    static std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
+    std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
 
     // Keymaps used to determine the current state of a key
-    static std::unordered_map<int, bool> _currentFrameKeyMap;
-    static std::unordered_map<int, bool> _prevFrameKeyMap;
+    std::unordered_map<int, bool> _currentFrameKeyMap;
+    std::unordered_map<int, bool> _prevFrameKeyMap;
 
-    private:
-    Input(){}
-    ~Input(){}
+    protected:
+    Input() = default;
+    ~Input() = default;
 
     public:
-    static void Init();
-    static void Cleanup();
+    void Init();
+    void Cleanup();
 
     // Updates the provided key in THIS FRAME'S keymap
-    static void UpdateKey (int key, bool state);
+    void UpdateKey (int key, bool state);
     // Stores the current frame's keymap and prepares it for the next frame 
-    static void StoreKeys();
+    void StoreKeys();
 
-    static const Action* const GetAction(const std::string &name);
+    const Action* const GetAction(const std::string &name);
     // Button action
-    static void BindFuncToAction(const std::string &actionName, ButtonActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func);
+    void BindFuncToAction(const std::string &actionName, ButtonActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func);
     // One Dimensional action
-    static void BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func);
+    void BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func);
     // Two Dimensional action
-    static void BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func);
+    void BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func);
 
     private:
-    static bool IsKeyPressed(int key);
-    static bool IsKeyDown(int key);
-    static bool IsKeyReleased(int key);
+    bool IsKeyPressed(int key);
+    bool IsKeyDown(int key);
+    bool IsKeyReleased(int key);
 
-    static void ExecuteActions();
+    void ExecuteActions();
 };

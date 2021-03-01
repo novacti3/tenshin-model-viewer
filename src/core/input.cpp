@@ -1,14 +1,8 @@
 #include "input.hpp"
 
+#include "core/log.hpp"
+
 #include <GLFW/glfw3.h>
-
-std::unordered_map<std::string, Action*> Input::_actions;
-std::unordered_map<std::string, std::vector<ButtonActionFunc>> Input::_buttonActionFunctions;
-std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> Input::_oneDimensionalActionFunctions;
-std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> Input::_twoDimensionalActionFunctions;
-
-std::unordered_map<int, bool> Input::_currentFrameKeyMap;
-std::unordered_map<int, bool> Input::_prevFrameKeyMap;
 
 void Input::Init()
 {
@@ -38,6 +32,8 @@ void Input::Cleanup()
         delete entry.second;
         entry.second = nullptr;
     }
+
+    Log::LogInfo("Input destroyed");
 }
 
 void Input::UpdateKey (int key, bool state)

@@ -4,6 +4,7 @@
 #include "core/types.hpp"
 
 #include <glad/glad.h>
+
 #include <vector>
 
 class Primitive
