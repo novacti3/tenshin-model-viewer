@@ -13,9 +13,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-std::function<void(int, int)> App::_onKeyPressed;
-std::function<void(Action&, glm::ivec2 value)> App::_onRotateCam;
-
 bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 {
     const char *glslVersion = "#version 330";
@@ -26,20 +23,19 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
         return false;
     }
     Log::LogInfo("Window initialized");
-    // Window::AddListener(this);
 
     Input::getInstance().Init();
     Log::LogInfo("Input initialized");
 
+    // TODO: Move to camera
+    ButtonActionFunc quitProgramFunc = &QuitProgram;
+    Input::getInstance().BindFuncToAction("QuitProgram", quitProgramFunc);
+    Input::getInstance().BindFuncToAction("RotateCamera", _onRotateCam);
     _onRotateCam = [this](Action &action, glm::ivec2 value)
     {
         App::OnRotateCam(action, value);
     };
-
-    ButtonActionFunc quitProgramFunc = &QuitProgram;
-    Input::getInstance().BindFuncToAction("QuitProgram", quitProgramFunc);
-    Input::getInstance().BindFuncToAction("RotateCamera", _onRotateCam);
-
+    
     _onKeyPressed = [this](int key, int action)
     {
         App::OnKeyPressed(key, action);
@@ -146,11 +142,7 @@ void App::OnKeyPressed(int key, int action)
     Input::getInstance().UpdateKey(key, state);
 }
 
-void App::QuitProgram(Action& action)
-{
-    glfwSetWindowShouldClose(Window::getInstance().getHandle(), true);
-}
-
+// TODO: Move to camera
 void App::OnRotateCam(Action &action, glm::ivec2 value)
 {
     // FIXME: This is fucking horrible and needs to be changed to something more sane ASAP
@@ -188,4 +180,9 @@ void App::OnRotateCam(Action &action, glm::ivec2 value)
     glm::vec3 rot = glm::vec3(static_cast<float>(value.y) * ROT_SPEED, static_cast<float>(value.x) * ROT_SPEED, 0.0f);
     rot.x = glm::clamp(rot.x, MIN_PITCH, MAX_PITCH);
     camTransform->addRotation(rot);
+}
+
+void App::QuitProgram(Action& action)
+{
+    glfwSetWindowShouldClose(Window::getInstance().getHandle(), true);
 }
