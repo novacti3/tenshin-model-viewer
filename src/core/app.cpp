@@ -69,12 +69,12 @@ bool App::Init(const glm::uvec2 windowSize, const std::string windowTitle)
 
 void App::LoadResources()
 {
-    ResourceManager::AddShader(ResourceManager::CreateShaderFromFiles("../../res/shaders/unlit-color.vs", "../../res/shaders/unlit-color.fs"), "unlit-color");
+    ResourceManager::getInstance().AddShader(ResourceManager::getInstance().CreateShaderFromFiles("../../res/shaders/unlit-color.vs", "../../res/shaders/unlit-color.fs"), "unlit-color");
 
     // FIXME: The transform values are flipped for some reason (eg. -Y is +Y although it should be +Y)
     // The rendering code might be scuffed because it appears that the camera moves and rotates ish rather than the individual cubes?
     SceneObject *cubeOne = new SceneObject(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-    cubeOne->AddComponent<PrimitiveRenderer>(new PrimitiveRenderer(new Cube(), ResourceManager::GetShader("unlit-color")));
+    cubeOne->AddComponent<PrimitiveRenderer>(new PrimitiveRenderer(new Cube(), ResourceManager::getInstance().GetShader("unlit-color")));
 
     _currentScene->AddObject(cubeOne);
 }
@@ -111,7 +111,7 @@ void App::Cleanup()
     _currentScene = nullptr; 
 
     // Clean up internal engine stuff
-    ResourceManager::Cleanup();
+    ResourceManager::getInstance().Cleanup();
     Renderer::Cleanup();
     UIManager::Cleanup();    
     Input::getInstance().Cleanup();
