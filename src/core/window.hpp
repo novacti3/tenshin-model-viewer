@@ -22,6 +22,12 @@ class Window final : public Singleton<Window>, public EventSender
     private:
     Window() = default;
     ~Window() = default;
+    // Copy
+    Window(const Window& other) = delete;
+    Window& operator=(Window other) = delete;
+    // Move
+    Window(Window&& other) = delete;
+    Window& operator=(Window&& other) = delete;
 
     public:
     bool Init(glm::uvec2 size, const std::string title);
