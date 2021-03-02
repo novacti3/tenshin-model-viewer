@@ -15,6 +15,12 @@ class Scene
     Scene();
     Scene(SceneObject *camera);
     ~Scene();
+    // Copy
+    Scene(const Scene& other);
+    Scene& operator=(Scene other);
+    // Move
+    Scene(Scene&& other);
+    Scene& operator=(Scene&& other);
 
     public:
     inline const std::vector<SceneObject*> &getSceneObjects() const { return _sceneObjects; }

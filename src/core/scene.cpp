@@ -20,6 +20,28 @@ Scene::~Scene()
     }
 }
 
+// Copy
+Scene::Scene(const Scene& other)
+{
+    this->_sceneObjects = other._sceneObjects;
+}
+Scene& Scene::operator=(Scene other)
+{
+    this->_sceneObjects = other._sceneObjects;
+    return *this;
+}
+
+// Move
+Scene::Scene(Scene&& other)
+{
+    this->_sceneObjects = std::move(other._sceneObjects);
+}
+Scene& Scene::operator=(Scene&& other)
+{
+    this->_sceneObjects = std::move(other._sceneObjects);
+    return *this;
+}
+
 // NOTE: Find object by name func?
 void Scene::AddObject(SceneObject *obj)
 {
