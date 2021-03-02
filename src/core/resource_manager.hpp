@@ -16,6 +16,13 @@ class ResourceManager final : public Singleton<ResourceManager>
     private:
     ResourceManager() = default;
     ~ResourceManager() = default;
+    public:
+    // Copy
+    ResourceManager(const ResourceManager& other) = delete;
+    ResourceManager& operator=(ResourceManager other) = delete;
+    // Move
+    ResourceManager(ResourceManager&& other) = delete;
+    ResourceManager& operator=(ResourceManager&& other) = delete;
 
     public:
     void Cleanup();
