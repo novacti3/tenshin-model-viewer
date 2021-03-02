@@ -25,6 +25,13 @@ class UIManager : public Singleton<UIManager>, public EventSender
     private:
     UIManager() = default;
     ~UIManager() = default;
+    public:
+    // Copy
+    UIManager(const UIManager& other) = delete;
+    UIManager& operator=(UIManager other) = delete;
+    // Move
+    UIManager(UIManager&& other) = delete;
+    UIManager& operator=(UIManager&& other) = delete;
 
     public:
     bool Init(GLFWwindow *window, const char *glslVersion);
