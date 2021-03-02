@@ -15,6 +15,16 @@ class Renderer : public Singleton<Renderer>, public EventListener
     Texture *_colorBuffer;
     Texture *_depthBuffer;
 
+    private:
+    Renderer() = default;
+    ~Renderer() = default;
+    // Copy
+    Renderer(const Renderer& other) = delete;
+    Renderer& operator=(Renderer other) = delete;
+    // Move
+    Renderer(Renderer&& other) = delete;
+    Renderer& operator=(Renderer&& other) = delete;
+
     public:
     bool Init();
     void Cleanup();
