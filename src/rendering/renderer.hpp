@@ -18,6 +18,7 @@ class Renderer : public Singleton<Renderer>, public EventListener
     private:
     Renderer() = default;
     ~Renderer() = default;
+    public:
     // Copy
     Renderer(const Renderer& other) = delete;
     Renderer& operator=(Renderer other) = delete;

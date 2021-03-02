@@ -22,6 +22,7 @@ class Window final : public Singleton<Window>, public EventSender
     private:
     Window() = default;
     ~Window() = default;
+    public:
     // Copy
     Window(const Window& other) = delete;
     Window& operator=(Window other) = delete;
