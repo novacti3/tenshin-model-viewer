@@ -19,17 +19,58 @@ class Primitive
     public:
     virtual ~Primitive()
     {
-        // FIXME: All of these produce OpenGL Error 1282
         GL_CALL(glad_glDeleteVertexArrays(1, &_VAO));
         GL_CALL(glad_glDeleteBuffers(1, &_VBO));
         GL_CALL(glad_glDeleteBuffers(1, &_EBO));
+    }
+    // Copy
+    Primitive(const Primitive& other)
+    {
+        this->_vertices = other._vertices;
+        this->_indices = other._indices;
+
+        this->_VAO = other._VAO;
+        this->_VBO = other._VBO;
+        this->_EBO = other._EBO;
+    }
+    Primitive& operator=(Primitive other)
+    {
+        this->_vertices = other._vertices;
+        this->_indices = other._indices;
+
+        this->_VAO = other._VAO;
+        this->_VBO = other._VBO;
+        this->_EBO = other._EBO;
+    
+        return *this;
+    }
+    // Move
+    Primitive(Primitive&& other)
+    {
+        this->_vertices = std::move(other._vertices);
+        this->_indices = std::move(other._indices);
+
+        this->_VAO = std::move(other._VAO);
+        this->_VBO = std::move(other._VBO);
+        this->_EBO = std::move(other._EBO);    
+    }
+    Primitive& operator=(Primitive&& other)
+    {
+        this->_vertices = std::move(other._vertices);
+        this->_indices = std::move(other._indices);
+
+        this->_VAO = std::move(other._VAO);
+        this->_VBO = std::move(other._VBO);
+        this->_EBO = std::move(other._EBO);
+
+        return *this;
     }
 
     public:
     inline const std::vector<Vertex>       &getVertices() const { return _vertices; }
     inline const std::vector<unsigned int> &getIndices()  const { return _indices; }
 
-    inline const unsigned int getVAO() const { return _VAO; }
-    inline const unsigned int getVBO() const { return _VBO; }
-    inline const unsigned int getEBO() const { return _EBO; }
+    inline const unsigned int &getVAO() const { return _VAO; }
+    inline const unsigned int &getVBO() const { return _VBO; }
+    inline const unsigned int &getEBO() const { return _EBO; }
 };
