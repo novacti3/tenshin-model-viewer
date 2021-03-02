@@ -31,6 +31,28 @@ Shader::~Shader()
     GL_CALL(glad_glDeleteProgram(_id));
 }
 
+// Copy
+Shader::Shader(const Shader& other)
+{
+    this->_id = other._id;
+}
+Shader& Shader::operator=(Shader other)
+{
+    this->_id = other._id;
+    return *this;
+}
+
+// Move
+Shader::Shader(Shader&& other)
+{
+    this->_id = std::move(other._id);
+}
+Shader& Shader::operator=(Shader&& other)
+{
+    this->_id = std::move(other._id);
+    return *this;
+}
+
 void Shader::Bind() const
 {
     GL_CALL(glad_glUseProgram(_id));

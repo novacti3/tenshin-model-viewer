@@ -7,6 +7,12 @@ class Shader
 
     public:
     Shader(const char *vertSource, const char *fragSource);
+    // Copy
+    Shader(const Shader& other);
+    Shader& operator=(Shader other);
+    // Move
+    Shader(Shader&& other);
+    Shader& operator=(Shader&& other);
     ~Shader();
 
     public:

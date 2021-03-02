@@ -22,6 +22,7 @@ Texture::~Texture()
     GL_CALL(glad_glDeleteTextures(1, &_id));
 } 
 
+// Copy
 Texture::Texture(const Texture &other)
 {
     memcpy(this->data, other.data, sizeof(other.data));
@@ -43,6 +44,7 @@ Texture& Texture::operator=(Texture other)
     return *this;
 }
 
+// Move
 Texture::Texture(Texture&& other)
 {
     this->data = other.data;
