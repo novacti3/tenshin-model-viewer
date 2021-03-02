@@ -27,6 +27,26 @@ class SceneObject
             comp = nullptr;
         }
     }
+    // Copy
+    SceneObject(const SceneObject& other)
+    {
+        this->_components = other._components;
+    }
+    SceneObject& operator=(SceneObject other)
+    {
+        this->_components = other._components;
+        return *this;
+    }
+    // Move
+    SceneObject(SceneObject&& other)
+    {
+        this->_components = std::move(other._components);
+    }
+    SceneObject& operator=(SceneObject&& other)
+    {
+        this->_components = std::move(other._components);
+        return *this;
+    }
 
     public:
     template <class T>
