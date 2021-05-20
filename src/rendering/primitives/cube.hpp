@@ -1,10 +1,10 @@
 #pragma once
 
-#include "primitive.hpp"
+#include "rendering/primitives/primitive.hpp"
 
-class Cube : public Primitive
+class Cube final : public Primitive
 {
     public:
     Cube();
-    ~Cube();
+    ~Cube() = default;
 };

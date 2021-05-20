@@ -1,36 +1,47 @@
 #pragma once
 
+#include "core/singleton.hpp"
 #include "core/event.hpp"
+#include "rendering/renderer.hpp"
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-class UIManager : public EventSender
+class UIManager : public Singleton<UIManager>, public EventSender
 {
-    private:
-    static inline const char *DOCKSPACE_ID = "EditorDockspace";
-    
-    static inline bool _showModelProperties = true;
-    static inline bool _showMaterialProperties = true;
-    static inline bool _showRendererProperties = true;
-    static inline bool _showDebugConsole = true;
-    static inline bool _showScene = true;
+    friend class Singleton<UIManager>;
 
-    static inline ImGuiWindowFlags _windowFlags;
+    private:
+    const char *DOCKSPACE_ID = "EditorDockspace";
+    
+    bool _showModelProperties = true;
+    bool _showMaterialProperties = true;
+    bool _showRendererProperties = true;
+    bool _showDebugConsole = true;
+    bool _showScene = true;
+
+    ImGuiWindowFlags _windowFlags;
 
     private:
     UIManager() = default;
     ~UIManager() = default;
+    public:
+    // Copy
+    UIManager(const UIManager& other) = delete;
+    UIManager& operator=(UIManager other) = delete;
+    // Move
+    UIManager(UIManager&& other) = delete;
+    UIManager& operator=(UIManager&& other) = delete;
 
     public:
-    static void Init(GLFWwindow *window, const char *glslVersion);
-    static void Render(unsigned int width, unsigned int height);
-    static void Cleanup();
+    bool Init(GLFWwindow *window, const char *glslVersion);
+    void Render(unsigned int width, unsigned int height);
+    void Cleanup();
 
     private:
-    static void ShowMenuBar();
-    static void ShowMaterialProperties();
-    static void ShowRendererProperties();
-    static void ShowDebugConsole();
-    static void ShowScene();
+    void ShowMenuBar();
+    void ShowMaterialProperties();
+    void ShowRendererProperties();
+    void ShowDebugConsole();
+    void ShowScene();
 };

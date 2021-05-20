@@ -1,12 +1,10 @@
 #include "resource_manager.hpp"
 
-#include "log.hpp"
-#include "utils.hpp"
+#include "core/log.hpp"
+#include "core/utils.hpp"
 
 #include <fstream>
 #include <sstream>
-
-std::unordered_map<std::string, Shader*> ResourceManager::_loadedShaders;
 
 void ResourceManager::Cleanup()
 {

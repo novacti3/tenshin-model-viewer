@@ -20,7 +20,7 @@ class Event
 
     public:
     Event(): _type(EventType::EMPTY) {}
-    explicit Event(EventType type): _type(std::move(type)) {}
+    explicit Event(EventType type): _type(type) {}
     virtual ~Event() = default;
     // NOTE: Remove copy and move constructors and operators?
 

@@ -21,18 +21,17 @@ int main()
     Log::SetLogLevelFilter(LogLevel::Error);
 #endif
 
-    App app;
-    if(!app.Init(glm::uvec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE))
+    if(!App::getInstance().Init(glm::uvec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE))
     {
         Log::LogFatal("Failed creating app instance");
         return -1;
     }
     Log::LogInfo("App instance created");
 
-    app.LoadResources();
+    App::getInstance().LoadResources();
 
     float lastTime = 0, currentTime = 0, deltaTime = 0;
-    while(!glfwWindowShouldClose(Window::getHandle()))
+    while(!glfwWindowShouldClose(Window::getInstance().getHandle()))
     {
         // FIXME: The way the deltaTime is calculated must be goofd because it makes everything spazz out and anything but consistent and constant
         // NOTE: Might want to move this into a static Time class or something so it's accessible from anywhere
@@ -41,11 +40,11 @@ int main()
         lastTime = deltaTime;
 
         glfwPollEvents();
-        app.Update(deltaTime);
-        app.Render();
+        App::getInstance().Update(deltaTime);
+        App::getInstance().Render();
     }
 
-    app.Cleanup();
+    App::getInstance().Cleanup();
 
     return 0;
 }

@@ -1,6 +1,9 @@
 #pragma once
 
+#include "core/singleton.hpp"
+
 #include <glm/vec2.hpp>
+
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -23,6 +26,20 @@ class ButtonKeybind final : public IKeybind
     public:
     ButtonKeybind(int keyCode): _keyCode(keyCode) {}
     ~ButtonKeybind() = default;
+    // Copy
+    ButtonKeybind(const ButtonKeybind& other): _keyCode(other._keyCode) {}
+    ButtonKeybind& operator=(ButtonKeybind other)
+    {
+        this->_keyCode = other._keyCode;
+        return *this;
+    }
+    // Move
+    ButtonKeybind(ButtonKeybind&& other): _keyCode(std::move(other._keyCode)) {}
+    ButtonKeybind& operator=(ButtonKeybind&& other)
+    {
+        this->_keyCode = std::move(other._keyCode);
+        return *this;
+    }
 
     public:
     int getKeyCode() const { return _keyCode; }
@@ -38,6 +55,24 @@ class OneDimensionalKeybind final : public IKeybind
     public:
     OneDimensionalKeybind(int positiveKeyCode, int negativeKeyCode): _positiveKeyCode(positiveKeyCode), _negativeKeyCode(negativeKeyCode) {}
     ~OneDimensionalKeybind() = default;
+    // Copy
+    OneDimensionalKeybind(const OneDimensionalKeybind& other): _positiveKeyCode(other._positiveKeyCode), _negativeKeyCode(other._negativeKeyCode) {}
+    OneDimensionalKeybind& operator=(OneDimensionalKeybind other)
+    {
+        this->_positiveKeyCode = other._positiveKeyCode;
+        this->_negativeKeyCode = other._negativeKeyCode;
+
+        return *this;
+    }
+    // Move
+    OneDimensionalKeybind(OneDimensionalKeybind&& other): _positiveKeyCode(std::move(other._positiveKeyCode)), _negativeKeyCode(std::move(other._negativeKeyCode)) {}
+    OneDimensionalKeybind& operator=(OneDimensionalKeybind&& other)
+    {
+        this->_positiveKeyCode = std::move(other._positiveKeyCode);
+        this->_negativeKeyCode = std::move(other._negativeKeyCode);
+
+        return *this;
+    }
 
     public:
     int getPositiveKeyCode() const { return _positiveKeyCode; }
@@ -55,6 +90,28 @@ class TwoDimensionalKeybind final : public IKeybind
     public:
     TwoDimensionalKeybind(int positiveXKeyCode, int negativeXKeyCode, int positiveYKeyCode, int negativeYKeyCode): _positiveXKeyCode(positiveXKeyCode), _negativeXKeyCode(negativeXKeyCode), _positiveYKeyCode(positiveYKeyCode), _negativeYKeyCode(negativeYKeyCode) {}
     ~TwoDimensionalKeybind() = default;
+    // Copy
+    TwoDimensionalKeybind(const TwoDimensionalKeybind& other): _positiveXKeyCode(other._positiveXKeyCode), _negativeXKeyCode(other._negativeXKeyCode), _positiveYKeyCode(other._positiveYKeyCode), _negativeYKeyCode(other._negativeYKeyCode) {}
+    TwoDimensionalKeybind& operator=(TwoDimensionalKeybind other)
+    {
+        this->_positiveXKeyCode = other._positiveXKeyCode;
+        this->_negativeXKeyCode = other._negativeXKeyCode;
+        this->_positiveYKeyCode = other._positiveYKeyCode;
+        this->_negativeYKeyCode = other._negativeYKeyCode;
+
+        return *this;
+    }
+    // Move
+    TwoDimensionalKeybind(TwoDimensionalKeybind&& other): _positiveXKeyCode(std::move(other._positiveXKeyCode)), _negativeXKeyCode(std::move(other._negativeXKeyCode)), _positiveYKeyCode(std::move(other._positiveYKeyCode)), _negativeYKeyCode(std::move(other._negativeYKeyCode)) {}
+    TwoDimensionalKeybind& operator=(TwoDimensionalKeybind&& other)
+    {
+        this->_positiveXKeyCode = std::move(other._positiveXKeyCode);
+        this->_negativeXKeyCode = std::move(other._negativeXKeyCode);
+        this->_positiveYKeyCode = std::move(other._positiveYKeyCode);
+        this->_negativeYKeyCode = std::move(other._negativeYKeyCode);
+
+        return *this;
+    }
 
     public:
     int getPositiveXKeyCode() const { return _positiveXKeyCode; }
@@ -82,7 +139,7 @@ class Action final
     std::vector<IKeybind*> _keybinds;
 
     public:
-    Action(ActionType type, std::vector<IKeybind*> keybinds): _type(type), _keybinds(std::move(keybinds)) {} 
+    Action(ActionType type, std::vector<IKeybind*> keybinds): _type(type), _keybinds(keybinds) {} 
     virtual ~Action()
     {
         for(IKeybind *keybind: _keybinds)
@@ -90,6 +147,24 @@ class Action final
             delete keybind;
             keybind = 0;
         }
+    }
+    // Copy
+    Action(const Action& other): _type(other._type), _keybinds(other._keybinds) {}
+    Action& operator=(Action other)
+    {
+        this->_type = other._type;
+        this->_keybinds = other._keybinds;
+
+        return *this;
+    }
+    // Move
+    Action(Action&& other): _type(std::move(other._type)), _keybinds(std::move(other._keybinds)) {}
+    Action& operator=(Action&& other)
+    {
+        this->_type = std::move(other._type);
+        this->_keybinds = std::move(other._keybinds);
+
+        return *this;
     }
 
     public:
@@ -104,49 +179,58 @@ using TwoDimensionalActionFunc = std::function<void(Action&, glm::ivec2 value)>;
 
 // TODO: Modifier keys (eg. allow CTRL+O)
 // TODO: Add mouse input support
-class Input final
+class Input final : public Singleton<Input>
 {
+    friend class Singleton<Input>;
+
     private:
     // Hashmap of all registered Actions that the input system will check for
-    static std::unordered_map<std::string, Action*> _actions;
+    std::unordered_map<std::string, Action*> _actions;
 
     // Hashmaps of lists of functions bound to Actions inside of _actions
-    static std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
-    static std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
-    static std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<ButtonActionFunc>> _buttonActionFunctions;
+    std::unordered_map<std::string, std::vector<OneDimensionalActionFunc>> _oneDimensionalActionFunctions;
+    std::unordered_map<std::string, std::vector<TwoDimensionalActionFunc>> _twoDimensionalActionFunctions;
 
     // Keymaps used to determine the current state of a key
-    static std::unordered_map<int, bool> _currentFrameKeyMap;
-    static std::unordered_map<int, bool> _prevFrameKeyMap;
+    std::unordered_map<int, bool> _currentFrameKeyMap;
+    std::unordered_map<int, bool> _prevFrameKeyMap;
 
     private:
-    Input(){}
-    ~Input(){}
+    Input() = default;
+    ~Input() = default;
+    public:
+    // Copy
+    Input(const Input& other) = delete;
+    Input& operator=(Input other) = delete;
+    // Move
+    Input(Input&& other) = delete;
+    Input& operator=(Input&& other) = delete;
 
     public:
-    static void Init();
-    static void Cleanup();
+    void Init();
+    void Cleanup();
 
     // Updates the provided key in THIS FRAME'S keymap
-    static void UpdateKey (int key, bool state);
+    void UpdateKey (int key, bool state);
     // Stores the current frame's keymap and prepares it for the next frame 
-    static void StoreKeys();
+    void StoreKeys();
 
-    static const Action* const GetAction(const std::string &name);
+    const Action* const GetAction(const std::string &name);
     // Button action
-    static void BindFuncToAction(const std::string &actionName, ButtonActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func);
+    void BindFuncToAction(const std::string &actionName, ButtonActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, ButtonActionFunc func);
     // One Dimensional action
-    static void BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func);
+    void BindFuncToAction(const std::string &actionName, OneDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, OneDimensionalActionFunc func);
     // Two Dimensional action
-    static void BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func);
-    static void UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func);
+    void BindFuncToAction(const std::string &actionName, TwoDimensionalActionFunc func);
+    void UnbindFuncFromAction(const std::string &actionName, TwoDimensionalActionFunc func);
 
     private:
-    static bool IsKeyPressed(int key);
-    static bool IsKeyDown(int key);
-    static bool IsKeyReleased(int key);
+    bool IsKeyPressed(int key);
+    bool IsKeyDown(int key);
+    bool IsKeyReleased(int key);
 
-    static void ExecuteActions();
+    void ExecuteActions();
 };

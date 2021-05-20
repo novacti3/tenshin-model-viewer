@@ -1,11 +1,13 @@
 #pragma once
 
+#include "components/icomponent.hpp"
+
 #include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-struct Transform
+struct TransformComponent final : public IComponent
 {
     private:
     glm::vec3 _position;
@@ -13,9 +15,9 @@ struct Transform
     glm::vec3 _scale;
 
     public:
-    Transform(const glm::vec3 position = glm::vec3(0.0f), const glm::vec3 rotation = glm::vec3(0.0f), const glm::vec3 scale = glm::vec3(1.0f))
+    TransformComponent(const glm::vec3 position = glm::vec3(0.0f), const glm::vec3 rotation = glm::vec3(0.0f), const glm::vec3 scale = glm::vec3(1.0f))
         : _position(std::move(position)), _rotation(std::move(rotation)), _scale(std::move(scale)){}
-    ~Transform(){}
+    ~TransformComponent(){}
 
     public:
     glm::mat4 CalculateModelMatrix() const
@@ -35,16 +37,16 @@ struct Transform
         return model;
     }
 
-    inline const glm::vec3 &getPosition() const { return _position; }
-    inline const glm::vec3 &getRotation() const { return _rotation; }
-    inline const glm::vec3 &getScale()    const { return _scale; }
+    inline const glm::vec3 getPosition() const { return _position; }
+    inline const glm::vec3 getRotation() const { return _rotation; }
+    inline const glm::vec3 getScale()    const { return _scale; }
 
-    inline const glm::vec3 &setPosition(const glm::vec3 newPosition)
+    inline const glm::vec3 setPosition(const glm::vec3 newPosition)
     {
         _position = newPosition; 
         return _position; 
     }
-    inline const glm::vec3 &setRotation(const glm::vec3 newRotation) 
+    inline const glm::vec3 setRotation(const glm::vec3 newRotation) 
     { 
         _rotation = newRotation;
         
@@ -64,18 +66,18 @@ struct Transform
 
         return _rotation; 
     }
-    inline const glm::vec3 &setScale(const glm::vec3 newScale)
+    inline const glm::vec3 setScale(const glm::vec3 newScale)
     {
         _scale = newScale; 
         return _scale; 
     }
 
-    inline const glm::vec3 &addPosition(const glm::vec3 newPosition)
+    inline const glm::vec3 addPosition(const glm::vec3 newPosition)
     {
         _position += newPosition; 
         return _position; 
     }
-    inline const glm::vec3 &addRotation(const glm::vec3 newRotation) 
+    inline const glm::vec3 addRotation(const glm::vec3 newRotation) 
     { 
         _rotation += newRotation;
         
@@ -95,7 +97,7 @@ struct Transform
 
         return _rotation; 
     }
-    inline const glm::vec3 &addScale(const glm::vec3 newScale)
+    inline const glm::vec3 addScale(const glm::vec3 newScale)
     {
         _scale += newScale; 
         return _scale; 
