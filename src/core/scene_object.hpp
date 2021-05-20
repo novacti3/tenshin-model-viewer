@@ -76,19 +76,19 @@ class SceneObject
         }
     }
     
-    template <class T>
-    const T *GetComponent() const
+template <class T>
+const T *GetComponent() const
+{
+    // Loop through all of the components and return the desired component if it's present
+    for (auto i = _components.begin(); i < _components.end(); i++)
     {
-        // Loop through all of the components and return the desired component if it's present
-        for (auto i = _components.begin(); i < _components.end(); i++)
+        T* component = dynamic_cast<T*>(*i);
+        if(component != nullptr)
         {
-            T* component = dynamic_cast<T*>(*i);
-            if(component != nullptr)
-            {
-                return component;
-            }
+            return component;
         }
-
-        return nullptr;
     }
+
+    return nullptr;
+}
 };
