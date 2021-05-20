@@ -102,7 +102,7 @@ void App::Render()
 
 void App::Cleanup()
 {
-    // Delete scenes
+    // Delete scene
     for(Scene *scene: _scenes)
     {
         delete scene;
