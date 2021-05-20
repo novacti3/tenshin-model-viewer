@@ -37,16 +37,16 @@ struct TransformComponent final : public IComponent
         return model;
     }
 
-    inline const glm::vec3 &getPosition() const { return _position; }
-    inline const glm::vec3 &getRotation() const { return _rotation; }
-    inline const glm::vec3 &getScale()    const { return _scale; }
+    inline const glm::vec3 getPosition() const { return _position; }
+    inline const glm::vec3 getRotation() const { return _rotation; }
+    inline const glm::vec3 getScale()    const { return _scale; }
 
-    inline const glm::vec3 &setPosition(const glm::vec3 newPosition)
+    inline const glm::vec3 setPosition(const glm::vec3 newPosition)
     {
         _position = newPosition; 
         return _position; 
     }
-    inline const glm::vec3 &setRotation(const glm::vec3 newRotation) 
+    inline const glm::vec3 setRotation(const glm::vec3 newRotation) 
     { 
         _rotation = newRotation;
         
@@ -66,18 +66,18 @@ struct TransformComponent final : public IComponent
 
         return _rotation; 
     }
-    inline const glm::vec3 &setScale(const glm::vec3 newScale)
+    inline const glm::vec3 setScale(const glm::vec3 newScale)
     {
         _scale = newScale; 
         return _scale; 
     }
 
-    inline const glm::vec3 &addPosition(const glm::vec3 newPosition)
+    inline const glm::vec3 addPosition(const glm::vec3 newPosition)
     {
         _position += newPosition; 
         return _position; 
     }
-    inline const glm::vec3 &addRotation(const glm::vec3 newRotation) 
+    inline const glm::vec3 addRotation(const glm::vec3 newRotation) 
     { 
         _rotation += newRotation;
         
@@ -97,7 +97,7 @@ struct TransformComponent final : public IComponent
 
         return _rotation; 
     }
-    inline const glm::vec3 &addScale(const glm::vec3 newScale)
+    inline const glm::vec3 addScale(const glm::vec3 newScale)
     {
         _scale += newScale; 
         return _scale; 
